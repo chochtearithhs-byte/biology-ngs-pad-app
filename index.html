@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រព័ន្ធសិក្សាជីវវិទ្យា T. TEARITH</title>
+    
+    <!-- --- PWA CONFIGURATION --- -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2ecc71">
+    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1mGVFFMVNkaM7cyndEQctonpTa6gOvFaN">
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker Registered Successfully!'))
+            .catch(err => console.log('Service Worker Registration Failed:', err));
+        });
+      }
+    </script>
+    <!-- ------------------------- -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Khmer+M1:wght@400;700&display=swap');
+
+        :root {
+            --primary: #2ecc71;
+            --secondary: #2ecc71;
+            --accent: #fdbb2d;
+            --danger: #e74c3c;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            background-color: #1aff00;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Khmer M1', 'Kantumruy Pro', sans-serif;
+        }
+
+        /* --- ផ្នែកអក្សររត់ជូនដំណឹងខាងលើ --- */
+        .marquee-container {
+            width: 100%;
+            background-color: #fbc02d;
+            color: #0000ff;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+            padding: 8px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 25s linear infinite;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        .main-wrapper {
+            margin-top: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px 40px 40px 40px;
+            box-sizing: border-box;
+        }
+
+        .school-logo {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            background: #f9d423;
+            padding: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .title-1 { color: #d63031; font-size: 1.8rem; margin-bottom: 5px; font-weight: bold; }
+        .title-2 { color: #0000ff; font-size: 1.4rem; margin-bottom: 5px; }
+        .title-3 { color: #0000ff; font-size: 2rem; margin-bottom: 30px; font-weight: bold; }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; color: #0000ff; }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            outline: none;
+            box-sizing: border-box;
+            font-size: 1.1rem;
+            text-align: center;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 35px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: 1px solid #999;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            font-family: 'Khmer M1', sans-serif;
+        }
+
+        button:hover { background-color: #e0e0e0; }
+
+        .footer {
+            color: #1aff00;
+            font-size: 1.2rem;
+            margin-top: 40px;
+            font-weight: bold;
+        }
+
+        #lessonContent {
+            background: #00a651;
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .header-box {
+            background: linear-gradient(to bottom, #4a90e2, #2e5da8);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-size: 22px;
+            display: inline-block;
+            margin-bottom: 30px;
+            border: 2px solid white;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .ribbon-btn {
+            background: linear-gradient(to bottom, #f9d423, #e6b121);
+            color: #1d4a99;
+            padding: 30px;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+            transition: 0.3s;
+        }
+
+        .ribbon-btn:hover { transform: scale(1.05); }
+
+        #lesson-panel {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            display: none;
+            text-align: left;
+        }
+
+        .lesson-item {
+            background: #f1f5f9;
+            margin-bottom: 10px;
+            padding: 12px;
+            border-left: 6px solid #e6b121;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: none;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        .btn-pdf { background-color: #d63031; }
+        .btn-work { background-color: #0984e3; }
+        .btn-logout { background-color: #333; color: white; margin-top: 20px; }
+
+        /* --- MODAL DIALOG DISPLAY IN SAME TAB --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-body {
+            background: white;
+            width: 95%;
+            max-width: 900px;
+            height: 90vh;
+            border-radius: 15px;
+            overflow-y: auto;
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* --- STYLES FOR EMBEDDED QUIZ & HOMEWORK --- */
+        .quiz-item { 
+            background: white; padding: 25px; border-radius: 15px; 
+            margin-bottom: 15px; border-left: 5px solid var(--primary); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .quiz-item label {
+            display: block; padding: 10px; margin: 5px 0;
+            border: 1px solid #eee; border-radius: 8px; cursor: pointer; transition: 0.2s;
+            text-align: left;
+        }
+        .quiz-item label:hover { background: #f0fff4; border-color: var(--primary); }
+        .quiz-item input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+        .quiz-nav-buttons { display: flex; justify-content: space-between; margin-top: 15px; margin-bottom: 15px; gap: 10px; }
+        .timer-box { 
+            font-size: 1.5rem; font-weight: bold; color: var(--danger); 
+            text-align: center; padding: 10px; background: #fff0f0; 
+            border-radius: 10px; margin-bottom: 15px; border: 2px solid var(--danger);
+        }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; padding: 20px; }
+        .btn-menu { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; border-radius: 10px; font-weight: bold; font-size: 0.9rem;}
+        .btn-menu.active { background: var(--primary); color: white; }
+        .btn-quiz { background: var(--accent); border-color: var(--accent); color: #000; }
+        .btn-score { background: #3498db; border-color: #3498db; color: white; }
+        .score-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .score-table th, .score-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .score-table th { background: var(--primary); color: white; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; }
+        .btn-success { background: var(--secondary); color: white; width: 100%; font-size: 1.1rem; border: none; padding: 12px; border-radius: 8px; }
+        .btn-info { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 8px; }
+        #viewer-frame { width: 100%; height: 500px; border: none; background: #eee; border-radius: 10px; }
+        
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; text-align: left; }
+        .btn-submit { background: #27ae60; color: white; width: 100%; border: none; padding: 12px; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        .btn-search { background: #2980b9; color: white; width: 100%; border: none; padding: 12px; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        #status, #searchResult { margin-top: 15px; text-align: center; font-size: 14px; padding: 10px; border-radius: 8px; display: none; }
+        .success { background: #d4edda; color: #155724; display: block !important; }
+        .error { background: #f8d7da; color: #721c24; display: block !important; }
+
+        .hidden { display: none !important; }
+        #quiz-section { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+
+        @media (max-width: 600px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .lesson-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- របារជូនដំណឹងអក្សររត់រហូត -->
+    <div class="marquee-container">
+        <div class="marquee-text">
+            📢 ស្វាគមន៍មកកាន់ប្រព័ន្ធសិក្សាជីវវិទ្យា NGS_PAD | សូមបញ្ចូល Username Grade និង Password ដើម្បីចូលប្រើប្រាស់ក្នុងការស្វ័យសិក្សា | ទទួលចុះឈ្មោះសិក្សារៀងរាល់ថ្ងៃ!
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="container" id="loginBox">
+            <img src="https://lh3.googleusercontent.com/d/1mGVFFMVNkaM7cyndEQctonpTa6gOvFaN" alt="School Logo" class="school-logo" onerror="this.src='https://via.placeholder.com/120?text=LOGO'">
+
+            <div class="title-1">"វិទ្យាល័យព្រះអង្គឌួង"</div>
+            <div class="title-2">កម្មវិធីសាលារៀនជំនាន់ថ្មី</div>
+            <div class="title-3">ប្រព័ន្ធសិក្សាជីវវិទ្យា<br> NGS_PAD</div>
+
+            <form id="biologyForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="បញ្ចូលឈ្មោះអ្នកប្រើ" required>
+                </div>
+                <div class="form-group">
+                    <label>Grade</label>
+                    <input type="text" id="Grade" placeholder="បញ្ចូលថ្នាក់ (ឧទាហរណ៍៖ 10A)" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="បញ្ចូលលេខសម្ងាត់" required>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" id="loginBtn">Login</button>
+                    <button type="reset">Reset</button>
+                </div>
+            </form>
+
+            <div class="footer">ថ្នាក់ទី៧ ដល់ ថ្នាក់ទី១២</div>
+        </div>
+
+        <div class="container" id="lessonContent">
+            <div id="main-menu">
+                <div class="header-box">ការសិក្សាមុខវិជ្ជាជីវវិទ្យា</div>
+                <div class="grid-container">
+                    <button class="ribbon-btn" onclick="renderLessons('៧')">ថ្នាក់ទី ៧</button>
+                    <button class="ribbon-btn" onclick="renderLessons('១០')">ថ្នាក់ទី ១០</button>
+                    <button class="ribbon-btn" onclick="renderLessons('៨')">ថ្នាក់ទី ៨</button>
+                    <button class="ribbon-btn" onclick="renderLessons('១១')">ថ្នាក់ទី ១១</button>
+                    <button class="ribbon-btn" onclick="renderLessons('៩')">ថ្នាក់ទី ៩</button>
+                    <button class="ribbon-btn" onclick="renderLessons('១២')">ថ្នាក់ទី ១២</button>
+                </div>
+                <button class="btn-logout" onclick="logout()">ចាកចេញ (Log Out)</button>
+            </div>
+
+            <div id="lesson-panel">
+                <button onclick="backToMenu()" style="margin-bottom: 15px;">← ត្រឡប់ក្រោយ</button>
+                <h2 id="class-header" style="color: #2e5da8;"></h2>
+                <div id="lesson-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONTAINER FOR VIEWING CONTENT IN SAME TAB -->
+    <div class="modal-overlay" id="contentModal">
+        <div class="modal-body">
+            <button class="close-modal" onclick="closeModal()">✕ បិទ</button>
+            <div id="modalContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- ១. URL Apps Script សម្រាប់ Login រួម ---
+        const LOGIN_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzgPmP9vw741_4fv7L2EaENFYAfs0LPi6c1vs_V59F4JOmWjMTyd8Juc1X2VShg49Yw/exec';
+
+        // --- ២. រចនាសម្ព័ន្ធទិន្នន័យមេរៀន និង LINKS តាមថ្នាក់ និងតាមមេរៀននីមួយៗ (បន្ថែម lessonVideo2) ---
+        const lessonData = {
+            '៧': [
+                { title: "មេរៀនទី ១", lessonVideo: "https://www.youtube.com/embed/5PcP3jR5whM", lessonVideo2: "https://www.youtube.com/embed/5PcP3jR5whM", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c1-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c1-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c1-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c1-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c1-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c1-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c1-u4/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c1-u4/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c1-u5/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c1-u5/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៦", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c2-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c2-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៧", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c2-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c2-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៨", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c2-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c2-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៩", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c3-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c3-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១០", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c3-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c3-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c4-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c4-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c4-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c4-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c5-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c5-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c5-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c5-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c6-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c6-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
+            ],
+
+            '៨': [
+                { title: "មេរៀនទី ១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c1-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c1-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c1-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c1-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c2-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c2-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c2-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c2-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c3-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c3-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៦", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c3-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c3-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៧", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c4-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៨", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c4-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៩", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c4-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១០", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-u4/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c4-u4/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c5-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c5-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c5u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c6-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8-c6-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c6-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g8c6u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
+            ],
+
+            '៩': [
+                { title: "មេរៀនទី ១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c1-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c1-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c1-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c1-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c1-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c1-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c2-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c2-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c2-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c2-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៦", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c2-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c2-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៧", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c3-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c3-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៨", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c3-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c3-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៩", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c4-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c4-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១០", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c4-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c4-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c5-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c5-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c5-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c5-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c6-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c6-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c6-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c6-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c6-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c6-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
+            ],
+
+            '១០': [
+                { title: "ជំពូកទី១ មេរៀនទី១ ចំណែកថ្នាក់ និងដើមឈើមែកធាងពូជអម្បូរ", 
+                lessonVideo: "https://www.youtube.com/embed/5PcP3jR5whM", 
+                lessonVideo2: "https://www.youtube.com/embed/5PcP3jR5whM", 
+                expVideo: "https://www.youtube.com/embed/zKZ1g0o6PqE", 
+                pdfDoc: "https://drive.google.com/file/d/1QlCOF6Jdaco4dL6vmpcNk6fM-FwBJcrO/preview", 
+                resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", 
+                resExercise: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", 
+                workUrl: "https://drive.google.com/file/d/1QlCOF6Jdaco4dL6vmpcNk6fM-FwBJcrO/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbwQJc8EU-WDzQBJuvLzotgW_LjrQS0WD4UgfNfizPy281ggY01Agx_Y0RhcUmPG8OyC/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbyYBxzeTIp-LKy_7kQwvUSnhDXlO_ABpfA93LrNHw2crs5q8g8J1iVXzZTJVgyakR8J/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី២ វីរូស និងបាក់តេរី", 
+                lessonVideo: "https://www.youtube.com/embed/AK7SgaSatUg", 
+                lessonVideo2: "https://www.youtube.com/embed/AK7SgaSatUg", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1r_Zq13nxJz1fB1Yp14ENcEVdN-P8WlU0/preview", 
+                resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", 
+                resExercise: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", 
+                workUrl: "https://drive.google.com/file/d/1r_Zq13nxJz1fB1Yp14ENcEVdN-P8WlU0/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycby_ptzV51WFt1d1sbNzUHsuR6V4dp47eJb2G9JQ5igGjW1r_M61e71NcYpYFBffLL36vw/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbyR-3xqHK4EkrZEmUp0Pxj1I-3njQRDhiIMlUBXUnUe6ctpdVc9Goe6pHaC74_lAdvBSQ/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី៣ ប្រូទីស", 
+                lessonVideo: "https://www.youtube.com/embed/_m1Tf0CojSI", 
+                lessonVideo2: "https://www.youtube.com/embed/_m1Tf0CojSI", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1zD5ObtW5hOJxp-Wp_tQoLoYeFPI5W_lQ/preview", 
+                resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", 
+                resExercise: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", 
+                workUrl: "https://drive.google.com/file/d/1zD5ObtW5hOJxp-Wp_tQoLoYeFPI5W_lQ/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbxdC5P4i2gNvnhhj3QxQL98QzXNWjUQhzwWpuuIOzaESnQAfvkbK3uSioTKpfumVOVT/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbxDOtwAFwbaravg3mEmiwHF4TUKp25XMU7fh811hfOsa48GyG_IM0SFZCE0kcRJrb_JiQ/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី៤ ផ្សិត", 
+                lessonVideo: "https://www.youtube.com/embed/-sB5Ovgzu3g", 
+                lessonVideo2: "https://www.youtube.com/embed/-sB5Ovgzu3g", 
+                expVideo: "https://www.youtube.com/embed/zKZ1g0o6P", 
+                pdfDoc: "https://drive.google.com/file/d/1HlPFuPpf2w_UKv2HSCos4A4_b56Nf58Q/preview", 
+                resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", 
+                resExercise: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", 
+                workUrl: "https://drive.google.com/file/d/1HlPFuPpf2w_UKv2HSCos4A4_b56Nf58Q/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbwxGA6zgFURrxm8IZmTUZogQdON6yiPpikTAgTZ5xVOnUjM9sQ6Puq9daEsaDaLpHU/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbyYjKhESEYRo-fcv-pfCU3aeueASAHyY8mMgF-BHCMN-1PlBQ1ciap_i5gVIpKk45pSPw/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី៥ រុក្ខជាតិ", 
+                lessonVideo: "https://www.youtube.com/embed/ZNv9iNq69sE", 
+                lessonVideo2: "https://www.youtube.com/embed/ZNv9iNq69sE", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1njl-BORC4-z4pagozaGyK3fOSsrDH9rU/preview", 
+                resDoc: "https://drive.google.com/file/d/1sskIfV7SUcKOvoo0wQT_KBnea1kR3JGs/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", 
+                resExercise: "https://drive.google.com/file/d/1sskIfV7SUcKOvoo0wQT_KBnea1kR3JGs/preview", 
+                workUrl: "https://drive.google.com/file/d/1njl-BORC4-z4pagozaGyK3fOSsrDH9rU/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbzd--NlSkPpJkP4TaF5xFuGfsCv1TV52M-Xi-ewpKRAAPt6qtv80JqYM7cjYcuMHJWM/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbyPDKAcE2c3TFMurF3r48B_p4I6dq6HZwWo3TBhD-7Bt4E1TVaBc8WS2xsibe9_84Gm/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី៦ សត្វ", 
+                lessonVideo: "https://www.youtube.com/embed/IO7UNM39tug", 
+                lessonVideo2: "https://www.youtube.com/embed/IO7UNM39tug", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1ILf5WPj4-nlBGXJQMnbcWo7-YeaXRRGb/preview", 
+                resDoc: "https://drive.google.com/file/d/1tdTJPaMBcJ9G0T_wcww9W35Qn7-NSD5t/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu", 
+                resExercise: "https://drive.google.com/file/d/1tdTJPaMBcJ9G0T_wcww9W35Qn7-NSD5t/preview", 
+                workUrl: "https://drive.google.com/file/d/1ILf5WPj4-nlBGXJQMnbcWo7-YeaXRRGb/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbxdORKVrXMdbsR3ZrWQaaKQvyPlLwkE6kKdkCNCjwr4dYGnbEr2dyUjtRbVEAmcLKUSxA/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbyYBxzeTIp-LKy_7kQwvUSnhDXlO_ABpfA93LrNHw2crs5q8g8J1iVXzZTJVgyakR8J/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី១ កោសិកា", 
+                lessonVideo: "https://www.youtube.com/embed/dz07kIKJVcY", 
+                lessonVideo2: "https://www.youtube.com/embed/dz07kIKJVcY", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1kEizkqWic45-xJ4oBKevnoGNklh7kNCO/preview",
+                resDoc: "https://drive.google.com/file/d/1ecKd6n1wJcf08jQ_lk3dcUqeUVgCsQEo/preview",  
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu", 
+                resExercise: "https://drive.google.com/file/d/1ecKd6n1wJcf08jQ_lk3dcUqeUVgCsQEo/preview", 
+                workUrl: "https://drive.google.com/file/d/1ILf5WPj4-nlBGXJQMnbcWo7-YeaXRRGb/preview",
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbxz6M37DAWuyCR17mZj3ZW7LpTcKj4nf9aWJa1he9SjrEV6iLAn0oFViYTPSntu8L-a/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbxInNdSFMFN2f3ksYGimB3PukFFzQ3A6bdkQLBIiPJtU9ajmuYvFo-5IUr9tohWCkTGAw/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី២ ប្រូការីយ៉ូត និងអឺការីយ៉ូត", 
+                lessonVideo: "https://www.youtube.com/embed/aaiwQaQbdiM", 
+                lessonVideo2: "https://www.youtube.com/embed/aaiwQaQbdiM", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1y9Yh6dzCdSP86A3Mb8S3Wu2jO4z0XHRC/preview", 
+                resDoc: "https://drive.google.com/file/d/1ecKd6n1wJcf08jQ_lk3dcUqeUVgCsQEo/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", 
+                resExercise: "https://drive.google.com/file/d/1ecKd6n1wJcf08jQ_lk3dcUqeUVgCsQEo/preview", 
+                workUrl: "https://drive.google.com/file/d/1y9Yh6dzCdSP86A3Mb8S3Wu2jO4z0XHRC/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbyN1xeie3EYnJR40pDTwa9zR1NSnE4LDBcWo9v8d4I__Ag8gACOr1IYiMlYqkx1zcalcg/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbzBf7WGGVGzN3MkPIQxT6z1Bqu-I9pXn6J2Qz2jfJZzK7zrvFFfQrlSD9uM7BsKwpGK/exec" },
+                { title: "មេរៀនទី ៩", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/studybiologyinngspad/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homeworkg10c3u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១០", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-in-ngspad-c3-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g10c3u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-in-ngspad/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework10-c4-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-g10-c4-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homeworkg10c3u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g10-c5-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homeworkg10c5u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g10-c5-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g10c5u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g10-c5-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g10c5u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
+            ],
+
+            '១១': [
+                { title: "ជំពូកទី១ មេរៀនទី១ សមាសធាតុគីមីក្នុងកោសិកា", 
+                lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", 
+                lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/15pLpZ402jyWSO5zDHA9jpHQcyfHXC6SP/preview", 
+                resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", 
+                resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", 
+                workUrl: "https://drive.google.com/file/d/15pLpZ402jyWSO5zDHA9jpHQcyfHXC6SP/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី២ រូបផ្គុំ និងនាទីរបស់កោសិកា", 
+                lessonVideo: "https://www.youtube.com/embed/NieyiTY-JU8", 
+                lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1EqKHXiOrmDhaUMflnGTVie862vtelYHC/preview", 
+                resDoc: "https://drive.google.com/file/d/1ecKd6n1wJcf08jQ_lk3dcUqeUVgCsQEo/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4u", 
+                resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb/preview", 
+                workUrl: "https://drive.google.com/file/d/1EqKHXiOrmDhaUMflnGTVie862vtelYHC/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbyKG0Uu_KqC0INz_HjohGUi_LUY-XWJUtS8EhNZ2GnnmMfMzacesxRSctloR3UpDnP5uw/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbxiDF9X5hYQ7gcszu7fKgLLWnpGBEJtytq5paLnssBRs1yogKJZpzQcupOS5cE9ONgG/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី៣ ការលូតលាស់របស់កោសិកា និងរូបផ្គុំសារពាង្គកាយរស់", 
+                lessonVideo: "https://www.youtube.com/embed/ce6szz2wXh0", 
+                lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1QN7lIiKQ4cvxrIr4LWoPYD7nczy0btyR/preview", 
+                resDoc: "https://drive.google.com/file/d/1yqOIn04vdOkCMtCiZ7VXAX7JRSfUMB1R/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/a46z-jBLvuE", 
+                resExercise: "https://drive.google.com/file/d/1rVo6JRMz-OqnOg44DhAX6SMz33qV5Pnn/preview", 
+                workUrl: "https://drive.google.com/file/d/1QN7lIiKQ4cvxrIr4LWoPYD7nczy0btyR/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbyovrBjUupl-h-QFCWWtFP3XkNYUg8OdITEl7V90eVuAJsknVrGiNNjoLunBfsip8nf/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbwhPg15dVKMwloLkpzr0_qsduQMbXtqcqJs0ejtCT7t6jl2pxrCZaqcuk2p7BKQ-k-e/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី១ ប្រដាប់រំលាយអាហារ", 
+                lessonVideo: "https://www.youtube.com/embed/_gJTILp1ygg", 
+                lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1mmmCB_IxdA0m6f1R4dS18zJksXASVN_E/preview", 
+                resDoc: "https://drive.google.com/file/d/1yqOIn04vdOkCMtCiZ7VXAX7JRSfUMB1/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4u", 
+                resExercise: "https://drive.google.com/file/d/1rVo6JRMz-OqnOg44DhAX6SMz33qV5Pn/preview", 
+                workUrl: "https://drive.google.com/file/d/1mmmCB_IxdA0m6f1R4dS18zJksXASVN_E/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbyFYmDdpWAsqxHYcgoWFYIbwF6Me4MQy0TmniUnNQaAf375fRT4YTwH1fXDDUqE3GwB/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbwvbQkccbDynJ1UPtvxJ_qgGr_BdTulHE64HbG0pgtUaWxdUYVfCBz7NuxhV5I7uok8/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី២ បណ្ដូរឧស្ម័ន", 
+                lessonVideo: "https://www.youtube.com/embed/1s7XwF1V_3g", 
+                lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZ", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/1l4ExC616kx3W5L20rLdgBfZocaLI4wqF/preview", 
+                resDoc: "https://drive.google.com/file/d/1yqOIn04vdOkCMtCiZ7VXAX7JRSfUMB1/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/a46z-jBLvu", 
+                resExercise: "https://drive.google.com/file/d/1rVo6JRMz-OqnOg44DhAX6SMz33qV5Pn/preview", 
+                workUrl: "https://drive.google.com/file/d/1l4ExC616kx3W5L20rLdgBfZocaLI4wqF/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbxAj-CWR6khXhxTV2i3vQ4U5neQC0pbHn0MhtVHwkq9ViJzSB7jWy5x30tU3qMph3Lu/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbwPudQUzCjaR8iUrXJAtIHhzXOBTwFze5GtRmCX4cQFgFaEtsmR6zKfdRE9bDcTZ4xn/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី៣ ការបញ្ចេញចោល", 
+                lessonVideo: "https://www.youtube.com/embed/4mQf9vjulDs", 
+                lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZ", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/107g4g_rMPGKuxEZrM0HG1y-4SOsAnmqi/preview", 
+                resDoc: "https://drive.google.com/file/d/1yqOIn04vdOkCMtCiZ7VXAX7JRSfUMB1/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", 
+                resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Gio/preview", 
+                workUrl: "https://drive.google.com/file/d/107g4g_rMPGKuxEZrM0HG1y-4SOsAnmqi/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbw-xPYRy4wQH0h4QZ4zf029kFvbyB1YhERxrVDLVTK2eddEdXO3xue2BTT13iFwJxsPnA/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbw9lJdZmOl3hhzt_Ok6vnmIGl-hUe2GfaeEQLAnOaFaeSWtmC7921RT_BwU_1re8s85-A/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី៤ ប្រដាប់បន្តពូជ", 
+                lessonVideo: "https://www.youtube.com/embed/GpGPBD3vUL4?si=W2arLHLWYNFFR0iw", 
+                lessonVideo2: "https://www.youtube.com/embed/5itaiSAnNlM?si=FNw8lpSrR7GUZ6br", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", 
+                pdfDoc: "https://drive.google.com/file/d/11Rz4b6PIXKmkAIwi-n-PqBBU3Eaw7SQ_/preview", 
+                resDoc: "https://drive.google.com/file/d/1PlG1lFqtTZaq-Ykv_x1qRKuKb3QrHTpC/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/ULWZjWkntOY?si=K6ByVSjkJf2LUQms", 
+                resExercise: "https://drive.google.com/file/d/1cZsOWcjr1h8MjlJ9CsJh87NP6ixfOKjD/preview", 
+                workUrl: "https://drive.google.com/file/d/11Rz4b6PIXKmkAIwi-n-PqBBU3Eaw7SQ_/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbwx7mR3-mYYVI-n_NFx1hALd6EgCxF_eLFgyZwO4ccJSR_eJy1UiOIY4xobj7VvRhWJ/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbwNBtaUVdPiVfPMxue7-mmmg6s66e0RuzY_s5-igOB-gffarPp2Lsu7Hl_KIbDQDLP3/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី៥ ប្រដាប់របត់ឈាមនិងប្រព័ន្ធស៊ាំ", 
+                lessonVideo: "https://www.youtube.com/embed/5eTrt48ktcI?si=7KEmRSHhWBqg8yif", 
+                lessonVideo2: "https://www.youtube.com/embed/vT3S65s1_pE?si=4aVpscXmvyqYGmrA", 
+                expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo?si=4aVpscXmvyqYGmrA", 
+                pdfDoc: "https://drive.google.com/file/d/1VK0xbclWM-51coq2yNlMCzdVwpssUOl_/preview", 
+                resDoc: "https://drive.google.com/file/d/15--rREYAvNE0q0fKCzJ1qPzwxfcmX2vp/preview", 
+                exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", 
+                resExercise: "https://drive.google.com/file/d/1rVo6JRMz-OqnOg44DhAX6SMz33qV5Pn/preview", 
+                workUrl: "https://drive.google.com/file/d/1VK0xbclWM-51coq2yNlMCzdVwpssUOl_/preview", 
+                quizScriptUrl: "https://script.google.com/macros/s/AKfycbwee-0928G1y0UlYLj0eae8gd_mv2qGSO0BemXTQBnx3PkAqUckZDazATHHUqLtZj-9jg/exec", 
+                workScriptUrl: "https://script.google.com/macros/s/AKfycbzNKancZp-sKHDS1QUpxT3qK6Xu8Ir9rca1VXCPpGtiLJ1pQ7qePrxqI_8fFomgACzA/exec" },
+                { title: "មេរៀនទី ៩", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g11-c3-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g11-c3-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១០", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g11-c3-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g11-c3-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g11-c4-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g11-c4-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-g11-c4-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g11-c4-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g11-c5-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g11-c5-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g11-c5-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g11-c5-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g11-c5-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g11-c5-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
+            ],
+
+            '១២': [
+                { title: "មេរៀនទី ១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c1-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c1-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c1-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c1-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c2-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c2-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c2-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c2-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c2-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c2-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៦", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c3-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c3-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៧", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c3-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c3-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៨", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c3-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c3-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ៩", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c4-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c4-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១០", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c4-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c4-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១១", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c4-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c4-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១២", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c5-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c5-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៣", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c5-u2/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c5-u2/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៤", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c5-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c5-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" },
+                { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g12-c5-u4/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g12-c5-u4/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
+            ]
+        };
+
+        // --- ៣. កំណត់អថេរ Global សម្រាប់រក្សាមេរៀនដែលកំពុងបើក ---
+        let currentSelectedLesson = null;
+        let activeGrade = '';
+        let currentStep = 0;
+        let correctAnswers = {};
+        let timerInterval;
+        let currentQuestionIndex = 0;
+        let totalQuestions = 0;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const isLogin = localStorage.getItem("bio_logged_in");
+            if (isLogin === "true") {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('lessonContent').style.display = 'block';
+            }
+        });
+
+        document.getElementById('biologyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const gradeVal = document.getElementById('Grade').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const btn = document.getElementById('loginBtn');
+
+            btn.disabled = true;
+            btn.innerText = "កំពុងភ្ជាប់ទិន្នន័យ...";
+
+            fetch(LOGIN_SCRIPT_URL + `?username=${encodeURIComponent(user)}&grade=${encodeURIComponent(gradeVal)}&password=${encodeURIComponent(pass)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    localStorage.setItem("bio_logged_in", "true");
+                    localStorage.setItem("bio_user", user);
+                    localStorage.setItem("bio_grade", gradeVal);
+
+                    document.getElementById('loginBox').style.display = 'none';
+                    document.getElementById('lessonContent').style.display = 'block';
+                } else {
+                    alert("ឈ្មោះ ថ្នាក់ ឬលេខសម្ងាត់មិនត្រឹមត្រូវទេ! សូមពិនិត្យឡើងវិញ។");
+                    btn.disabled = false;
+                    btn.innerText = "Login";
+                }
+            })
+            .catch(error => {
+                alert("មានបញ្ហាភ្ជាប់ទៅកាន់ប្រព័ន្ធ៖ " + error.message);
+                btn.disabled = false;
+                btn.innerText = "Login";
+            });
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.reload();
+        }
+
+        function renderLessons(grade) {
+            activeGrade = grade;
+            document.getElementById('main-menu').style.display = 'none';
+            const panel = document.getElementById('lesson-panel');
+            panel.style.display = 'block';
+            document.getElementById('class-header').innerText = "មេរៀនជីវវិទ្យា ថ្នាក់ទី " + grade;
+
+            const content = document.getElementById('lesson-content');
+            content.innerHTML = "";
+
+            const lessons = lessonData[grade] || [];
+            lessons.forEach((item, index) => {
+                const elem = document.createElement('div');
+                elem.className = 'lesson-item';
+                elem.innerHTML = `
+                    <div><strong>${item.title}</strong></div>
+                    <div>
+                        <button class="btn-action btn-pdf" onclick="openLessonModule('${grade}', ${index})">PDF/Video</button>
+                        <button class="btn-action btn-work" onclick="openWorkModule('${grade}', ${index})">កិច្ចការ</button>
+                    </div>
+                `;
+                content.appendChild(elem);
+            });
+        }
+
+        function backToMenu() {
+            document.getElementById('main-menu').style.display = 'block';
+            document.getElementById('lesson-panel').style.display = 'none';
+        }
+
+        /* --- MODAL CONTROL AND EMBEDDED MODULES --- */
+        function openModal() { document.getElementById('contentModal').style.display = 'flex'; }
+        function closeModal() { 
+            document.getElementById('contentModal').style.display = 'none'; 
+            document.getElementById('modalContainer').innerHTML = "";
+            if(typeof timerInterval !== 'undefined') clearInterval(timerInterval);
+        }
+
+        // ១. បើកមេរៀន (PDF/Video1/Video2/Quiz) តាមមេរៀនដែលបានជ្រើសរើស
+        function openLessonModule(grade, lessonIndex) {
+            currentSelectedLesson = lessonData[grade][lessonIndex];
+            
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="header-nav" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <button class="btn btn-main" onclick="navStep(-1)">« ថយក្រោយ</button>
+                    <span id="step-info" style="font-weight: bold;">ជំហានទី១</span>
+                    <button class="btn btn-main" onclick="navStep(1)">ទៅមុខ »</button>
+                </div>
+                <h2 id="page-title" style="color: var(--primary); margin-top: 0;">មេរៀន</h2>
+                <iframe id="viewer-frame" src=""></iframe>
+
+                <div id="quiz-section" class="hidden">
+                    <div class="timer-box" id="timer">ពេលវេលា៖ 60:00</div>
+                    <div id="quiz-list">កំពុងទាញយកសំណួរ...</div>
+                    <div class="quiz-nav-buttons">
+                        <button class="btn btn-info" id="prev-q-btn" onclick="changeQuestion(-1)">« សំណួរមុន</button>
+                        <button class="btn btn-info" id="next-q-btn" onclick="changeQuestion(1)">សំណួរបន្ទាប់ »</button>
+                    </div>
+                    <button class="btn btn-success" id="submit-btn" onclick="checkScore()">បញ្ជូនចម្លើយទាំងអស់</button>
+                </div>
+
+                <div id="score-section" class="hidden">
+                    <h3>តារាងលទ្ធផលពិន្ទុតេស្ត</h3>
+                    <div id="score-display">កំពុងស្វែងរកទិន្នន័យ...</div>
+                </div>
+
+                <div class="menu-grid">
+                    <button class="btn btn-menu" id="m0" onclick="loadPage(0)">វីដេអូមេរៀនទី១</button>
+                    <button class="btn btn-menu" id="m1" onclick="loadPage(1)">វីដេអូមេរៀនទី២</button>
+                    <button class="btn btn-menu" id="m2" onclick="loadPage(2)">វីដេអូពិសោធន៍</button>
+                    <button class="btn btn-menu" id="m3" onclick="loadPage(3)">ឯកសារមេរៀន</button>
+                    <button class="btn btn-menu" id="m4" onclick="loadPage(4)">ឯកសារស្រាវជ្រាវ</button>
+                    <button class="btn btn-menu" id="m5" onclick="loadPage(5)">វីដេអូអនុវត្តលំហាត់</button>
+                    <button class="btn btn-menu" id="m6" onclick="loadPage(6)">លំហាត់ស្រាវជ្រាវ</button>
+                    <button class="btn btn-menu btn-quiz" id="m7" onclick="loadPage(7)">ធ្វើតេស្ត 100 សំណួរ</button>
+                    <button class="btn btn-menu btn-score" id="m8" onclick="loadPage(8)">មើលពិន្ទុ</button>
+                </div>
+            `;
+            openModal();
+            loadPage(0);
+        }
+
+        // ២. បើកប្រព័ន្ធកិច្ចការ តាមមេរៀនដែលបានជ្រើសរើស
+        function openWorkModule(grade, lessonIndex) {
+            currentSelectedLesson = lessonData[grade][lessonIndex];
+            const savedUser = localStorage.getItem("bio_user") || "";
+            const savedGrade = localStorage.getItem("bio_grade") || "";
+
+            const container = document.getElementById('modalContainer');
+            
+            let workFrameContent = "";
+            if (currentSelectedLesson.workUrl && currentSelectedLesson.workUrl !== "#" && currentSelectedLesson.workUrl.startsWith("http")) {
+                workFrameContent = `<iframe id="viewer-frame" src="${currentSelectedLesson.workUrl}" style="width:100%; height:400px; border:none; border-radius:10px; margin-bottom:15px;"></iframe>`;
+            }
+
+            container.innerHTML = `
+                <div class="card">
+                    <h2>ផ្ញើកិច្ចការស្វ័យសិក្សា - ${currentSelectedLesson.title} (ថ្នាក់ទី ${grade})</h2>
+                    ${workFrameContent}
+                    <form id="uploadForm">
+                        <div class="form-group">
+                            <label>ឈ្មោះសិស្ស</label>
+                            <input type="text" id="name" value="${savedUser}" required readonly style="background:#e9ecef;">
+                        </div>
+                        <div class="form-group">
+                            <label>អត្តលេខ (ID)</label>
+                            <input type="text" id="studentId" placeholder="ឧទាហរណ៍: 001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ថ្នាក់រៀន</label>
+                            <input type="text" id="className" value="${savedGrade}" required readonly style="background:#e9ecef;">
+                        </div>
+                        <div class="form-group">
+                            <label>Link វីដេអូ</label>
+                            <input type="url" id="videoLink" placeholder="YouTube ឬ Google Drive" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Link ឯកសារ PDF</label>
+                            <input type="url" id="pdfLink" placeholder="Google Drive Link" required>
+                        </div>
+                        <button type="submit" class="btn btn-submit" id="submitBtn">បញ្ជូនកិច្ចការ</button>
+                    </form>
+                    <div id="status"></div>
+                </div>
+
+                <div class="card" style="border-top: 5px solid #2980b9;">
+                    <h3>ពិនិត្យលទ្ធផលពិន្ទុ</h3>
+                    <div class="form-group">
+                        <label>ថ្នាក់រៀន</label>
+                        <input type="text" id="searchClass" value="${savedGrade}" readonly style="background:#e9ecef;">
+                    </div>
+                    <div class="form-group">
+                        <label>បញ្ចូលអត្តលេខ (ID) ដើម្បីឆែក</label>
+                        <input type="text" id="searchId" placeholder="បញ្ចូល ID របស់អ្នក">
+                    </div>
+                    <button onclick="checkWorkScore()" class="btn btn-search">ស្វែងរកពិន្ទុ</button>
+                    <div id="searchResult"></div>
+                </div>
+            `;
+            
+            openModal();
+
+            document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const status = document.getElementById('status');
+                const btn = document.getElementById('submitBtn');
+                btn.disabled = true;
+                status.className = 'success';
+                status.innerHTML = "កំពុងបញ្ជូន...";
+                const payload = {
+                    name: document.getElementById('name').value,
+                    studentId: document.getElementById('studentId').value,
+                    className: document.getElementById('className').value,
+                    videoLink: document.getElementById('videoLink').value,
+                    pdfLink: document.getElementById('pdfLink').value
+                };
+
+                try {
+                    await fetch(currentSelectedLesson.workScriptUrl, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+                    status.className = 'success';
+                    status.innerHTML = "បញ្ជូនជោគជ័យ!";
+                    e.target.reset();
+                } catch (err) {
+                    status.className = 'error';
+                    status.innerHTML = "មានកំហុស!";
+                } finally { btn.disabled = false; }
+            });
+        }
+
+        async function checkWorkScore() {
+            const className = document.getElementById('searchClass').value;
+            const id = document.getElementById('searchId').value;
+            const resDiv = document.getElementById('searchResult');
+            
+            if (!id) {
+                resDiv.className = 'error';
+                resDiv.innerHTML = "សូមបញ្ចូលអត្តលេខ (ID)!";
+                return;
+            }
+            
+            resDiv.className = 'success';
+            resDiv.innerHTML = "កំពុងស្វែងរក...";
+
+            try {
+                const response = await fetch(`${currentSelectedLesson.workScriptUrl}?id=${id}&className=${className}`);
+                const data = await response.json();
+                if (data.status === "success") {
+                    resDiv.className = 'success';
+                    resDiv.innerHTML = `<b>ឈ្មោះ:</b> ${data.name}<br><b>ថ្នាក់:</b> ${data.className}<br><b>ពិន្ទុ:</b> <span style="color:red; font-size:1.2em">${data.score}</span>`;
+                } else {
+                    resDiv.className = 'error';
+                    resDiv.innerHTML = "រកមិនឃើញ ID នេះក្នុងថ្នាក់ដែលបានជ្រើសរើសទេ!";
+                }
+            } catch (err) { 
+                resDiv.className = 'error';
+                resDiv.innerHTML = "កំហុសបច្ចេកទេសក្នុងការទាញទិន្នន័យ!"; 
+            }
+        }
+
+        /* --- LOGIC សិក្សាមេរៀន QUIZ & NAVIGATION --- */
+        function getStepContent(idx) {
+            if(!currentSelectedLesson) return { title: '', type: '', url: '' };
+            const pages = [
+                { title: "វីដេអូមេរៀន ទី១", type: "v", url: currentSelectedLesson.lessonVideo },
+                { title: "វីដេអូមេរៀន ទី២", type: "v", url: currentSelectedLesson.lessonVideo2 || currentSelectedLesson.lessonVideo },
+                { title: "វីដេអូពិសោធន៍", type: "v", url: currentSelectedLesson.expVideo },
+                { title: "ឯកសារមេរៀន", type: "p", url: currentSelectedLesson.pdfDoc },
+                { title: "ឯកសារស្រាវជ្រាវ", type: "p", url: currentSelectedLesson.resDoc },
+                { title: "វីដេអូអនុវត្តលំហាត់", type: "v", url: currentSelectedLesson.exerciseVideo },
+                { title: "លំហាត់ស្រាវជ្រាវ", type: "p", url: currentSelectedLesson.resExercise },
+                { title: "តេស្តសមត្ថភាព 100 សំណួរ", type: "q", url: "" },
+                { title: "លទ្ធផលពិន្ទុ", type: "s", url: "" }
+            ];
+            return pages[idx] || pages[0];
+        }
+
+        function loadPage(idx) {
+            if(idx < 0 || idx >= 9) return;
+            currentStep = idx;
+            const item = getStepContent(idx);
+
+            document.getElementById('page-title').innerText = item.title;
+            document.getElementById('step-info').innerText = `ជំហានទី ${idx + 1}`;
+            document.querySelectorAll('.btn-menu').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById('m' + idx);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            const frame = document.getElementById('viewer-frame');
+            const qSec = document.getElementById('quiz-section');
+            const sSec = document.getElementById('score-section');
+
+            frame.classList.add('hidden');
+            qSec.classList.add('hidden');
+            sSec.classList.add('hidden');
+            clearInterval(timerInterval);
+
+            if(item.type === 'q') {
+                qSec.classList.remove('hidden');
+                fetchQuiz();
+            } else if(item.type === 's') {
+                sSec.classList.remove('hidden');
+                fetchScores();
+            } else {
+                frame.classList.remove('hidden');
+                frame.src = item.url;
+            }
+        }
+
+        function navStep(dir) { loadPage(currentStep + dir); }
+
+        async function fetchQuiz() {
+            const list = document.getElementById('quiz-list');
+            list.innerHTML = "កំពុងស្វែងរកសំណួរ...";
+            try {
+                const res = await fetch(`${currentSelectedLesson.quizScriptUrl}?action=getQuiz`);
+                const qs = await res.json();
+                let html = "";
+                
+                const quizData = qs.slice(1, 101);
+                totalQuestions = quizData.length;
+                currentQuestionIndex = 0;
+
+                quizData.forEach((r, i) => {
+                    correctAnswers['q'+i] = r[5].toString().toUpperCase().trim();
+                    html += `
+                    <div class="quiz-item single-question ${i === 0 ? '' : 'hidden'}" id="q-box-${i}">
+                        <p><strong>សំណួរ ${i+1} នៃ ${totalQuestions}៖ ${r[0]}</strong></p>
+                        <label><input type="radio" name="q${i}" value="A"> A. ${r[1]}</label>
+                        <label><input type="radio" name="q${i}" value="B"> B. ${r[2]}</label>
+                        <label><input type="radio" name="q${i}" value="C"> C. ${r[3]}</label>
+                        <label><input type="radio" name="q${i}" value="D"> D. ${r[4]}</label>
+                    </div>`;
+                });
+                list.innerHTML = html;
+                updateQuizNavButtons();
+                startTimer(60);
+            } catch(e) { list.innerHTML = "កំហុសក្នុងការស្វែងរកសំណួរ!"; }
+        }
+
+        function changeQuestion(dir) {
+            const nextIndex = currentQuestionIndex + dir;
+            if (nextIndex >= 0 && nextIndex < totalQuestions) {
+                document.getElementById(`q-box-${currentQuestionIndex}`).classList.add('hidden');
+                currentQuestionIndex = nextIndex;
+                document.getElementById(`q-box-${currentQuestionIndex}`).classList.remove('hidden');
+                updateQuizNavButtons();
+            }
+        }
+
+        function updateQuizNavButtons() {
+            const prevBtn = document.getElementById('prev-q-btn');
+            const nextBtn = document.getElementById('next-q-btn');
+            const submitBtn = document.getElementById('submit-btn');
+
+            prevBtn.disabled = (currentQuestionIndex === 0);
+            prevBtn.style.opacity = (currentQuestionIndex === 0) ? "0.5" : "1";
+
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        async function fetchScores() {
+            const display = document.getElementById('score-display');
+            display.innerHTML = "<p style='text-align:center;'>កំពុងស្វែងរកទិន្នន័យ...</p>";
+            try {
+                const res = await fetch(`${currentSelectedLesson.quizScriptUrl}?action=getScores`);
+                const scores = await res.json();
+                
+                if(scores.length <= 1) {
+                    display.innerHTML = "មិនទាន់មានទិន្នន័យពិន្ទុនៅឡើយទេ។";
+                    return;
+                }
+
+                let html = `<table class="score-table">
+                    <tr>
+                        <th>ឈ្មោះ</th>
+                        <th>ថ្នាក់</th>
+                        <th>លេខរៀង</th>
+                        <th>ពិន្ទុ</th>
+                    </tr>`;
+                
+                scores.slice(1).forEach(row => {
+                    html += `<tr>
+                        <td>${row[0] || '-'}</td>
+                        <td>${row[1] || '-'}</td>
+                        <td>${row[2] || '-'}</td>
+                        <td style="font-weight:bold; color:var(--primary)">${row[3] || '0'}</td>
+                    </tr>`;
+                });
+                html += `</table>`;
+                display.innerHTML = html;
+            } catch(e) {
+                display.innerHTML = "<p style='color:red;'>មិនអាចស្វែងរកពិន្ទុបានទេ។ សូមពិនិត្យមើល Apps Script របស់អ្នក!</p>";
+            }
+        }
+
+        function startTimer(m) {
+            let s = m * 60;
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(s/60);
+                let secs = s % 60;
+                document.getElementById('timer').innerText = `ពេលវេលា៖ ${mins}:${secs < 10 ? '0'+secs : secs}`;
+                if(s <= 0) { clearInterval(timerInterval); checkScore(); }
+                s--;
+            }, 1000);
+        }
+
+        async function checkScore() {
+            let score = 0;
+            let total = Object.keys(correctAnswers).length;
+            for(let k in correctAnswers) {
+                const sel = document.querySelector(`input[name="${k}"]:checked`);
+                if(sel && sel.value === correctAnswers[k]) score++;
+            }
+
+            const stuName = localStorage.getItem("bio_user") || "សិស្ស";
+            const stuGrade = localStorage.getItem("bio_grade") || "-";
+
+            alert(`សិស្សឈ្មោះ៖ ${stuName}\nពិន្ទុរបស់អ្នកគឺ៖ ${score} / ${total}`);
+
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "កំពុងរក្សាទុកពិន្ទុ...";
+            btn.disabled = true;
+
+            try {
+                await fetch(currentSelectedLesson.quizScriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    body: JSON.stringify({
+                        name: stuName,
+                        grade: stuGrade,
+                        id: "-",
+                        score: score
+                    })
+                });
+                alert("រក្សាទុកពិន្ទុបានជោគជ័យ!");
+                loadPage(8);
+            } catch(e) {
+                alert("រក្សាទុកមិនជោគជ័យ ប៉ុន្តែអ្នកអាចថតរូបទុក!");
+            }
+            btn.innerText = "បញ្ជូនចម្លើយទាំងអស់";
+            btn.disabled = false;
+        }
+
+        /* --- ការពារ SCREENSHOT & COPY ក្នុង QUIZ --- */
+        document.addEventListener('contextmenu', function(e) {
+            if(document.getElementById('quiz-section') && !document.getElementById('quiz-section').classList.contains('hidden')) {
+                e.preventDefault();
+                alert("មិនអនុញ្ញាតឱ្យចុច Right-Click លើសំណួរតេស្តឡើយ!");
+            }
+        });
+
+        window.addEventListener('keyup', function(e) {
+            if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                navigator.clipboard.writeText("");
+                alert("មិនអនុញ្ញាតឱ្យថតរូបអេក្រង់ (Screenshot) នៃសំណួរឡើយ!");
+            }
+        });
+
+        window.addEventListener('keydown', function(e) {
+            const quizSec = document.getElementById('quiz-section');
+            const isQuizVisible = quizSec && !quizSec.classList.contains('hidden');
+            
+            if (isQuizVisible) {
+                if ((e.ctrlKey && (e.key === 'c' || e.key === 'x' || e.key === 'u' || e.key === 'p' || e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 85 || e.keyCode === 80))) {
+                    e.preventDefault();
+                    alert("មុខងារចម្លង (Copy) ឬ បោះពុម្ព (Print) ត្រូវបានបិទលើសំណួរតេស្ត!");
+                    return false;
+                }
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.keyCode === 73))) {
+                    e.preventDefault();
+                    alert("មិនអនុញ្ញាតឱ្យបើកឧបករណ៍ពិនិត្យកូដឡើយ!");
+                    return false;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

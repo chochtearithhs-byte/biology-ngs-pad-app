@@ -1,0 +1,24 @@
+{
+  "name": "ប្រព័ន្ធសិក្សាជីវវិទ្យា T. TEARITH",
+  "short_name": "NGS Biology",
+  "description": "ប្រព័ន្ធសិក្សាជីវវិទ្យាស្វ័យសិក្សាសម្រាប់សិស្សានុសិស្ស ថ្នាក់ទី៧ ដល់ ថ្នាក់ទី១២",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1aff00",
+  "theme_color": "#2ecc71",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/1mGVFFMVNkaM7cyndEQctonpTa6gOvFaN",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1mGVFFMVNkaM7cyndEQctonpTa6gOvFaN",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
