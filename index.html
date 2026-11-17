@@ -240,8 +240,8 @@
                     <input type="text" id="loginUser" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក" required>
                 </div>
                 <div class="form-group" id="classGroup">
-                    <label>កម្រិតថ្នាក់ (ឧ. 7A, 7B, 8A, 10A, 12A)</label>
-                    <input type="text" id="loginClass" placeholder="ឧទាហរណ៍៖ 10A" required>
+                    <label id="lblClassInput">កម្រិតថ្នាក់ (ឧ. 7A, 10A, ១១F)</label>
+                    <input type="text" id="loginClass" placeholder="ឧទាហរណ៍៖ 11F ឬ ១១F" required>
                 </div>
                 <div class="form-group">
                     <label>លេខកូដសម្ងាត់ (Password)</label>
@@ -292,7 +292,7 @@
 
                 <div style="margin-top: auto; padding: 12px; background: #f8fafc; border-radius: 10px; font-size: 0.8rem; color: #475569;">
                     <strong>💾 Cloud Storage:</strong><br>
-                    ទិន្នន័យរក្សាទុកក្នុងតាមថ្នាក់ទី <span id="sideClassFooter" style="font-weight:bold; color:var(--primary);"></span>
+                    ទិន្នន័យរក្សាទុកក្នុងតាមថ្នាក់៖ <span id="sideClassFooter" style="font-weight:bold; color:var(--primary);"></span>
                 </div>
             </aside>
 
@@ -305,13 +305,20 @@
                             ថ្នាក់៖ 10A | អត្តលេខ៖ 001
                         </div>
                     </div>
-                    <div id="permissionNotice" style="background:rgba(255,255,255,0.15); padding:10px 15px; border-radius:10px; font-size:0.85rem;"></div>
+                    <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
+                        <div id="permissionNotice" style="background:rgba(255,255,255,0.15); padding:10px 15px; border-radius:10px; font-size:0.85rem;"></div>
+                        <!-- ប្រអប់ជ្រើសរើសថ្នាក់រហ័សសម្រាប់គ្រូតាម Admin កំណត់ -->
+                        <div id="teacherActiveClassBox" class="hidden" style="background:rgba(255,255,255,0.2); padding:6px 12px; border-radius:10px; font-size:0.85rem; display:flex; align-items:center; gap:8px;">
+                            <label for="teacherQuickClassSelect"><strong>🏫 ថ្នាក់កំពុងគ្រប់គ្រង៖</strong></label>
+                            <select id="teacherQuickClassSelect" onchange="onTeacherQuickClassChange(this.value)" style="padding:4px 10px; border-radius:6px; border:none; font-weight:700; color:#14532d;"></select>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- ផ្នែកទី ១៖ បញ្ជីមេរៀន និងផ្ទាំងសិក្សា -->
                 <section id="tab-lessons">
                     <div id="gradeSelectorForAdmin" class="hidden" style="margin-bottom: 15px;">
-                        <label><strong>ជ្រើសរើសកម្រិតថ្នាក់ (Admin)៖</strong></label>
+                        <label><strong>ជ្រើសរើសកម្រិតថ្នាក់៖</strong></label>
                         <select id="adminGradeSelect" onchange="renderLessonList(this.value)" style="padding:8px; border-radius:8px;">
                             <option value="៧">ថ្នាក់ទី ៧</option>
                             <option value="៨">ថ្នាក់ទី ៨</option>
@@ -381,7 +388,7 @@
                         <div id="teacherAdminHwFilterBar" class="filter-bar hidden">
                             <div class="filter-group">
                                 <label><strong>🏫 ជ្រើសរើសថ្នាក់៖</strong></label>
-                                <select id="hwClassFilter" onchange="renderHomeworkFiltered()">
+                                <select id="hwClassFilter" onchange="onHwClassFilterChange(this.value)">
                                     <option value="ALL">គ្រប់ថ្នាក់ទាំងអស់</option>
                                 </select>
                             </div>
@@ -394,7 +401,7 @@
                         </div>
 
                         <p style="font-size:0.88rem; color:#64748b;">
-                            * សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ គ្រូបន្ទុកថ្នាក់អាចជ្រើសរើសថ្នាក់ និងមេរៀនដើម្បីដាក់ពិន្ទុ និងមតិកែលម្អ។
+                            • សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ គ្រូបន្ទុកថ្នាក់អាចជ្រើសរើសថ្នាក់ដែល Admin កំណត់ឱ្យ និងមេរៀនដើម្បីកែប្រែ និងដាក់ពិន្ទុ។
                         </p>
                         <div style="overflow-x:auto;">
                             <table class="data-table">
@@ -433,7 +440,7 @@
                         <div id="teacherAdminScoreFilterBar" class="filter-bar hidden">
                             <div class="filter-group">
                                 <label><strong>🏫 ជ្រើសរើសថ្នាក់៖</strong></label>
-                                <select id="scoreClassFilter" onchange="renderQuizScoresFiltered()">
+                                <select id="scoreClassFilter" onchange="onScoreClassFilterChange(this.value)">
                                     <option value="ALL">គ្រប់ថ្នាក់ទាំងអស់</option>
                                 </select>
                             </div>
@@ -452,13 +459,16 @@
                 <!-- ផ្នែកទី ៤៖ ADMIN PANEL -->
                 <section id="tab-admin" class="hidden">
                     <div class="study-panel">
-                        <h2 style="margin-top:0; color:var(--danger);">🛡️ គ្រប់គ្រងគណនី និងសិទ្ធិអនុញ្ញាត (Admin)</h2>
+                        <h2 style="margin-top:0; color:var(--danger);">🛡️ គ្រប់គ្រងគណនី និងកំណត់ថ្នាក់ជូនគ្រូបន្ទុកថ្នាក់ (Admin)</h2>
+                        <p style="font-size:0.85rem; color:#475569; margin-top:-8px;">
+                            • Admin អាចកំណត់ថ្នាក់ឱ្យគ្រូម្នាក់បង្រៀនច្រើនថ្នាក់ដោយបន្ថែមម្តងមួយថ្នាក់ (ដូចជា <code>១១F</code>, <code>១១G</code>, <code>១០A</code>) ឬវាយចូលគ្នាដោយដាក់សញ្ញាក្បៀស (ឧ. <code>១១A, ១១B, ១១F</code>) ឬ <code>ALL</code>។
+                        </p>
                         <form id="adminUserForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; background:#f8fafc; padding:15px; border-radius:12px;">
-                            <input type="text" id="admUsername" placeholder="ឈ្មោះអ្នកប្រើ (Username)" required>
+                            <input type="text" id="admUsername" placeholder="ឈ្មោះគ្រូ ឬសិស្ស (Username)" required>
                             <input type="text" id="admPassword" placeholder="លេខសម្ងាត់" required>
                             <select id="admRole">
-                                <option value="student">សិស្ស (Student)</option>
                                 <option value="teacher">គ្រូបន្ទុកថ្នាក់ (Teacher)</option>
+                                <option value="student">សិស្ស (Student)</option>
                                 <option value="admin">Admin</option>
                             </select>
                             <select id="admGradeLevel">
@@ -469,12 +479,12 @@
                                 <option value="១១">កម្រិតថ្នាក់ទី ១១</option>
                                 <option value="១២">កម្រិតថ្នាក់ទី ១២</option>
                             </select>
-                            <input type="text" id="admClassName" placeholder="ថ្នាក់ (ឧ. 7A, 10B)" required>
+                            <input type="text" id="admClassName" placeholder="ថ្នាក់ (ឧ. ១១F ឬ ១១A, ១១B)" required>
                             <input type="text" id="admStudentId" placeholder="អត្តលេខ (ID)">
                             <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem;">
-                                <input type="checkbox" id="admCanEditLesson"> អនុញ្ញាតឱ្យគ្រូកែប្រែមេរៀន
+                                <input type="checkbox" id="admCanEditLesson" checked> អនុញ្ញាតឱ្យគ្រូកែប្រែមេរៀន
                             </label>
-                            <button type="submit" class="btn-sm btn-study">រក្សាទុកគណនី</button>
+                            <button type="submit" class="btn-sm btn-study" id="btnAdminSaveUser">រក្សាទុក / កំណត់សិទ្ធិ</button>
                         </form>
                         <div id="adminUsersList" style="margin-top:15px;"></div>
                     </div>
@@ -589,9 +599,75 @@
         });
 
         // =========================================================================
+        // HELPER: បំប្លែងលេខខ្មែរ/ឡាតាំង និងគ្រប់គ្រងបញ្ជីថ្នាក់របស់គ្រូ
+        // =========================================================================
+        const khmerDigitsMap = { '០': '0', '១': '1', '២': '2', '៣': '3', '៤': '4', '៥': '5', '៦': '6', '៧': '7', '៨': '8', '៩': '9' };
+        const latinToKhmerDigitsMap = { '0': '០', '1': '១', '2': '២', '3': '៣', '4': '៤', '5': '៥', '6': '៦', '7': '៧', '8': '៨', '9': '៩' };
+
+        function normalizeClass(str) {
+            if (!str) return '';
+            return str.toString().trim()
+                .replace(/[០-៩]/g, d => khmerDigitsMap[d] || d)
+                .toUpperCase();
+        }
+
+        function toKhmerDigits(str) {
+            if (!str) return '';
+            return str.toString().replace(/[0-9]/g, d => latinToKhmerDigitsMap[d] || d);
+        }
+
+        // ទាញកម្រិតថ្នាក់ (៧..១២) ចេញពីឈ្មោះថ្នាក់ (ឧ. "11F" ឬ "១១F" -> "១១")
+        function extractGradeFromClassName(classStr) {
+            const norm = normalizeClass(classStr);
+            const match = norm.match(/^(10|11|12|7|8|9)/);
+            return match ? toKhmerDigits(match[1]) : null;
+        }
+
+        // ទាញយកបញ្ជីថ្នាក់ទាំងអស់ដែល Admin បានកំណត់ឱ្យគ្រូ
+        function getAssignedClassesForUser(user) {
+            if (!user) return [];
+            if (Array.isArray(user.allowedClasses) && user.allowedClasses.length > 0) {
+                return user.allowedClasses;
+            }
+            if (!user.className) return [];
+            if (normalizeClass(user.className) === 'ALL') return ['ALL'];
+            return user.className.split(/[,;\/]+/).map(c => c.trim()).filter(Boolean);
+        }
+
+        // ទាញយកកម្រិតថ្នាក់ទាំងអស់ដែលគ្រូបង្រៀន (ឧ. ['១០', '១១'])
+        function getAssignedGradesForUser(user) {
+            if (!user) return ['១០'];
+            if (user.role === 'admin' || normalizeClass(user.gradeLevel) === 'ALL') {
+                return ['៧', '៨', '៩', '១០', '១១', '១២'];
+            }
+            const gradeSet = new Set();
+            if (Array.isArray(user.allowedGrades)) {
+                user.allowedGrades.forEach(g => gradeSet.add(toKhmerDigits(g)));
+            } else if (user.gradeLevel) {
+                user.gradeLevel.toString().split(/[,;\/]+/).forEach(g => {
+                    const clean = toKhmerDigits(g.trim());
+                    if (clean) gradeSet.add(clean);
+                });
+            }
+            getAssignedClassesForUser(user).forEach(c => {
+                const g = extractGradeFromClassName(c);
+                if (g) gradeSet.add(g);
+            });
+            return gradeSet.size > 0 ? [...gradeSet] : ['១០'];
+        }
+
+        // ពិនិត្យមើលថាតើថ្នាក់ទិន្នន័យ (rowClass) ត្រូវនឹងថ្នាក់ដែលគ្រូត្រូវបាន Admin កំណត់ឱ្យឬទេ
+        function isClassAllowedForTeacher(rowClass, user) {
+            const assigned = getAssignedClassesForUser(user);
+            if (assigned.some(ac => normalizeClass(ac) === 'ALL')) return true;
+            const normRow = normalizeClass(rowClass);
+            return assigned.some(ac => normalizeClass(ac) === normRow);
+        }
+
+        // =========================================================================
         // MAIN APPLICATION LOGIC
         // =========================================================================
-        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFHqMA5I1yHnMBpegrdWqscLYQ3O_gQpZ4vKEgI3rFEl8cnTUxWRrKG0TSnSObLWiC/exec";
+        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc56hLQqC0i-591Amvc62_KRqafYcvk79fdTv6jmM04nIPZqDg74wfcvhb6KXmg8W8/exec";
 
         let currentUser = null;
         let selectedLoginRole = 'student';
@@ -604,6 +680,7 @@
 
         let cachedHomeworkData = [];
         let cachedQuizScoresData = [];
+        let activeTeacherClass = 'ALL';
 
         const defaultLessonData = {
             '៧': [
@@ -624,16 +701,16 @@
                 { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g7-c6-u1/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g7-c6-u1/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
             ],
             '៨': [
-                { title: "ជំពូកទី១ មេរៀនទី១ សត្វនិងជំងឺរុក្ខជាតិ", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c1-u1/home", resDoc: "https://drive.google.com/file/d/192K5KpwXM0z07xQ73ixih7NS6PG4q3Xl/preview", exerciseVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb/preview", workUrl: "https://docs.google.com/document/d/1XxhYN0m2BR9yfZSbd7yzvpZO8wmcGx3LYIMhLdgVn3c/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbyyO-CZp4GhI6tB4AC0dYgU_csuFvQ6z1yixuz_qOC7xeWCxpEINbeIK4QiITQaHnaK5w/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxlFJ2ZEjAcQGTVmQ1pwSrT5HPI-ldT6XNU7aZ71ZORAF1t3wcDJhS1TJ-sJqyoBywADA/exec" },
+                { title: "ជំពូកទី១ មេរៀនទី១ សត្វនិងជំងឺរុក្ខជាតិ", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c1-u1/home", resDoc: "https://drive.google.com/file/d/192K5KpwXM0z07xQ73ixih7NS6PG4q3Xl/preview", exerciseVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1XxhYN0m2BR9yfZSbd7yzvpZO8wmcGx3LYIMhLdgVn3c/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbyyO-CZp4GhI6tB4AC0dYgU_csuFvQ6z1yixuz_qOC7xeWCxpEINbeIK4QiITQaHnaK5w/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxlFJ2ZEjAcQGTVmQ1pwSrT5HPI-ldT6XNU7aZ71ZORAF1t3wcDJhS1TJ-sJqyoBywADA/exec" },
                 { title: "ជំពូកទី១ មេរៀនទី២ វិធីថែរក្សាដំណាំ", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c1-/home", resDoc: "https://drive.google.com/file/d/1YCcc-eXFXfoNEwE4QyZfTplIdqUPDgWE/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giof/preview", workUrl: "https://docs.google.com/document/d/1UNgfY_1eobpuF-Nc7kAQiKOVVefzgi6KqFrhin3GBUY/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxgFHn0paAWWeZsynirPgEoOD2iZIlo9GFBnw-StbBxXQTe9ZnAAYeF14hIBRrKiQEdUQ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxMmahXEv0DEias7m1CX0IPlcMWnzlODVBxAxCHebuDhEm9djNk2PMDxtVMC8Vafkwo/exec" },
-                { title: "ជំពូកទី២ មេរៀនទី១ ស្ថានប្រព័ន្ធតាមមូលដ្ឋាន", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZ4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c2-/home", resDoc: "https://drive.google.com/file/d/18zfhbyFtMiSep7CsSpRdVzSMeCjoeZp3/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb/preview", workUrl: "https://docs.google.com/document/d/1J_F-5UlcM4-3kGE_rTdVmFXx7AvWVwKO9pssJeInpcw/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxtH6muQ_loAKdcn1cHW1zUjUK9YVcIHAb8UhIIhbbJdQzAUmyo2TNSffJWKhKRClWJfw/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyOkWu9mDZEqGD-_qsUNNu829bSfHRWb19dlndyxUCq1Q_K8YSoPjRDKU8iSW53TO1t/exec" },
-                { title: "ជំពូកទី២ មេរៀនទី២ ទំនាក់ទំនងក្នុងបរិស្ថាន", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c2-u/home", resDoc: "https://drive.google.com/file/d/15Yd5OJvMaLcBCGz1a6yM5z3l1Z1XhKB1/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAuuQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0QGiofb/preview", workUrl: "https://docs.google.com/document/d/1CsJx_KO3mXyW3NuPsmopk79f7dWqtOa6FWb-VFDumz8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbz0BevZ1Cx7uwaaPQ7dI9yBYfdvB6iaw4T09KRtGiIf6hvkGu6VvD-02uTWiy-FZXCjWQ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyloIBB2yHIsBuSoNi50WNEU8cITMGk4NoWL7dHMlHhkWEyTqu8Eq9tn6QFZcd-aSs/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី១ ស្ថានប្រព័ន្ធតាមមូលដ្ឋាន", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZ4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c2-/home", resDoc: "https://drive.google.com/file/d/18zfhbyFtMiSep7CsSpRdVzSMeCjoeZp3/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1J_F-5UlcM4-3kGE_rTdVmFXx7AvWVwKO9pssJeInpcw/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxtH6muQ_loAKdcn1cHW1zUjUK9YVcIHAb8UhIIhbbJdQzAUmyo2TNSffJWKhKRClWJfw/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyOkWu9mDZEqGD-_qsUNNu829bSfHRWb19dlndyxUCq1Q_K8YSoPjRDKU8iSW53TO1t/exec" },
+                { title: "ជំពូកទី២ មេរៀនទី២ ទំនាក់ទំនងក្នុងបរិស្ថាន", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c2-u/home", resDoc: "https://drive.google.com/file/d/15Yd5OJvMaLcBCGz1a6yM5z3l1Z1XhKB1/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAuuQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1CsJx_KO3mXyW3NuPsmopk79f7dWqtOa6FWb-VFDumz8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbz0BevZ1Cx7uwaaPQ7dI9yBYfdvB6iaw4T09KRtGiIf6hvkGu6VvD-02uTWiy-FZXCjWQ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyloIBB2yHIsBuSoNi50WNEU8cITMGk4NoWL7dHMlHhkWEyTqu8Eq9tn6QFZcd-aSs/exec" },
                 { title: "ជំពូកទី៣ មេរៀនទី១ បន្សាយ", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c3-/home", resDoc: "https://drive.google.com/file/d/1dMTrr4SZPcQjpVZV2EMuFCvVtMPwze3c/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAuuQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Gib6/preview", workUrl: "https://docs.google.com/document/d/1pn5fBjrIwoNq55FGGkV7bkwSqtpSeC0fxi6c8wMwMuk/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx1lQW4M2RlojjdkuZaLsG3rVqkGrxfYCkKbPIBfXMno9b6XvaCxYMw5rWTF0E004XJDA/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycby6Ea_CgFSqFcFwvvTVEsIJVfeAHFAqqT8hIT2WnXP-gij3zYUiGsCWz-p-BIj7GUj5Rg/exec" },
                 { title: "ជំពូកទី៣ មេរៀនទី២ ដំណឹកនាំក្នុងរុក្ខជាតិ", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4Ze4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c3-/home", resDoc: "https://drive.google.com/file/d/1b_XA6LI-6NiAgNMQDXcEN84tUIbQa3oc/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giob6/preview", workUrl: "https://docs.google.com/document/d/1hul4AhnOdU8yTvQFaeap2_jzOYT9UuX3qsogyPSBXxQ/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwrsiNcuBL5XKKcDE2qjlQq3sQXJcYylKCgQ4v-of0E5pmS924hzOy7e8HNRwc3Lz1oJw/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycby3ORTl8dYqYclmcnQr70YF3VI0TC4DXAItFKv1MpvcoILKp7flLuufHEIVnyviymnv/exec" },
                 { title: "ជំពូកទី៤ មេរៀនទី១ ប្រដាប់ដង្ហើម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/16TsdK4TtVYDYGGcBsMGAJQgAp-L40_09/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0QGiofb6/preview", workUrl: "https://docs.google.com/document/d/1Y1HnLIr9awsyIz8GGhKe-jgSQuVbBNwHsG8eT1IhOis/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxKm7_uhagR6aEe0V_zkei5XY4l9RhGX7Y5g9l56WVnWhbB6zeqC2MTBrAjMvMNMfXS/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyd7hHMuHDDOjr5_Q7rHGYrKWG0tcw5Y2DOnyQBcmoBAqi0eJnY37BwUOB4WUxyF5gGlg/exec" },
-                { title: "ជំពូកទី៤ មេរៀនទី២ ដង្ហើម", lessonVideo: "https://www.youtube.com/embed/iOjo4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjo4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1aK7Dek06w-Mb3OBNu0OcrfSJH-OY6prD/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb/preview", workUrl: "https://docs.google.com/document/d/1x8QYeQh96nNUrD58QSC6PEVRXK0VPPJZIYMtu8bzy1E/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxeWXm3YmuvLljiyPKY_ymzJFcFV34stNfuJ7c9bPOoRkqCcrZwIbyJrc5-pkSFXTzR/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzK7AfDYgALxMj7fpJlAwTDoWmQtoiOVtdWcaM4XbYtSJ-M2fMkwfYCLgoSQf7ezt2toA/exec" },
+                { title: "ជំពូកទី៤ មេរៀនទី២ ដង្ហើម", lessonVideo: "https://www.youtube.com/embed/iOjo4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjo4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1aK7Dek06w-Mb3OBNu0OcrfSJH-OY6prD/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1x8QYeQh96nNUrD58QSC6PEVRXK0VPPJZIYMtu8bzy1E/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxeWXm3YmuvLljiyPKY_ymzJFcFV34stNfuJ7c9bPOoRkqCcrZwIbyJrc5-pkSFXTzR/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzK7AfDYgALxMj7fpJlAwTDoWmQtoiOVtdWcaM4XbYtSJ-M2fMkwfYCLgoSQf7ezt2toA/exec" },
                 { title: "ជំពូកទី៤ មេរៀនទី៣ ដង្ហើមកោសិកា", lessonVideo: "https://www.youtube.com/embed/Cijko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1JDtZkg6lwGAMnLZs1_KW4cLrNsVtFycs/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx00Gfb6/preview", workUrl: "https://docs.google.com/document/d/1lAKtz0S6S8xt-fEcSPf5EfPlWizV4hXUncl7UjtIcOE/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxO6Q67v-C0u3cKQUAv-JUsWEClH84ZYOfYR2SZoJy_WotlG3jWIZA2AwjkxfY3XETl8w/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwHWSvKhO0JqcTNpS0-5z3kq857JfIRUBQI513VuHIGXRKk6nnz0ThCDhRuf7X5ZuQ2/exec" },
-                { title: "ជំពូកទី៤ មេរៀនទី៤ ប្រដាប់់របត់ឈាម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4Ze4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1XRPc20RaXcEML8kuKq-nEqr1Nhv_h9_P/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb/preview", workUrl: "https://docs.google.com/document/d/1TAswj7EtXmFItaTCZQyOrF95yaKIxaRzywNz5Jf9xV8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzntrepUP0qr_BZszcJn5D4xtyhFF45zwCAAOh1fxcrMGV4qeVVCvxxcs_SMV3zbMOW/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxy1cgq7hHWp4Cd5Xs4EJ2hd6Ual1on7JBDM_AXrRw33C8Ens3vdh6YnawMY0kI8povfw/exec" },
+                { title: "ជំពូកទី៤ មេរៀនទី៤ ប្រដាប់់របត់ឈាម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4Ze4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1XRPc20RaXcEML8kuKq-nEqr1Nhv_h9_P/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1TAswj7EtXmFItaTCZQyOrF95yaKIxaRzywNz5Jf9xV8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzntrepUP0qr_BZszcJn5D4xtyhFF45zwCAAOh1fxcrMGV4qeVVCvxxcs_SMV3zbMOW/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxy1cgq7hHWp4Cd5Xs4EJ2hd6Ual1on7JBDM_AXrRw33C8Ens3vdh6YnawMY0kI8povfw/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី១ អាហារ", lessonVideo: "https://www.youtube.com/embed/CiOjk4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1lcYOnqsjke7zPexjinP-2H9ii-fXtqVS/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1mgfRGbpv4ZNXXDpaFAVeOv2m3pppQXh3zaXkWySbvqg/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbyhxo5HwdTG-ytwlMCjKEOAVSUgyE4ALQ8X381yzQZ9AWoTdDsXH5piyEJBELTcb6sd/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwiOSRsYK3tQLSAtp4PkxUP_cPJFKzc-ElXHgtMdjAnFhC8-mFxlGuXjH-5HqHblBCh/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី២ របបអាហារនិងថាមពល", lessonVideo: "https://www.youtube.com/embed/CiOjko4oe4", lessonVideo2: "https://www.youtube.com/embed/CiOjkooZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1OdLwSmMLAhb2C9BEOAOsJZ5_NdSlmih3/preview", exerciseVideo: "https://www.youtube.com/embed/oY5coAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-/preview", workUrl: "https://docs.google.com/document/d/1QaS7hDxUO8o_J3gT9RHJ1FQC9BVT6y2RMkik-f8biaU/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzUq6rawmy2kn5HcpVYO1tfrhgPa4HCKmVz6zdOxpPLtnJAtD7fCKGFmWhX9-2BwQp_/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzS-T52vJkGoQgIhXJXKsbxN1fXqAkZCCf34AfBHlDE5JDcBXXVztQDZGE0yoohqmlY/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី៣ អាហារមានសុវត្ថិភាព", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1sA1zeMps0zMJDMdfqsdXK7I2fWvnTxwj/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoA4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx00Giofb6/preview", workUrl: "https://docs.google.com/document/d/1Z36fcijrZoYf8wW5Xw-YvMxkKbGI9njNxU5IQIN2zoc/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxbGbtLaRBJJ0sNZhQIXw2k-ZB8Z44EthhF2uhkqHME-U0H5eeSvj_XsLaZwgO9SDMx8g/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzT6AAjG5ZpJu_NgnuZLSvWieAnNrE59e71lQrygsWD13YlSPR-kWv_3Q6V2gLmMgiD/exec" },
@@ -720,18 +797,24 @@
             const classGroup = document.getElementById('classGroup');
             const loginClass = document.getElementById('loginClass');
             const lblUsername = document.getElementById('lblUsername');
+            const lblClassInput = document.getElementById('lblClassInput');
 
             if (role === 'admin') {
                 lblUsername.innerText = "ឈ្មោះ Admin (Username)";
                 classGroup.classList.add('hidden');
+                loginClass.required = false;
                 loginClass.value = 'ALL';
             } else if (role === 'teacher') {
                 lblUsername.innerText = "ឈ្មោះគ្រូបន្ទុកថ្នាក់ (Username)";
+                lblClassInput.innerText = "ថ្នាក់ណាមួយដែល Admin កំណត់ឱ្យ (ឧ. ១១F ឬ 11F)";
                 classGroup.classList.remove('hidden');
+                loginClass.required = true;
                 loginClass.value = '';
             } else {
                 lblUsername.innerText = "ឈ្មោះសិស្ស (Username)";
+                lblClassInput.innerText = "កម្រិតថ្នាក់ (ឧ. 7A, 10A, ១១F)";
                 classGroup.classList.remove('hidden');
+                loginClass.required = true;
                 loginClass.value = '';
             }
         }
@@ -739,7 +822,8 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('loginUser').value.trim();
-            const className = selectedLoginRole === 'admin' ? 'ALL' : document.getElementById('loginClass').value.trim().toUpperCase();
+            const rawClassInput = document.getElementById('loginClass').value.trim();
+            const className = selectedLoginRole === 'admin' ? 'ALL' : rawClassInput.toUpperCase();
             const password = document.getElementById('loginPass').value.trim();
             const btn = document.getElementById('btnLoginSubmit');
 
@@ -747,21 +831,41 @@
             btn.innerText = "កំពុងផ្ទៀងផ្ទាត់...";
 
             try {
-                const url = `${MAIN_APPS_SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&className=${encodeURIComponent(className)}&password=${encodeURIComponent(password)}`;
-                const res = await fetch(url, { method: 'GET', redirect: 'follow' });
-                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-                const data = await res.json();
+                const candidateClasses = selectedLoginRole === 'admin'
+                    ? ['ALL']
+                    : [...new Set([className, toKhmerDigits(className), normalizeClass(className)])];
 
-                if (data.status === 'success') {
-                    currentUser = data.user;
+                let loginSuccessData = null;
+                let lastErrorMessage = "ឈ្មោះអ្នកប្រើ ថ្នាក់ ឬលេខសម្ងាត់មិនត្រឹមត្រូវ!";
+
+                for (const tryClass of candidateClasses) {
+                    const url = `${MAIN_APPS_SCRIPT_URL}?action=login&role=${encodeURIComponent(selectedLoginRole)}&username=${encodeURIComponent(username)}&className=${encodeURIComponent(tryClass)}&password=${encodeURIComponent(password)}`;
+                    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+                    if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                    const data = await res.json();
+
+                    if (data.status === 'success') {
+                        loginSuccessData = data;
+                        if (data.user.role === 'teacher') {
+                            activeTeacherClass = tryClass;
+                        }
+                        break;
+                    } else if (data.message) {
+                        lastErrorMessage = data.message;
+                    }
+                }
+
+                if (loginSuccessData && loginSuccessData.status === 'success') {
+                    currentUser = loginSuccessData.user;
+                    currentUser._pass = password; // រក្សាទុកសម្រាប់ផ្ទៀងផ្ទាត់សុវត្ថិភាពពេលកែពិន្ទុ
                     localStorage.setItem('ngspad_user', JSON.stringify(currentUser));
                     initApp();
                 } else {
-                    alert(data.message);
+                    alert(lastErrorMessage);
                 }
             } catch (err) {
                 console.error("Login Error:", err);
-                alert("កំហុសក្នុងការតភ្ជាប់! សូមពិនិត្យ៖\n1. តើអ្នកបាន Deploy Apps Script ដោយជ្រើស 'Who has access: Anyone' ហើយឬនៅ?\n2. តើក្នុង Google Sheet មាន Sheet ឈ្មោះ 'Users' ត្រឹមត្រូវឬទេ?\n(ព័ត៌មានលម្អិត៖ " + err.message + ")");
+                alert("កំហុសក្នុងការតភ្ជាប់! សូមពិនិត្យការ Deploy Apps Script (" + err.message + ")");
             } finally {
                 btn.disabled = false;
                 btn.innerText = "ចូលប្រើប្រាស់ប្រព័ន្ធ →";
@@ -776,20 +880,60 @@
             document.getElementById('topUserInfo').innerText = `👤 ${currentUser.username} (${roleKh})`;
             document.getElementById('bannerName').innerHTML = `${currentUser.username} <span class="badge-pill">ថ្នាក់៖ ${currentUser.className}</span>`;
             document.getElementById('bannerMeta').innerText = `តួនាទី៖ ${roleKh} | អត្តលេខ៖ ${currentUser.studentId || '-'}`;
-            document.getElementById('sideGradeLabel').innerText = currentUser.gradeLevel === 'ALL' ? 'ទាំងអស់' : currentUser.gradeLevel;
+            document.getElementById('sideGradeLabel').innerText = currentUser.gradeLevel === 'ALL' || currentUser.gradeLevel === 'All' ? 'ទាំងអស់' : currentUser.gradeLevel;
             document.getElementById('sideClassFooter').innerText = currentUser.className;
-            document.getElementById('hwClassHeader').innerText = currentUser.role === 'teacher' ? `កម្រិតថ្នាក់ទី ${currentUser.gradeLevel}` : `ថ្នាក់ ${currentUser.className}`;
 
             if (currentUser.role === 'student') {
+                document.getElementById('hwClassHeader').innerText = `ថ្នាក់ ${currentUser.className}`;
                 document.getElementById('permissionNotice').innerText = `សិទ្ធិសិស្ស (${currentUser.username})៖ មើល និងកែប្រែកិច្ចការរបស់ខ្លួនឯង`;
             } else if (currentUser.role === 'teacher') {
-                document.getElementById('permissionNotice').innerText = `សិទ្ធិគ្រូ៖ ដាក់ពិន្ទុតាមថ្នាក់ និងមេរៀន (កម្រិតទី ${currentUser.gradeLevel})`;
+                const assignedClasses = getAssignedClassesForUser(currentUser);
+                const assignedGrades = getAssignedGradesForUser(currentUser);
+
+                document.getElementById('hwClassHeader').innerText = `ថ្នាក់ក្នុងបន្ទុក៖ ${assignedClasses.join(', ')}`;
+                document.getElementById('permissionNotice').innerText = `សិទ្ធិគ្រូ៖ កែកិច្ចការ & ដាក់ពិន្ទុថ្នាក់ ${assignedClasses.join(', ')}`;
                 document.getElementById('btnExportHwExcel').classList.remove('hidden');
                 document.getElementById('btnExportQuizExcel').classList.remove('hidden');
                 document.getElementById('btnExportCombinedExcel').classList.remove('hidden');
                 document.getElementById('teacherAdminHwFilterBar').classList.remove('hidden');
                 document.getElementById('teacherAdminScoreFilterBar').classList.remove('hidden');
+
+                // ប្រសិនបើគ្រូបង្រៀនច្រើនកម្រិតថ្នាក់ (ឧ. ១០ និង ១១) បង្ហាញប្រអប់ជ្រើសរើសកម្រិតថ្នាក់សម្រាប់មើលមេរៀន
+                if (assignedGrades.length > 1) {
+                    const gradeBox = document.getElementById('gradeSelectorForAdmin');
+                    const gradeSel = document.getElementById('adminGradeSelect');
+                    gradeBox.classList.remove('hidden');
+                    gradeSel.innerHTML = '';
+                    assignedGrades.forEach(g => {
+                        gradeSel.innerHTML += `<option value="${g}">ថ្នាក់ទី ${g}</option>`;
+                    });
+                }
+
+                // បង្ហាញប្រអប់ជ្រើសរើសថ្នាក់ដែល Admin កំណត់ឱ្យគ្រូនៅលើ Banner
+                const quickBox = document.getElementById('teacherActiveClassBox');
+                const quickSel = document.getElementById('teacherQuickClassSelect');
+                quickBox.classList.remove('hidden');
+                quickSel.innerHTML = '';
+
+                if (assignedClasses.length > 1 || assignedClasses.some(c => normalizeClass(c) === 'ALL')) {
+                    quickSel.innerHTML += `<option value="ALL">គ្រប់ថ្នាក់ក្នុងបន្ទុក (${assignedClasses.join(', ')})</option>`;
+                }
+                assignedClasses.forEach(c => {
+                    if (normalizeClass(c) !== 'ALL') {
+                        quickSel.innerHTML += `<option value="${c}">ថ្នាក់ ${c}</option>`;
+                    }
+                });
+
+                if (assignedClasses.length === 1 && normalizeClass(assignedClasses[0]) !== 'ALL') {
+                    activeTeacherClass = assignedClasses[0];
+                    quickSel.value = assignedClasses[0];
+                } else if (activeTeacherClass && [...quickSel.options].some(o => normalizeClass(o.value) === normalizeClass(activeTeacherClass))) {
+                    const matchedOpt = [...quickSel.options].find(o => normalizeClass(o.value) === normalizeClass(activeTeacherClass));
+                    quickSel.value = matchedOpt.value;
+                    activeTeacherClass = matchedOpt.value;
+                }
             } else if (currentUser.role === 'admin') {
+                document.getElementById('hwClassHeader').innerText = `គ្រប់ថ្នាក់ទាំងអស់`;
                 document.getElementById('adminSidebarSection').classList.remove('hidden');
                 document.getElementById('gradeSelectorForAdmin').classList.remove('hidden');
                 document.getElementById('btnExportHwExcel').classList.remove('hidden');
@@ -797,11 +941,68 @@
                 document.getElementById('btnExportCombinedExcel').classList.remove('hidden');
                 document.getElementById('teacherAdminHwFilterBar').classList.remove('hidden');
                 document.getElementById('teacherAdminScoreFilterBar').classList.remove('hidden');
-                document.getElementById('permissionNotice').innerText = "សិទ្ធិ Admin៖ គ្រប់គ្រងប្រព័ន្ធ និងទាញយករបាយការណ៍ Excel គ្រប់ថ្នាក់";
+                document.getElementById('permissionNotice').innerText = "សិទ្ធិ Admin៖ កំណត់សិទ្ធិគ្រូ និងគ្រប់គ្រងប្រព័ន្ធ";
             }
 
-            const targetGrade = currentUser.gradeLevel === 'ALL' ? '១០' : currentUser.gradeLevel;
-            renderLessonList(targetGrade);
+            const assignedGrades = getAssignedGradesForUser(currentUser);
+            const initialGrade = currentUser.role === 'admin' ? '១០' : (extractGradeFromClassName(activeTeacherClass) || assignedGrades[0] || '១០');
+            if (document.getElementById('adminGradeSelect')) {
+                document.getElementById('adminGradeSelect').value = initialGrade;
+            }
+            renderLessonList(initialGrade);
+        }
+
+        // ប្តូរថ្នាក់រហ័សពី Banner និងធ្វើសមកាលកម្មជាមួយ Filter ទាំងអស់
+        function onTeacherQuickClassChange(selectedVal) {
+            activeTeacherClass = selectedVal;
+            const hwSel = document.getElementById('hwClassFilter');
+            const scoreSel = document.getElementById('scoreClassFilter');
+            if (hwSel && [...hwSel.options].some(o => o.value === selectedVal)) {
+                hwSel.value = selectedVal;
+                updateLessonDropdownBySelectedClass('hwClassFilter', 'hwLessonFilter', cachedHomeworkData);
+            }
+            if (scoreSel && [...scoreSel.options].some(o => o.value === selectedVal)) {
+                scoreSel.value = selectedVal;
+                updateLessonDropdownBySelectedClass('scoreClassFilter', 'scoreLessonFilter', cachedQuizScoresData);
+            }
+
+            // ប្តូរបញ្ជីមេរៀនឱ្យត្រូវនឹងកម្រិតថ្នាក់ដែលគ្រូទើបជ្រើសរើស
+            const gradeOfClass = extractGradeFromClassName(selectedVal);
+            if (gradeOfClass && defaultLessonData[gradeOfClass]) {
+                if (document.getElementById('adminGradeSelect')) {
+                    document.getElementById('adminGradeSelect').value = gradeOfClass;
+                }
+                renderLessonList(gradeOfClass);
+            }
+
+            if (!document.getElementById('tab-homework').classList.contains('hidden')) {
+                renderHomeworkFiltered();
+            }
+            if (!document.getElementById('tab-scores').classList.contains('hidden')) {
+                renderQuizScoresFiltered();
+            }
+        }
+
+        function onHwClassFilterChange(selectedVal) {
+            activeTeacherClass = selectedVal;
+            const quickSel = document.getElementById('teacherQuickClassSelect');
+            const scoreSel = document.getElementById('scoreClassFilter');
+            if (quickSel && [...quickSel.options].some(o => o.value === selectedVal)) quickSel.value = selectedVal;
+            if (scoreSel && [...scoreSel.options].some(o => o.value === selectedVal)) scoreSel.value = selectedVal;
+
+            updateLessonDropdownBySelectedClass('hwClassFilter', 'hwLessonFilter', cachedHomeworkData);
+            renderHomeworkFiltered();
+        }
+
+        function onScoreClassFilterChange(selectedVal) {
+            activeTeacherClass = selectedVal;
+            const quickSel = document.getElementById('teacherQuickClassSelect');
+            const hwSel = document.getElementById('hwClassFilter');
+            if (quickSel && [...quickSel.options].some(o => o.value === selectedVal)) quickSel.value = selectedVal;
+            if (hwSel && [...hwSel.options].some(o => o.value === selectedVal)) hwSel.value = selectedVal;
+
+            updateLessonDropdownBySelectedClass('scoreClassFilter', 'scoreLessonFilter', cachedQuizScoresData);
+            renderQuizScoresFiltered();
         }
 
         function logout() {
@@ -961,12 +1162,16 @@
 
             alert(`សិស្ស៖ ${currentUser.username}\nពិន្ទុតេស្តរបស់អ្នកគឺ៖ ${score} / ${totalQuestions}`);
 
+            const saveClass = currentUser.role === 'teacher' && activeTeacherClass !== 'ALL'
+                ? activeTeacherClass
+                : getAssignedClassesForUser(currentUser)[0] || currentUser.className;
+
             await fetch(MAIN_APPS_SCRIPT_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify({
                     action: 'saveQuizScore',
-                    className: currentUser.className,
+                    className: saveClass,
                     lessonTitle: currentLesson.title,
                     studentId: currentUser.studentId,
                     studentName: currentUser.username,
@@ -977,13 +1182,13 @@
             loadStep(8);
         }
 
-        // ទាញពិន្ទុតេស្តតាមឈ្មោះសិស្ស (Student Name)
         async function loadSingleStudentScore() {
             document.getElementById('scoreStudentLabel').innerText = `${currentUser.username} ថ្នាក់ ${currentUser.className}`;
             const display = document.getElementById('singleScoreDisplay');
             display.innerHTML = "កំពុងស្វែងរកពិន្ទុរបស់អ្នក...";
 
-            const url = `${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}&role=${currentUser.role}&gradeLevel=${encodeURIComponent(currentUser.gradeLevel)}`;
+            const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
+            const url = `${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}&role=${currentUser.role}`;
             const res = await fetch(url);
             const data = await res.json();
 
@@ -1000,37 +1205,32 @@
             display.innerHTML = html;
         }
 
-        // --- ជំនួយការបំពេញ Dropdown ថ្នាក់ និងមេរៀនសម្រាប់គ្រូ និង Admin ---
-        function populateTeacherAdminFilters(classSelectId, lessonSelectId, dataList) {
+        // --- ធ្វើបច្ចុប្បន្នភាព Dropdown មេរៀនឱ្យត្រូវនឹងថ្នាក់ដែលគ្រូកំពុងជ្រើសរើស ---
+        function updateLessonDropdownBySelectedClass(classSelectId, lessonSelectId, dataList) {
             const classSel = document.getElementById(classSelectId);
             const lessonSel = document.getElementById(lessonSelectId);
-            const prevClass = classSel.value;
             const prevLesson = lessonSel.value;
+            const selectedClass = classSel.value;
 
-            // ប្រមូលថ្នាក់ទាំងអស់ដែលមានក្នុងទិន្នន័យ + ថ្នាក់ផ្ទាល់ខ្លួនរបស់គ្រូ
-            const classSet = new Set(dataList.map(item => (item.className || '').toUpperCase()).filter(Boolean));
-            if (currentUser.className && currentUser.className !== 'ALL') {
-                classSet.add(currentUser.className.toUpperCase());
-            }
-            const sortedClasses = [...classSet].sort();
-
-            classSel.innerHTML = `<option value="ALL">គ្រប់ថ្នាក់ក្នុងកម្រិត (${currentUser.gradeLevel === 'ALL' ? 'ទាំងអស់' : 'ទី ' + currentUser.gradeLevel})</option>`;
-            sortedClasses.forEach(c => {
-                classSel.innerHTML += `<option value="${c}">ថ្នាក់ ${c}</option>`;
-            });
-            if (prevClass && [...classSel.options].some(o => o.value === prevClass)) {
-                classSel.value = prevClass;
-            } else if (currentUser.role === 'teacher' && currentUser.className) {
-                classSel.value = currentUser.className.toUpperCase();
-            }
-
-            // ប្រមូលមេរៀនតាមកម្រិតថ្នាក់របស់គ្រូ + មេរៀនដែលមានក្នុងទិន្នន័យ
             const lessonSet = new Set();
-            const targetGrade = currentUser.gradeLevel === 'ALL' ? '១០' : currentUser.gradeLevel;
-            (defaultLessonData[targetGrade] || []).forEach(l => lessonSet.add(l.title));
+
+            if (selectedClass && selectedClass !== 'ALL') {
+                const grade = extractGradeFromClassName(selectedClass);
+                if (grade && defaultLessonData[grade]) {
+                    defaultLessonData[grade].forEach(l => lessonSet.add(l.title));
+                }
+            } else {
+                getAssignedGradesForUser(currentUser).forEach(g => {
+                    (defaultLessonData[g] || []).forEach(l => lessonSet.add(l.title));
+                });
+            }
+
+            // បន្ថែមមេរៀនដែលមានក្នុងទិន្នន័យកិច្ចការ/ពិន្ទុរបស់ថ្នាក់នោះ
             dataList.forEach(item => {
-                const lName = item.lessonTitle || item.lesson;
-                if (lName) lessonSet.add(lName);
+                if (selectedClass === 'ALL' || normalizeClass(item.className) === normalizeClass(selectedClass)) {
+                    const lName = item.lessonTitle || item.lesson;
+                    if (lName) lessonSet.add(lName);
+                }
             });
 
             lessonSel.innerHTML = `<option value="ALL">គ្រប់មេរៀនទាំងអស់</option>`;
@@ -1042,12 +1242,61 @@
             }
         }
 
+        // --- ជំនួយការបំពេញ Dropdown ថ្នាក់ និងមេរៀនសម្រាប់គ្រូ (តាម Admin កំណត់) និង Admin ---
+        function populateTeacherAdminFilters(classSelectId, lessonSelectId, dataList) {
+            const classSel = document.getElementById(classSelectId);
+            const prevClass = classSel.value;
+
+            if (currentUser.role === 'teacher') {
+                // គ្រូអាចជ្រើសរើសបានតែថ្នាក់ដែល Admin បានកំណត់ឱ្យប៉ុណ្ណោះ
+                const assignedClasses = getAssignedClassesForUser(currentUser);
+                classSel.innerHTML = '';
+
+                if (assignedClasses.some(c => normalizeClass(c) === 'ALL')) {
+                    const classSet = new Set(dataList.map(item => (item.className || '').trim()).filter(Boolean));
+                    classSel.innerHTML += `<option value="ALL">គ្រប់ថ្នាក់ទាំងអស់</option>`;
+                    [...classSet].sort().forEach(c => {
+                        classSel.innerHTML += `<option value="${c}">ថ្នាក់ ${c}</option>`;
+                    });
+                } else {
+                    if (assignedClasses.length > 1) {
+                        classSel.innerHTML += `<option value="ALL">គ្រប់ថ្នាក់ក្នុងបន្ទុក (${assignedClasses.join(', ')})</option>`;
+                    }
+                    assignedClasses.forEach(c => {
+                        classSel.innerHTML += `<option value="${c}">ថ្នាក់ ${c}</option>`;
+                    });
+                }
+
+                if (activeTeacherClass && [...classSel.options].some(o => normalizeClass(o.value) === normalizeClass(activeTeacherClass))) {
+                    const match = [...classSel.options].find(o => normalizeClass(o.value) === normalizeClass(activeTeacherClass));
+                    classSel.value = match.value;
+                } else if (prevClass && [...classSel.options].some(o => o.value === prevClass)) {
+                    classSel.value = prevClass;
+                } else if (assignedClasses.length === 1) {
+                    classSel.value = assignedClasses[0];
+                }
+            } else {
+                const classSet = new Set(dataList.map(item => (item.className || '').trim()).filter(Boolean));
+                const sortedClasses = [...classSet].sort();
+                classSel.innerHTML = `<option value="ALL">គ្រប់ថ្នាក់ទាំងអស់</option>`;
+                sortedClasses.forEach(c => {
+                    classSel.innerHTML += `<option value="${c}">ថ្នាក់ ${c}</option>`;
+                });
+                if (prevClass && [...classSel.options].some(o => o.value === prevClass)) {
+                    classSel.value = prevClass;
+                }
+            }
+
+            updateLessonDropdownBySelectedClass(classSelectId, lessonSelectId, dataList);
+        }
+
         // --- កិច្ចការផ្ទះ / ស្រាវជ្រាវ ---
         async function loadHomeworkTable() {
             const tbody = document.getElementById('homeworkTableBody');
             tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">កំពុងទាញយកទិន្នន័យ...</td></tr>`;
 
-            const url = `${MAIN_APPS_SCRIPT_URL}?action=getHomework&className=${encodeURIComponent(currentUser.className)}&role=${currentUser.role}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}&gradeLevel=${encodeURIComponent(currentUser.gradeLevel)}`;
+            const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
+            const url = `${MAIN_APPS_SCRIPT_URL}?action=getHomework&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&role=${currentUser.role}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}`;
             const res = await fetch(url);
             const json = await res.json();
             cachedHomeworkData = json.data || [];
@@ -1064,18 +1313,29 @@
             let rows = cachedHomeworkData;
 
             if (currentUser.role === 'student') {
-                // សិស្សមើលឃើញតែកិច្ចការតាមឈ្មោះសិស្សរបស់ខ្លួនប៉ុណ្ណោះ
                 rows = cachedHomeworkData.filter(r =>
                     r.studentName.toString().trim().toLowerCase() === currentUser.username.trim().toLowerCase() &&
-                    r.className.toUpperCase() === currentUser.className.toUpperCase()
+                    normalizeClass(r.className) === normalizeClass(currentUser.className)
                 );
-            } else {
-                // គ្រូបន្ទុកថ្នាក់ ឬ Admin ត្រងតាមថ្នាក់ និងមេរៀនដែលបានជ្រើសរើស
+            } else if (currentUser.role === 'teacher') {
+                // បង្ហាញតែកិច្ចការក្នុងថ្នាក់ដែល Admin កំណត់ឱ្យគ្រូប៉ុណ្ណោះ
+                rows = rows.filter(r => isClassAllowedForTeacher(r.className, currentUser));
+
                 const selectedClass = document.getElementById('hwClassFilter').value;
                 const selectedLesson = document.getElementById('hwLessonFilter').value;
 
                 if (selectedClass !== 'ALL') {
-                    rows = rows.filter(r => r.className.toUpperCase() === selectedClass.toUpperCase());
+                    rows = rows.filter(r => normalizeClass(r.className) === normalizeClass(selectedClass));
+                }
+                if (selectedLesson !== 'ALL') {
+                    rows = rows.filter(r => r.lessonTitle === selectedLesson);
+                }
+            } else {
+                const selectedClass = document.getElementById('hwClassFilter').value;
+                const selectedLesson = document.getElementById('hwLessonFilter').value;
+
+                if (selectedClass !== 'ALL') {
+                    rows = rows.filter(r => normalizeClass(r.className) === normalizeClass(selectedClass));
                 }
                 if (selectedLesson !== 'ALL') {
                     rows = rows.filter(r => r.lessonTitle === selectedLesson);
@@ -1090,7 +1350,8 @@
             tbody.innerHTML = "";
             rows.forEach(hw => {
                 const isOwnerStudent = (currentUser.role === 'student' && hw.studentName.toString().trim().toLowerCase() === currentUser.username.trim().toLowerCase());
-                const isTeacherOrAdmin = (currentUser.role === 'teacher' || currentUser.role === 'admin');
+                const canTeacherGradeThisRow = (currentUser.role === 'admin') ||
+                    (currentUser.role === 'teacher' && isClassAllowedForTeacher(hw.className, currentUser));
 
                 let actionBtns = "-";
                 if (isOwnerStudent) {
@@ -1098,7 +1359,7 @@
                         <button class="btn-sm btn-edit-lesson" onclick='openEditHwStudent(${JSON.stringify(hw)})'>✏️ កែ</button>
                         <button class="btn-sm" style="background:var(--danger); color:white;" onclick="deleteHwStudent('${hw.recordId}')">🗑️ លុប</button>
                     `;
-                } else if (isTeacherOrAdmin) {
+                } else if (canTeacherGradeThisRow) {
                     actionBtns = `
                         <button class="btn-sm btn-study" onclick='openGradeHwTeacher(${JSON.stringify(hw)})'>✅ ដាក់ពិន្ទុ / កែ</button>
                     `;
@@ -1133,7 +1394,10 @@
 
             const sel = document.getElementById('hwLessonSelect');
             sel.innerHTML = "";
-            const g = currentUser.gradeLevel === 'ALL' ? '១០' : currentUser.gradeLevel;
+            const g = currentUser.role === 'teacher'
+                ? (extractGradeFromClassName(activeTeacherClass) || getAssignedGradesForUser(currentUser)[0])
+                : (currentUser.gradeLevel === 'ALL' ? '១០' : toKhmerDigits(currentUser.gradeLevel));
+
             (defaultLessonData[g] || []).forEach(l => {
                 sel.innerHTML += `<option value="${l.title}">${l.title}</option>`;
             });
@@ -1153,7 +1417,7 @@
         }
 
         function openGradeHwTeacher(hw) {
-            document.getElementById('hwModalTitle').innerText = `ដាក់ពិន្ទុ និងមតិកែលម្អ៖ ${hw.studentName} (${hw.className})`;
+            document.getElementById('hwModalTitle').innerText = `ដាក់ពិន្ទុ និងកែប្រែកិច្ចការ៖ ${hw.studentName} (ថ្នាក់ ${hw.className})`;
             document.getElementById('hwRecordId').value = hw.recordId;
             document.getElementById('hwLessonSelect').innerHTML = `<option value="${hw.lessonTitle}">${hw.lessonTitle}</option>`;
             document.getElementById('hwVideoLink').value = hw.videoLink;
@@ -1176,9 +1440,14 @@
             btn.disabled = true;
             btn.innerText = "កំពុងរក្សាទុក...";
 
+            const submitClass = currentUser.role === 'teacher' && activeTeacherClass !== 'ALL'
+                ? activeTeacherClass
+                : getAssignedClassesForUser(currentUser)[0] || currentUser.className;
+
             let payload = {
                 recordId: recordId,
-                className: currentUser.className,
+                role: currentUser.role,
+                className: submitClass,
                 lessonTitle: document.getElementById('hwLessonSelect').value,
                 studentId: currentUser.studentId,
                 studentName: currentUser.username,
@@ -1198,8 +1467,11 @@
             } else if (currentUser.role === 'student') {
                 payload.action = "editHomeworkStudent";
             } else {
+                // បញ្ជូនព័ត៌មានផ្ទៀងផ្ទាត់សិទ្ធិថ្នាក់របស់គ្រូទៅកាន់ Apps Script
                 payload.action = "gradeHomeworkTeacher";
-                payload.teacherGradeLevel = currentUser.gradeLevel;
+                payload.teacherUsername = currentUser.username;
+                payload.teacherPassword = currentUser._pass || "";
+                payload.allowedClasses = getAssignedClassesForUser(currentUser);
                 payload.score = document.getElementById('hwScoreInput').value;
                 payload.teacherNote = document.getElementById('hwTeacherNoteInput').value;
             }
@@ -1294,6 +1566,10 @@
         // --- ADMIN MANAGE USERS ---
         document.getElementById('adminUserForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('btnAdminSaveUser');
+            btn.disabled = true;
+            btn.innerText = "កំពុងរក្សាទុក...";
+
             const payload = {
                 action: 'manageUser',
                 username: document.getElementById('admUsername').value.trim(),
@@ -1311,25 +1587,55 @@
             });
             const data = await res.json();
             alert(data.message);
+            btn.disabled = false;
+            btn.innerText = "រក្សាទុក / កំណត់សិទ្ធិ";
             loadAdminUsers();
         });
 
         async function loadAdminUsers() {
             const res = await fetch(`${MAIN_APPS_SCRIPT_URL}?action=getUsers`);
             const json = await res.json();
-            let html = `<table class="data-table"><tr><th>Username</th><th>Role</th><th>កម្រិតថ្នាក់</th><th>ថ្នាក់</th><th>ID</th><th>សិទ្ធិកែមេរៀន</th></tr>`;
+            let html = `<table class="data-table"><tr><th>Username</th><th>Role</th><th>កម្រិតថ្នាក់</th><th>ថ្នាក់ក្នុងបន្ទុក</th><th>ID</th><th>សិទ្ធិកែមេរៀន</th><th>សកម្មភាព</th></tr>`;
             (json.data || []).forEach(u => {
-                html += `<tr><td>${u[0]}</td><td>${u[2]}</td><td>${u[3]}</td><td>${u[4]}</td><td>${u[5]}</td><td>${u[6]}</td></tr>`;
+                if (!u[0]) return;
+                html += `<tr>
+                    <td><strong>${u[0]}</strong></td>
+                    <td>${u[2]}</td>
+                    <td>${u[3]}</td>
+                    <td><strong style="color:var(--primary);">${u[4]}</strong></td>
+                    <td>${u[5]}</td>
+                    <td>${u[6]}</td>
+                    <td>
+                        <button class="btn-sm" style="background:var(--danger); color:white;" onclick="deleteAdminUserRow('${u[0]}', '${u[4]}')">🗑️ លុប</button>
+                    </td>
+                </tr>`;
             });
             html += `</table>`;
             document.getElementById('adminUsersList').innerHTML = html;
+        }
+
+        async function deleteAdminUserRow(username, className) {
+            if (!confirm(`តើអ្នកពិតជាចង់លុបសិទ្ធិថ្នាក់ "${className}" របស់ "${username}" មែនទេ?`)) return;
+            const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                    action: 'deleteUserRow',
+                    username: username,
+                    className: className
+                })
+            });
+            const data = await res.json();
+            alert(data.message);
+            loadAdminUsers();
         }
 
         // --- តារាងពិន្ទុតេស្ត ១០០ សំណួរ ---
         async function loadAllQuizScores() {
             const box = document.getElementById('allScoresContainer');
             box.innerHTML = "កំពុងទាញយកទិន្នន័យ...";
-            const url = `${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}&role=${currentUser.role}&gradeLevel=${encodeURIComponent(currentUser.gradeLevel)}`;
+            const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
+            const url = `${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}&role=${currentUser.role}`;
             const res = await fetch(url);
             const json = await res.json();
             cachedQuizScoresData = json.data || [];
@@ -1346,17 +1652,27 @@
             let rows = cachedQuizScoresData;
 
             if (currentUser.role === 'student') {
-                // សិស្សទាញពិន្ទុតាមឈ្មោះសិស្សរបស់ខ្លួន
                 rows = cachedQuizScoresData.filter(r =>
                     (r.studentName || '').toString().trim().toLowerCase() === currentUser.username.trim().toLowerCase()
                 );
-            } else {
-                // គ្រូបន្ទុកថ្នាក់ និង Admin ត្រងតាមថ្នាក់ និងមេរៀន
+            } else if (currentUser.role === 'teacher') {
+                rows = rows.filter(r => isClassAllowedForTeacher(r.className || currentUser.className, currentUser));
+
                 const selectedClass = document.getElementById('scoreClassFilter').value;
                 const selectedLesson = document.getElementById('scoreLessonFilter').value;
 
                 if (selectedClass !== 'ALL') {
-                    rows = rows.filter(r => (r.className || '').toUpperCase() === selectedClass.toUpperCase());
+                    rows = rows.filter(r => normalizeClass(r.className) === normalizeClass(selectedClass));
+                }
+                if (selectedLesson !== 'ALL') {
+                    rows = rows.filter(r => (r.lesson || '') === selectedLesson);
+                }
+            } else {
+                const selectedClass = document.getElementById('scoreClassFilter').value;
+                const selectedLesson = document.getElementById('scoreLessonFilter').value;
+
+                if (selectedClass !== 'ALL') {
+                    rows = rows.filter(r => normalizeClass(r.className) === normalizeClass(selectedClass));
                 }
                 if (selectedLesson !== 'ALL') {
                     rows = rows.filter(r => (r.lesson || '') === selectedLesson);
@@ -1391,8 +1707,11 @@
             const targetLesson = document.getElementById('hwLessonFilter').value;
 
             let rows = cachedHomeworkData;
+            if (currentUser.role === 'teacher') {
+                rows = rows.filter(r => isClassAllowedForTeacher(r.className, currentUser));
+            }
             if (targetClass !== 'ALL') {
-                rows = rows.filter(r => r.className.toUpperCase() === targetClass.toUpperCase());
+                rows = rows.filter(r => normalizeClass(r.className) === normalizeClass(targetClass));
             }
             if (targetLesson !== 'ALL') {
                 rows = rows.filter(r => r.lessonTitle === targetLesson);
@@ -1428,8 +1747,11 @@
             const targetLesson = document.getElementById('scoreLessonFilter').value;
 
             let rows = cachedQuizScoresData;
+            if (currentUser.role === 'teacher') {
+                rows = rows.filter(r => isClassAllowedForTeacher(r.className || currentUser.className, currentUser));
+            }
             if (targetClass !== 'ALL') {
-                rows = rows.filter(r => (r.className || '').toUpperCase() === targetClass.toUpperCase());
+                rows = rows.filter(r => normalizeClass(r.className) === normalizeClass(targetClass));
             }
             if (targetLesson !== 'ALL') {
                 rows = rows.filter(r => (r.lesson || '') === targetLesson);
@@ -1461,18 +1783,23 @@
         async function exportCombinedClassReport() {
             const targetClass = document.getElementById('scoreClassFilter').value;
             const targetLesson = document.getElementById('scoreLessonFilter').value;
+            const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
 
             const [quizRes, hwRes] = await Promise.all([
-                fetch(`${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&role=${currentUser.role}&gradeLevel=${encodeURIComponent(currentUser.gradeLevel)}`),
-                fetch(`${MAIN_APPS_SCRIPT_URL}?action=getHomework&className=${encodeURIComponent(currentUser.className)}&role=${currentUser.role}&gradeLevel=${encodeURIComponent(currentUser.gradeLevel)}`)
+                fetch(`${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&role=${currentUser.role}`),
+                fetch(`${MAIN_APPS_SCRIPT_URL}?action=getHomework&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&role=${currentUser.role}`)
             ]);
 
             let quizList = (await quizRes.json()).data || [];
             let hwList = (await hwRes.json()).data || [];
 
+            if (currentUser.role === 'teacher') {
+                quizList = quizList.filter(q => isClassAllowedForTeacher(q.className || currentUser.className, currentUser));
+                hwList = hwList.filter(h => isClassAllowedForTeacher(h.className || currentUser.className, currentUser));
+            }
             if (targetClass !== 'ALL') {
-                quizList = quizList.filter(q => (q.className || '').toUpperCase() === targetClass.toUpperCase());
-                hwList = hwList.filter(h => (h.className || '').toUpperCase() === targetClass.toUpperCase());
+                quizList = quizList.filter(q => normalizeClass(q.className) === normalizeClass(targetClass));
+                hwList = hwList.filter(h => normalizeClass(h.className) === normalizeClass(targetClass));
             }
             if (targetLesson !== 'ALL') {
                 quizList = quizList.filter(q => (q.lesson || '') === targetLesson);
