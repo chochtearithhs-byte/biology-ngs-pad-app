@@ -1,12 +1,13 @@
 {
-  "name": "ប្រព័ន្ធសិក្សាជីវវិទ្យា T. TEARITH",
-  "short_name": "NGS Biology",
-  "description": "ប្រព័ន្ធសិក្សាជីវវិទ្យាស្វ័យសិក្សាសម្រាប់សិស្សានុសិស្ស ថ្នាក់ទី៧ ដល់ ថ្នាក់ទី១២",
+  "name": "ប្រព័ន្ធសិក្សាជីវវិទ្យា T. TEARITH - NGS_PAD",
+  "short_name": "NGS_PAD Bio",
+  "description": "ប្រព័ន្ធសិក្សាជីវវិទ្យា វិទ្យាល័យព្រះអង្គឌួង សម្រាប់សិស្សានុសិស្ស ថ្នាក់ទី៧ ដល់ ថ្នាក់ទី១២",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#1aff00",
-  "theme_color": "#2ecc71",
+  "orientation": "any",
+  "background_color": "#064e3b",
+  "theme_color": "#14532d",
   "icons": [
     {
       "src": "https://lh3.googleusercontent.com/d/1mGVFFMVNkaM7cyndEQctonpTa6gOvFaN",
