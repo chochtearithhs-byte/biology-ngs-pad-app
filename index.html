@@ -152,6 +152,20 @@
         .btn-excel:hover { background: #166534; }
         .btn-edit-lesson { background: var(--accent); color: #000; }
 
+        /* MEDIA VIEW BUTTONS IN HOMEWORK TABLE */
+        .media-btn-group { display: flex; flex-wrap: wrap; gap: 6px; }
+        .btn-media-view {
+            padding: 5px 10px; border: none; border-radius: 6px; font-size: 0.8rem;
+            font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+            transition: 0.2s;
+        }
+        .btn-media-video { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+        .btn-media-video:hover { background: #fecaca; }
+        .btn-media-pdf { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .btn-media-pdf:hover { background: #bfdbfe; }
+        .btn-media-drive { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+        .btn-media-drive:hover { background: #bbf7d0; }
+
         /* LESSON STUDY PANEL */
         .study-panel { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         #viewer-frame { width: 100%; height: 480px; border: none; border-radius: 12px; background: #0f172a; }
@@ -188,10 +202,33 @@
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 2000;
+            padding: 15px;
         }
         .modal-box {
-            background: white; width: 95%; max-width: 650px; max-height: 90vh;
+            background: white; width: 95%; max-width: 650px; max-height: 92vh;
             overflow-y: auto; border-radius: 16px; padding: 24px; position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        /* ផ្ទាំងមើល PDF / Play Video ធំទូលាយដូចផ្ទាំងដាក់ពិន្ទុ */
+        .media-modal-box {
+            max-width: 960px;
+            width: 96%;
+            display: flex;
+            flex-direction: column;
+        }
+        .media-iframe-container {
+            width: 100%;
+            height: 68vh;
+            min-height: 360px;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+        .media-iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
         .hidden { display: none !important; }
 
@@ -205,6 +242,7 @@
         @media (max-width: 768px) {
             .workspace { flex-direction: column; }
             .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; }
+            .media-iframe-container { height: 55vh; }
         }
     </style>
 </head>
@@ -401,7 +439,7 @@
                         </div>
 
                         <p style="font-size:0.88rem; color:#64748b;">
-                            • សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ គ្រូបន្ទុកថ្នាក់អាចជ្រើសរើសថ្នាក់ដែល Admin កំណត់ឱ្យ និងមេរៀនដើម្បីកែប្រែ និងដាក់ពិន្ទុ។
+                            • សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ ចុចលើប៊ូតុង <strong>🎬 វីដេអូ / 📄 PDF / 📁 Drive File</strong> ដើម្បីបើកមើលផ្ទាល់លើអេក្រង់។
                         </p>
                         <div style="overflow-x:auto;">
                             <table class="data-table">
@@ -411,7 +449,7 @@
                                         <th>មេរៀន</th>
                                         <th>អត្តលេខ</th>
                                         <th>ឈ្មោះសិស្ស</th>
-                                        <th>តំណភ្ជាប់ / ឯកសារ</th>
+                                        <th>តំណភ្ជាប់ / ឯកសារ (ចុចមើល)</th>
                                         <th>ពិន្ទុ (គ្រូដាក់)</th>
                                         <th>មតិគ្រូ</th>
                                         <th>សកម្មភាព</th>
@@ -490,6 +528,25 @@
                     </div>
                 </section>
             </main>
+        </div>
+    </div>
+
+    <!-- MODAL ថ្មី៖ ផ្ទាំង VIEW PDF / PLAY VIDEO ផ្ទាល់លើអេក្រង់ -->
+    <div class="modal-overlay" id="mediaViewerModal" onclick="if(event.target === this) closeMediaViewerModal()">
+        <div class="modal-box media-modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; flex-wrap:wrap;">
+                <div>
+                    <h3 id="mediaModalTitle" style="margin:0; color:var(--primary); font-size:1.15rem;">មើលឯកសារ / វីដេអូ</h3>
+                    <div id="mediaModalSubtitle" style="font-size:0.85rem; color:#64748b; margin-top:2px;"></div>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <a id="mediaExternalLink" href="#" target="_blank" class="btn-sm" style="background:#1d4ed8; color:white; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">↗ បើកក្នុង Tab ថ្មី</a>
+                    <button type="button" class="btn-sm" style="background:#dc2626; color:white;" onclick="closeMediaViewerModal()">✖ បិទ</button>
+                </div>
+            </div>
+            <div class="media-iframe-container">
+                <iframe id="mediaModalIframe" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 
@@ -599,6 +656,59 @@
         });
 
         // =========================================================================
+        // HELPER: បម្លែងតំណភ្ជាប់ YouTube / Google Drive / Google Docs ទៅជា Embed/Preview URL
+        // =========================================================================
+        function convertToEmbedUrl(rawUrl) {
+            if (!rawUrl) return '';
+            const url = rawUrl.trim();
+
+            // ១. YouTube standard link (youtube.com/watch?v=ID)
+            const ytWatchMatch = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+            if (ytWatchMatch) {
+                return `https://www.youtube.com/embed/${ytWatchMatch[1]}?autoplay=1`;
+            }
+
+            // ២. YouTube short link (youtu.be/ID)
+            const ytShortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+            if (ytShortMatch) {
+                return `https://www.youtube.com/embed/${ytShortMatch[1]}?autoplay=1`;
+            }
+
+            // ៣. Google Drive file link (/file/d/ID/view ឬ ?id=ID)
+            const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (driveFileMatch) {
+                return `https://drive.google.com/file/d/${driveFileMatch[1]}/preview`;
+            }
+            const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+            if (driveOpenMatch) {
+                return `https://drive.google.com/file/d/${driveOpenMatch[1]}/preview`;
+            }
+
+            // ៤. Google Docs / Slides / Sheets (/d/ID/edit ឬ /view)
+            const googleDocsMatch = url.match(/docs\.google\.com\/(document|presentation|spreadsheets)\/d\/([a-zA-Z0-9_-]+)/);
+            if (googleDocsMatch) {
+                return `https://docs.google.com/${googleDocsMatch[1]}/d/${googleDocsMatch[2]}/preview`;
+            }
+
+            return url;
+        }
+
+        function openMediaViewerModal(rawUrl, typeLabel, studentName, lessonTitle) {
+            if (!rawUrl) return;
+            const embedUrl = convertToEmbedUrl(rawUrl);
+            document.getElementById('mediaModalTitle').innerText = `${typeLabel} — សិស្ស៖ ${studentName}`;
+            document.getElementById('mediaModalSubtitle').innerText = `មេរៀន៖ ${lessonTitle}`;
+            document.getElementById('mediaExternalLink').href = rawUrl;
+            document.getElementById('mediaModalIframe').src = embedUrl;
+            document.getElementById('mediaViewerModal').style.display = 'flex';
+        }
+
+        function closeMediaViewerModal() {
+            document.getElementById('mediaModalIframe').src = '';
+            document.getElementById('mediaViewerModal').style.display = 'none';
+        }
+
+        // =========================================================================
         // HELPER: បំប្លែងលេខខ្មែរ/ឡាតាំង និងគ្រប់គ្រងបញ្ជីថ្នាក់របស់គ្រូ
         // =========================================================================
         const khmerDigitsMap = { '០': '0', '១': '1', '២': '2', '៣': '3', '៤': '4', '៥': '5', '៦': '6', '៧': '7', '៨': '8', '៩': '9' };
@@ -616,14 +726,12 @@
             return str.toString().replace(/[0-9]/g, d => latinToKhmerDigitsMap[d] || d);
         }
 
-        // ទាញកម្រិតថ្នាក់ (៧..១២) ចេញពីឈ្មោះថ្នាក់ (ឧ. "11F" ឬ "១១F" -> "១១")
         function extractGradeFromClassName(classStr) {
             const norm = normalizeClass(classStr);
             const match = norm.match(/^(10|11|12|7|8|9)/);
             return match ? toKhmerDigits(match[1]) : null;
         }
 
-        // ទាញយកបញ្ជីថ្នាក់ទាំងអស់ដែល Admin បានកំណត់ឱ្យគ្រូ
         function getAssignedClassesForUser(user) {
             if (!user) return [];
             if (Array.isArray(user.allowedClasses) && user.allowedClasses.length > 0) {
@@ -634,7 +742,6 @@
             return user.className.split(/[,;\/]+/).map(c => c.trim()).filter(Boolean);
         }
 
-        // ទាញយកកម្រិតថ្នាក់ទាំងអស់ដែលគ្រូបង្រៀន (ឧ. ['១០', '១១'])
         function getAssignedGradesForUser(user) {
             if (!user) return ['១០'];
             if (user.role === 'admin' || normalizeClass(user.gradeLevel) === 'ALL') {
@@ -656,7 +763,6 @@
             return gradeSet.size > 0 ? [...gradeSet] : ['១០'];
         }
 
-        // ពិនិត្យមើលថាតើថ្នាក់ទិន្នន័យ (rowClass) ត្រូវនឹងថ្នាក់ដែលគ្រូត្រូវបាន Admin កំណត់ឱ្យឬទេ
         function isClassAllowedForTeacher(rowClass, user) {
             const assigned = getAssignedClassesForUser(user);
             if (assigned.some(ac => normalizeClass(ac) === 'ALL')) return true;
@@ -857,7 +963,7 @@
 
                 if (loginSuccessData && loginSuccessData.status === 'success') {
                     currentUser = loginSuccessData.user;
-                    currentUser._pass = password; // រក្សាទុកសម្រាប់ផ្ទៀងផ្ទាត់សុវត្ថិភាពពេលកែពិន្ទុ
+                    currentUser._pass = password;
                     localStorage.setItem('ngspad_user', JSON.stringify(currentUser));
                     initApp();
                 } else {
@@ -898,7 +1004,6 @@
                 document.getElementById('teacherAdminHwFilterBar').classList.remove('hidden');
                 document.getElementById('teacherAdminScoreFilterBar').classList.remove('hidden');
 
-                // ប្រសិនបើគ្រូបង្រៀនច្រើនកម្រិតថ្នាក់ (ឧ. ១០ និង ១១) បង្ហាញប្រអប់ជ្រើសរើសកម្រិតថ្នាក់សម្រាប់មើលមេរៀន
                 if (assignedGrades.length > 1) {
                     const gradeBox = document.getElementById('gradeSelectorForAdmin');
                     const gradeSel = document.getElementById('adminGradeSelect');
@@ -909,7 +1014,6 @@
                     });
                 }
 
-                // បង្ហាញប្រអប់ជ្រើសរើសថ្នាក់ដែល Admin កំណត់ឱ្យគ្រូនៅលើ Banner
                 const quickBox = document.getElementById('teacherActiveClassBox');
                 const quickSel = document.getElementById('teacherQuickClassSelect');
                 quickBox.classList.remove('hidden');
@@ -952,7 +1056,6 @@
             renderLessonList(initialGrade);
         }
 
-        // ប្តូរថ្នាក់រហ័សពី Banner និងធ្វើសមកាលកម្មជាមួយ Filter ទាំងអស់
         function onTeacherQuickClassChange(selectedVal) {
             activeTeacherClass = selectedVal;
             const hwSel = document.getElementById('hwClassFilter');
@@ -966,7 +1069,6 @@
                 updateLessonDropdownBySelectedClass('scoreClassFilter', 'scoreLessonFilter', cachedQuizScoresData);
             }
 
-            // ប្តូរបញ្ជីមេរៀនឱ្យត្រូវនឹងកម្រិតថ្នាក់ដែលគ្រូទើបជ្រើសរើស
             const gradeOfClass = extractGradeFromClassName(selectedVal);
             if (gradeOfClass && defaultLessonData[gradeOfClass]) {
                 if (document.getElementById('adminGradeSelect')) {
@@ -1205,7 +1307,6 @@
             display.innerHTML = html;
         }
 
-        // --- ធ្វើបច្ចុប្បន្នភាព Dropdown មេរៀនឱ្យត្រូវនឹងថ្នាក់ដែលគ្រូកំពុងជ្រើសរើស ---
         function updateLessonDropdownBySelectedClass(classSelectId, lessonSelectId, dataList) {
             const classSel = document.getElementById(classSelectId);
             const lessonSel = document.getElementById(lessonSelectId);
@@ -1225,7 +1326,6 @@
                 });
             }
 
-            // បន្ថែមមេរៀនដែលមានក្នុងទិន្នន័យកិច្ចការ/ពិន្ទុរបស់ថ្នាក់នោះ
             dataList.forEach(item => {
                 if (selectedClass === 'ALL' || normalizeClass(item.className) === normalizeClass(selectedClass)) {
                     const lName = item.lessonTitle || item.lesson;
@@ -1242,13 +1342,11 @@
             }
         }
 
-        // --- ជំនួយការបំពេញ Dropdown ថ្នាក់ និងមេរៀនសម្រាប់គ្រូ (តាម Admin កំណត់) និង Admin ---
         function populateTeacherAdminFilters(classSelectId, lessonSelectId, dataList) {
             const classSel = document.getElementById(classSelectId);
             const prevClass = classSel.value;
 
             if (currentUser.role === 'teacher') {
-                // គ្រូអាចជ្រើសរើសបានតែថ្នាក់ដែល Admin បានកំណត់ឱ្យប៉ុណ្ណោះ
                 const assignedClasses = getAssignedClassesForUser(currentUser);
                 classSel.innerHTML = '';
 
@@ -1308,6 +1406,11 @@
             renderHomeworkFiltered();
         }
 
+        function escapeAttr(str) {
+            if (!str) return '';
+            return str.toString().replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+        }
+
         function renderHomeworkFiltered() {
             const tbody = document.getElementById('homeworkTableBody');
             let rows = cachedHomeworkData;
@@ -1318,7 +1421,6 @@
                     normalizeClass(r.className) === normalizeClass(currentUser.className)
                 );
             } else if (currentUser.role === 'teacher') {
-                // បង្ហាញតែកិច្ចការក្នុងថ្នាក់ដែល Admin កំណត់ឱ្យគ្រូប៉ុណ្ណោះ
                 rows = rows.filter(r => isClassAllowedForTeacher(r.className, currentUser));
 
                 const selectedClass = document.getElementById('hwClassFilter').value;
@@ -1365,17 +1467,31 @@
                     `;
                 }
 
+                const sNameEsc = escapeAttr(hw.studentName);
+                const lTitleEsc = escapeAttr(hw.lessonTitle);
+
+                let mediaButtons = '<div class="media-btn-group">';
+                if (hw.videoLink) {
+                    mediaButtons += `<button type="button" class="btn-media-view btn-media-video" onclick="openMediaViewerModal('${escapeAttr(hw.videoLink)}', '🎬 វីដេអូកិច្ចការ', '${sNameEsc}', '${lTitleEsc}')">🎬 វីដេអូ</button>`;
+                }
+                if (hw.pdfLink) {
+                    mediaButtons += `<button type="button" class="btn-media-view btn-media-pdf" onclick="openMediaViewerModal('${escapeAttr(hw.pdfLink)}', '📄 ឯកសារ PDF', '${sNameEsc}', '${lTitleEsc}')">📄 PDF</button>`;
+                }
+                if (hw.driveFileUrl) {
+                    mediaButtons += `<button type="button" class="btn-media-view btn-media-drive" onclick="openMediaViewerModal('${escapeAttr(hw.driveFileUrl)}', '📁 ឯកសារ Drive', '${sNameEsc}', '${lTitleEsc}')">📁 Drive File</button>`;
+                }
+                if (!hw.videoLink && !hw.pdfLink && !hw.driveFileUrl) {
+                    mediaButtons += '<span style="color:#94a3b8;">គ្មានឯកសារ</span>';
+                }
+                mediaButtons += '</div>';
+
                 tbody.innerHTML += `
                     <tr>
                         <td><strong>${hw.className}</strong></td>
                         <td>${hw.lessonTitle}</td>
                         <td>${hw.studentId}</td>
                         <td><strong>${hw.studentName}</strong></td>
-                        <td>
-                            ${hw.videoLink ? `<a href="${hw.videoLink}" target="_blank">🎬 វីដេអូ</a> ` : ''}
-                            ${hw.pdfLink ? `<a href="${hw.pdfLink}" target="_blank">📄 PDF</a> ` : ''}
-                            ${hw.driveFileUrl ? `<a href="${hw.driveFileUrl}" target="_blank">📁 Drive File</a>` : ''}
-                        </td>
+                        <td>${mediaButtons}</td>
                         <td><strong style="color:var(--danger);">${hw.score !== "" ? hw.score : "មិនទាន់ដាក់"}</strong></td>
                         <td>${hw.teacherNote || "-"}</td>
                         <td>${actionBtns}</td>
@@ -1467,7 +1583,6 @@
             } else if (currentUser.role === 'student') {
                 payload.action = "editHomeworkStudent";
             } else {
-                // បញ្ជូនព័ត៌មានផ្ទៀងផ្ទាត់សិទ្ធិថ្នាក់របស់គ្រូទៅកាន់ Apps Script
                 payload.action = "gradeHomeworkTeacher";
                 payload.teacherUsername = currentUser.username;
                 payload.teacherPassword = currentUser._pass || "";
