@@ -717,14 +717,14 @@
                 <div class="form-group"><label>Quiz Script URL (តេស្ត ១០០ សំណួរ)</label><input type="url" id="elQuizUrl"></div>
                 <div style="display:flex; gap:10px; justify-content:flex-end;">
                     <button type="button" class="btn-sm" style="background:#cbd5e1;" onclick="document.getElementById('editLessonModal').style.display='none'">បិទ</button>
-                    <button type="submit" class="btn-sm btn-study">រក្សាទុកមេរៀន</button>
+                    <button type="submit" class="btn-sm btn-study" id="btnSaveLesson">រក្សាទុកមេរៀន</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAjir9P2ztVzzSZfMnJk8mXkYPcz9p3vMkXFIsxB7yt9hOqO9550epnmQfEBz5CS0e/exec";
+        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTbt-k-0hN4eZJPDqV_c5T-HDFI487G1mWaSThu8qzJM3xgF-64fRUGiMHBxclijNS/exec";
 
         // =========================================================================
         // PWA SERVICE WORKER REGISTRATION, BACKGROUND NOTIFICATION & INSTALL PROMPT
@@ -740,12 +740,11 @@
                     swRegistration = await navigator.serviceWorker.register('./sw.js');
                     console.log('Service Worker Registered:', swRegistration.scope);
 
-                    // ចុះឈ្មោះ Periodic Background Sync ដើម្បីឆែកសារទោះបិទ App
                     if ('periodicSync' in swRegistration) {
                         const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
                         if (status.state === 'granted') {
                             await swRegistration.periodicSync.register('ngspad-check-notifications', {
-                                minInterval: 15 * 60 * 1000 // រៀងរាល់ ១៥ នាទីម្តងពេលបិទ App
+                                minInterval: 15 * 60 * 1000
                             });
                         }
                     }
@@ -779,7 +778,6 @@
             deferredPrompt = null;
         });
 
-        // ស្នើសុំសិទ្ធិបង្ហាញ Notification លើទូរសព្ទ / កុំព្យូទ័រ
         async function enableSystemNotifications() {
             if (!('Notification' in window)) {
                 alert("កម្មវិធីរុករក (Browser) របស់អ្នកមិនគាំទ្រការជូនដំណឹងលើអេក្រង់ទេ!");
@@ -835,7 +833,7 @@
         async function checkStudentNotifications(silent = true) {
             if (!currentUser || currentUser.role !== 'student') return;
             try {
-                const url = `${MAIN_APPS_SCRIPT_URL}?action=getNotifications&className=${encodeURIComponent(currentUser.className)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId || '')}`;
+                const url = `${MAIN_APPS_SCRIPT_URL}?action=getStudentNotifications&className=${encodeURIComponent(currentUser.className)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId || '')}`;
                 const res = await fetch(url);
                 const json = await res.json();
                 if (json.status === 'success') {
@@ -844,7 +842,6 @@
                     document.getElementById('topNotifCount').innerText = count;
                     document.getElementById('sideNotifCount').innerText = count;
 
-                    // បង្ហាញសារលោតលើអេក្រង់ឧបករណ៍សម្រាប់សារថ្មីៗ
                     cachedStudentNotifications.forEach(n => {
                         triggerDeviceNotification(n.title, n.message, n.notifId);
                     });
@@ -867,7 +864,7 @@
 
             let html = "";
             cachedStudentNotifications.forEach(n => {
-                const typeBadge = n.type === 'HOMEWORK_EDIT'
+                const typeBadge = (n.type === 'HOMEWORK_EDIT' || n.type === 'HW_UPDATE' || n.type === 'HW_DELETE')
                     ? `<span style="background:#dbeafe; color:#1d4ed8; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">📝 កែប្រែកិច្ចការផ្ទះ</span>`
                     : `<span style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">📊 កែប្រែពិន្ទុតេស្ត ១០០ សំណួរ</span>`;
 
@@ -1278,7 +1275,6 @@
                 document.getElementById('hwClassHeader').innerText = `ថ្នាក់ ${currentUser.className}`;
                 document.getElementById('permissionNotice').innerText = `សិទ្ធិសិស្ស (${currentUser.username})៖ មើល និងកែប្រែកិច្ចការរបស់ខ្លួនឯង`;
 
-                // បង្ហាញប៊ូតុងសារជូនដំណឹងសម្រាប់សិស្ស
                 document.getElementById('topNotifBtn').classList.remove('hidden');
                 document.getElementById('nav-notifications').classList.remove('hidden');
 
@@ -1289,7 +1285,7 @@
                 syncUserToServiceWorker();
                 checkStudentNotifications(true);
                 if (notifPollInterval) clearInterval(notifPollInterval);
-                notifPollInterval = setInterval(() => checkStudentNotifications(true), 20000); // ឆែកសាររៀងរាល់ ២០ វិនាទី
+                notifPollInterval = setInterval(() => checkStudentNotifications(true), 20000);
             } else if (currentUser.role === 'teacher') {
                 const assignedClasses = getAssignedClassesForUser(currentUser);
                 const assignedGrades = getAssignedGradesForUser(currentUser);
@@ -1694,17 +1690,21 @@
             const tbody = document.getElementById('homeworkTableBody');
             tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">កំពុងទាញយកទិន្នន័យ...</td></tr>`;
 
-            const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
-            const url = `${MAIN_APPS_SCRIPT_URL}?action=getHomework&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&role=${currentUser.role}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}`;
-            const res = await fetch(url);
-            const json = await res.json();
-            cachedHomeworkData = json.data || [];
+            try {
+                const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
+                const url = `${MAIN_APPS_SCRIPT_URL}?action=getHomework&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&role=${currentUser.role}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                cachedHomeworkData = json.data || [];
 
-            if (currentUser.role === 'teacher' || currentUser.role === 'admin') {
-                populateTeacherAdminFilters('hwClassFilter', 'hwLessonFilter', cachedHomeworkData);
+                if (currentUser.role === 'teacher' || currentUser.role === 'admin') {
+                    populateTeacherAdminFilters('hwClassFilter', 'hwLessonFilter', cachedHomeworkData);
+                }
+
+                renderHomeworkFiltered();
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:red;">កំហុសក្នុងការទាញទិន្នន័យ៖ ${err.message}</td></tr>`;
             }
-
-            renderHomeworkFiltered();
         }
 
         function escapeAttr(str) {
@@ -1864,73 +1864,87 @@
             btn.disabled = true;
             btn.innerText = "កំពុងរក្សាទុក...";
 
-            const submitClass = currentUser.role === 'teacher' && activeTeacherClass !== 'ALL'
-                ? activeTeacherClass
-                : getAssignedClassesForUser(currentUser)[0] || currentUser.className;
+            try {
+                const submitClass = currentUser.role === 'teacher' && activeTeacherClass !== 'ALL'
+                    ? activeTeacherClass
+                    : getAssignedClassesForUser(currentUser)[0] || currentUser.className;
 
-            let payload = {
-                recordId: recordId,
-                role: currentUser.role,
-                className: submitClass,
-                lessonTitle: document.getElementById('hwLessonSelect').value,
-                studentId: currentUser.studentId,
-                studentName: currentUser.username,
-                videoLink: document.getElementById('hwVideoLink').value,
-                pdfLink: document.getElementById('hwPdfLink').value
-            };
+                let payload = {
+                    recordId: recordId,
+                    role: currentUser.role,
+                    className: submitClass,
+                    lessonTitle: document.getElementById('hwLessonSelect').value,
+                    studentId: currentUser.studentId,
+                    studentName: currentUser.username,
+                    videoLink: document.getElementById('hwVideoLink').value.trim(),
+                    pdfLink: document.getElementById('hwPdfLink').value.trim()
+                };
 
-            if (!recordId) {
-                payload.action = "submitHomework";
-                const fileInput = document.getElementById('hwFileUpload');
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    payload.fileName = file.name;
-                    payload.mimeType = file.type;
-                    payload.fileBase64 = await toBase64(file);
+                if (!recordId) {
+                    payload.action = "submitHomework";
+                    const fileInput = document.getElementById('hwFileUpload');
+                    if (fileInput.files.length > 0) {
+                        const file = fileInput.files[0];
+                        payload.fileName = file.name;
+                        payload.mimeType = file.type;
+                        payload.fileBase64 = await toBase64(file);
+                    }
+                } else if (currentUser.role === 'student') {
+                    payload.action = "editHomeworkStudent";
+                } else {
+                    payload.action = "gradeHomeworkTeacher";
+                    payload.teacherUsername = currentUser.username;
+                    payload.teacherPassword = currentUser._pass || "";
+                    payload.allowedClasses = getAssignedClassesForUser(currentUser);
+                    payload.score = document.getElementById('hwScoreInput').value;
+                    payload.teacherNote = document.getElementById('hwTeacherNoteInput').value.trim();
                 }
-            } else if (currentUser.role === 'student') {
-                payload.action = "editHomeworkStudent";
-            } else {
-                payload.action = "gradeHomeworkTeacher";
-                payload.teacherUsername = currentUser.username;
-                payload.teacherPassword = currentUser._pass || "";
-                payload.allowedClasses = getAssignedClassesForUser(currentUser);
-                payload.score = document.getElementById('hwScoreInput').value;
-                payload.teacherNote = document.getElementById('hwTeacherNoteInput').value;
-            }
 
-            const res = await fetch(MAIN_APPS_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            });
-            const result = await res.json();
-            alert(result.message);
-            btn.disabled = false;
-            btn.innerText = "រក្សាទុក";
-            closeHwModal();
-            loadHomeworkTable();
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+                const result = await res.json();
+                alert(result.message);
+                
+                if (result.status === 'success') {
+                    closeHwModal();
+                    loadHomeworkTable();
+                }
+            } catch (err) {
+                console.error("Save Homework Error:", err);
+                alert("កំហុសក្នុងការរក្សាទុកទិន្នន័យ៖ " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "រក្សាទុក";
+            }
         });
 
         async function deleteHwStudent(recordId) {
             if (!confirm("តើអ្នកពិតជាចង់លុបកិច្ចការនេះមែនទេ?")) return;
-            const res = await fetch(MAIN_APPS_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({
-                    action: 'deleteHomework',
-                    role: 'student',
-                    recordId: recordId,
-                    studentName: currentUser.username,
-                    studentId: currentUser.studentId
-                })
-            });
-            const data = await res.json();
-            alert(data.message);
-            loadHomeworkTable();
+            try {
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'deleteHomework',
+                        role: 'student',
+                        recordId: recordId,
+                        studentName: currentUser.username,
+                        studentId: currentUser.studentId
+                    })
+                });
+                const data = await res.json();
+                alert(data.message);
+                loadHomeworkTable();
+            } catch (err) {
+                alert("កំហុសក្នុងការលុប៖ " + err.message);
+            }
         }
 
-        // មុខងារលុបកិច្ចការផ្ទះ ឬកិច្ចការស្រាវជ្រាវ សម្រាប់ Admin និងគ្រូបន្ទុកថ្នាក់
         async function deleteHwTeacherOrAdmin(hw) {
             const confirmMsg = `តើអ្នកពិតជាចង់លុបកិច្ចការផ្ទះ/ស្រាវជ្រាវនេះមែនទេ?\n\n• ថ្នាក់៖ ${hw.className}\n• សិស្ស៖ ${hw.studentName} (${hw.studentId || '-'})\n• មេរៀន៖ ${hw.lessonTitle}`;
             if (!confirm(confirmMsg)) return;
@@ -1986,33 +2000,44 @@
 
         document.getElementById('editLessonForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const grade = document.getElementById('elGrade').value;
-            const idx = document.getElementById('elIndex').value;
-            const updated = {
-                action: 'saveLesson',
-                grade: grade,
-                lessonIndex: idx,
-                title: document.getElementById('elTitle').value,
-                lessonVideo: document.getElementById('elVid1').value,
-                lessonVideo2: document.getElementById('elVid2').value,
-                expVideo: document.getElementById('elExp').value,
-                pdfDoc: document.getElementById('elPdf').value,
-                resDoc: document.getElementById('elRes').value,
-                exerciseVideo: document.getElementById('elExVid').value,
-                resExercise: document.getElementById('elResEx').value,
-                workUrl: "",
-                quizScriptUrl: document.getElementById('elQuizUrl').value
-            };
-            defaultLessonData[grade][idx] = updated;
-            const res = await fetch(MAIN_APPS_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(updated)
-            });
-            const data = await res.json();
-            alert(data.message);
-            document.getElementById('editLessonModal').style.display = 'none';
-            renderLessonList(grade);
+            const btn = document.getElementById('btnSaveLesson');
+            btn.disabled = true;
+            btn.innerText = "កំពុងរក្សាទុក...";
+
+            try {
+                const grade = document.getElementById('elGrade').value;
+                const idx = document.getElementById('elIndex').value;
+                const updated = {
+                    action: 'saveLesson',
+                    grade: grade,
+                    lessonIndex: idx,
+                    title: document.getElementById('elTitle').value,
+                    lessonVideo: document.getElementById('elVid1').value,
+                    lessonVideo2: document.getElementById('elVid2').value,
+                    expVideo: document.getElementById('elExp').value,
+                    pdfDoc: document.getElementById('elPdf').value,
+                    resDoc: document.getElementById('elRes').value,
+                    exerciseVideo: document.getElementById('elExVid').value,
+                    resExercise: document.getElementById('elResEx').value,
+                    workUrl: "",
+                    quizScriptUrl: document.getElementById('elQuizUrl').value
+                };
+                defaultLessonData[grade][idx] = updated;
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(updated)
+                });
+                const data = await res.json();
+                alert(data.message);
+                document.getElementById('editLessonModal').style.display = 'none';
+                renderLessonList(grade);
+            } catch (err) {
+                alert("កំហុសក្នុងការរក្សាទុកមេរៀន៖ " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "រក្សាទុកមេរៀន";
+            }
         });
 
         // --- ADMIN MANAGE USERS ---
@@ -2022,26 +2047,31 @@
             btn.disabled = true;
             btn.innerText = "កំពុងរក្សាទុក...";
 
-            const payload = {
-                action: 'manageUser',
-                username: document.getElementById('admUsername').value.trim(),
-                password: document.getElementById('admPassword').value.trim(),
-                role: document.getElementById('admRole').value,
-                gradeLevel: document.getElementById('admGradeLevel').value,
-                className: document.getElementById('admClassName').value.trim().toUpperCase(),
-                studentId: document.getElementById('admStudentId').value.trim(),
-                canEditLesson: document.getElementById('admCanEditLesson').checked
-            };
-            const res = await fetch(MAIN_APPS_SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            });
-            const data = await res.json();
-            alert(data.message);
-            btn.disabled = false;
-            btn.innerText = "រក្សាទុក / កំណត់សិទ្ធិ";
-            loadAdminUsers();
+            try {
+                const payload = {
+                    action: 'manageUser',
+                    username: document.getElementById('admUsername').value.trim(),
+                    password: document.getElementById('admPassword').value.trim(),
+                    role: document.getElementById('admRole').value,
+                    gradeLevel: document.getElementById('admGradeLevel').value,
+                    className: document.getElementById('admClassName').value.trim().toUpperCase(),
+                    studentId: document.getElementById('admStudentId').value.trim(),
+                    canEditLesson: document.getElementById('admCanEditLesson').checked
+                };
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                alert(data.message);
+                loadAdminUsers();
+            } catch (err) {
+                alert("កំហុសក្នុងការរក្សាទុក៖ " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "រក្សាទុក / កំណត់សិទ្ធិ";
+            }
         });
 
         async function loadAdminUsers() {
@@ -2086,17 +2116,21 @@
         async function loadAllQuizScores() {
             const box = document.getElementById('allScoresContainer');
             box.innerHTML = "កំពុងទាញយកទិន្នន័យ...";
-            const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
-            const url = `${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}&role=${currentUser.role}`;
-            const res = await fetch(url);
-            const json = await res.json();
-            cachedQuizScoresData = json.data || [];
+            try {
+                const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
+                const url = `${MAIN_APPS_SCRIPT_URL}?action=getQuizScores&className=${encodeURIComponent(currentUser.className)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId)}&role=${currentUser.role}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                cachedQuizScoresData = json.data || [];
 
-            if (currentUser.role === 'teacher' || currentUser.role === 'admin') {
-                populateTeacherAdminFilters('scoreClassFilter', 'scoreLessonFilter', cachedQuizScoresData);
+                if (currentUser.role === 'teacher' || currentUser.role === 'admin') {
+                    populateTeacherAdminFilters('scoreClassFilter', 'scoreLessonFilter', cachedQuizScoresData);
+                }
+
+                renderQuizScoresFiltered();
+            } catch (err) {
+                box.innerHTML = `<p style="color:red;">កំហុសក្នុងការទាញទិន្នន័យ៖ ${err.message}</p>`;
             }
-
-            renderQuizScoresFiltered();
         }
 
         function renderQuizScoresFiltered() {
