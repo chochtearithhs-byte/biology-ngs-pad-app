@@ -144,8 +144,8 @@
             border-left: 5px solid var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,0.04);
         }
         .btn-sm {
-            padding: 8px 14px; border: none; border-radius: 8px; font-weight: 600;
-            cursor: pointer; font-size: 0.85rem; margin-left: 6px;
+            padding: 7px 12px; border: none; border-radius: 8px; font-weight: 600;
+            cursor: pointer; font-size: 0.83rem; margin-left: 4px;
         }
         .btn-study { background: var(--primary-light); color: white; }
         .btn-excel { background: #15803d; color: white; display: inline-flex; align-items: center; gap: 6px; }
@@ -209,7 +209,6 @@
             overflow-y: auto; border-radius: 16px; padding: 24px; position: relative;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        /* ផ្ទាំងមើល PDF / Play Video ធំទូលាយដូចផ្ទាំងដាក់ពិន្ទុ */
         .media-modal-box {
             max-width: 960px;
             width: 96%;
@@ -261,7 +260,6 @@
             <h1>ប្រព័ន្ធសិក្សាជីវវិទ្យា NGS_PAD</h1>
             <p>វិទ្យាល័យព្រះអង្គឌួង - កម្មវិធីសាលារៀនជំនាន់ថ្មី</p>
 
-            <!-- ប៊ូតុងដំឡើង App លើផ្ទាំង Login -->
             <div style="display:flex; justify-content:center; margin-bottom:15px;">
                 <button type="button" class="btn-install-pwa" id="installBtnLogin" onclick="installPWA()">📲 ដំឡើងកម្មវិធីលើអេក្រង់ (Install App)</button>
             </div>
@@ -345,7 +343,6 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-end;">
                         <div id="permissionNotice" style="background:rgba(255,255,255,0.15); padding:10px 15px; border-radius:10px; font-size:0.85rem;"></div>
-                        <!-- ប្រអប់ជ្រើសរើសថ្នាក់រហ័សសម្រាប់គ្រូតាម Admin កំណត់ -->
                         <div id="teacherActiveClassBox" class="hidden" style="background:rgba(255,255,255,0.2); padding:6px 12px; border-radius:10px; font-size:0.85rem; display:flex; align-items:center; gap:8px;">
                             <label for="teacherQuickClassSelect"><strong>🏫 ថ្នាក់កំពុងគ្រប់គ្រង៖</strong></label>
                             <select id="teacherQuickClassSelect" onchange="onTeacherQuickClassChange(this.value)" style="padding:4px 10px; border-radius:6px; border:none; font-weight:700; color:#14532d;"></select>
@@ -422,7 +419,6 @@
                             </div>
                         </div>
 
-                        <!-- តម្រងជ្រើសរើសថ្នាក់ និងមេរៀនសម្រាប់ គ្រូបន្ទុកថ្នាក់ និង Admin -->
                         <div id="teacherAdminHwFilterBar" class="filter-bar hidden">
                             <div class="filter-group">
                                 <label><strong>🏫 ជ្រើសរើសថ្នាក់៖</strong></label>
@@ -439,7 +435,7 @@
                         </div>
 
                         <p style="font-size:0.88rem; color:#64748b;">
-                            • សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ ចុចលើប៊ូតុង <strong>🎬 វីដេអូ / 📄 PDF / 📁 Drive File</strong> ដើម្បីបើកមើលផ្ទាល់លើអេក្រង់។
+                            * សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ ចុចលើប៊ូតុង <strong>🎬 វីដេអូ / 📄 PDF / 📁 Drive File</strong> ដើម្បីបើកមើលផ្ទាល់លើអេក្រង់។
                         </p>
                         <div style="overflow-x:auto;">
                             <table class="data-table">
@@ -474,7 +470,6 @@
                             </div>
                         </div>
 
-                        <!-- តម្រងជ្រើសរើសថ្នាក់ និងមេរៀនសម្រាប់ គ្រូបន្ទុកថ្នាក់ និង Admin -->
                         <div id="teacherAdminScoreFilterBar" class="filter-bar hidden">
                             <div class="filter-group">
                                 <label><strong>🏫 ជ្រើសរើសថ្នាក់៖</strong></label>
@@ -490,7 +485,7 @@
                             </div>
                         </div>
 
-                        <div id="allScoresContainer">កំពុងទាញយកទិន្នន័យ...</div>
+                        <div style="overflow-x:auto;" id="allScoresContainer">កំពុងទាញយកទិន្នន័យ...</div>
                     </div>
                 </section>
 
@@ -499,7 +494,7 @@
                     <div class="study-panel">
                         <h2 style="margin-top:0; color:var(--danger);">🛡️ គ្រប់គ្រងគណនី និងកំណត់ថ្នាក់ជូនគ្រូបន្ទុកថ្នាក់ (Admin)</h2>
                         <p style="font-size:0.85rem; color:#475569; margin-top:-8px;">
-                            • Admin អាចកំណត់ថ្នាក់ឱ្យគ្រូម្នាក់បង្រៀនច្រើនថ្នាក់ដោយបន្ថែមម្តងមួយថ្នាក់ (ដូចជា <code>១១F</code>, <code>១១G</code>, <code>១០A</code>) ឬវាយចូលគ្នាដោយដាក់សញ្ញាក្បៀស (ឧ. <code>១១A, ១១B, ១១F</code>) ឬ <code>ALL</code>។
+                            * Admin អាចកំណត់ថ្នាក់ឱ្យគ្រូម្នាក់បង្រៀនច្រើនថ្នាក់ដោយបន្ថែមម្តងមួយថ្នាក់ (ដូចជា <code>១១F</code>, <code>១១G</code>, <code>១០A</code>) ឬវាយចូលគ្នាដោយដាក់សញ្ញាក្បៀស (ឧ. <code>១១A, ១១B, ១១F</code>) ឬ <code>ALL</code>។
                         </p>
                         <form id="adminUserForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; background:#f8fafc; padding:15px; border-radius:12px;">
                             <input type="text" id="admUsername" placeholder="ឈ្មោះគ្រូ ឬសិស្ស (Username)" required>
@@ -531,7 +526,58 @@
         </div>
     </div>
 
-    <!-- MODAL ថ្មី៖ ផ្ទាំង VIEW PDF / PLAY VIDEO ផ្ទាល់លើអេក្រង់ -->
+    <!-- MODAL ថ្មី៖ កែប្រែលទ្ធផលពិន្ទុតេស្ត ១០០ សំណួរ (សម្រាប់ Admin & គ្រូបន្ទុកថ្នាក់) -->
+    <div class="modal-overlay" id="editQuizScoreModal" onclick="if(event.target === this) closeEditQuizScoreModal()">
+        <div class="modal-box">
+            <h3 style="margin-top:0; color:var(--primary);">✏️ កែប្រែលទ្ធផលពិន្ទុតេស្ត ១០០ សំណួរ</h3>
+            <form id="editQuizScoreForm">
+                <input type="hidden" id="eqRowIndex">
+                <input type="hidden" id="eqOrigClassName">
+                <input type="hidden" id="eqOrigStudentName">
+                <input type="hidden" id="eqOrigLesson">
+                <input type="hidden" id="eqOrigScore">
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label>ថ្នាក់</label>
+                        <input type="text" id="eqClassName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>អត្តលេខសិស្ស</label>
+                        <input type="text" id="eqStudentId">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>ឈ្មោះសិស្ស</label>
+                    <input type="text" id="eqStudentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>មេរៀន</label>
+                    <input type="text" id="eqLesson" required>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label style="color:var(--primary);">ពិន្ទុទទួលបាន</label>
+                        <input type="number" step="0.01" id="eqScore" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ពិន្ទុពេញ (Total)</label>
+                        <input type="number" id="eqTotal" value="100" required>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+                    <button type="button" class="btn-sm" style="background:#cbd5e1;" onclick="closeEditQuizScoreModal()">បោះបង់</button>
+                    <button type="submit" class="btn-sm btn-study" id="btnSaveEditQuizScore">រក្សាទុកការកែប្រែ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL ផ្ទាំង VIEW PDF / PLAY VIDEO ផ្ទាល់លើអេក្រង់ -->
     <div class="modal-overlay" id="mediaViewerModal" onclick="if(event.target === this) closeMediaViewerModal()">
         <div class="modal-box media-modal-box">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:10px; flex-wrap:wrap;">
@@ -573,7 +619,6 @@
                     <input type="file" id="hwFileUpload" accept=".pdf,.doc,.docx,image/*">
                 </div>
 
-                <!-- ផ្នែកពិន្ទុសម្រាប់តែគ្រូបន្ទុកថ្នាក់ប៉ុណ្ណោះ -->
                 <div id="teacherGradingFields" class="hidden" style="background:#fef9c3; padding:12px; border-radius:10px; margin-bottom:12px;">
                     <div class="form-group">
                         <label style="color:#854d0e;">ពិន្ទុកិច្ចការ (សម្រាប់គ្រូបន្ទុកថ្នាក់)</label>
@@ -662,19 +707,16 @@
             if (!rawUrl) return '';
             const url = rawUrl.trim();
 
-            // ១. YouTube standard link (youtube.com/watch?v=ID)
             const ytWatchMatch = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
             if (ytWatchMatch) {
                 return `https://www.youtube.com/embed/${ytWatchMatch[1]}?autoplay=1`;
             }
 
-            // ២. YouTube short link (youtu.be/ID)
             const ytShortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
             if (ytShortMatch) {
                 return `https://www.youtube.com/embed/${ytShortMatch[1]}?autoplay=1`;
             }
 
-            // ៣. Google Drive file link (/file/d/ID/view ឬ ?id=ID)
             const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
             if (driveFileMatch) {
                 return `https://drive.google.com/file/d/${driveFileMatch[1]}/preview`;
@@ -684,7 +726,6 @@
                 return `https://drive.google.com/file/d/${driveOpenMatch[1]}/preview`;
             }
 
-            // ៤. Google Docs / Slides / Sheets (/d/ID/edit ឬ /view)
             const googleDocsMatch = url.match(/docs\.google\.com\/(document|presentation|spreadsheets)\/d\/([a-zA-Z0-9_-]+)/);
             if (googleDocsMatch) {
                 return `https://docs.google.com/${googleDocsMatch[1]}/d/${googleDocsMatch[2]}/preview`;
@@ -773,7 +814,7 @@
         // =========================================================================
         // MAIN APPLICATION LOGIC
         // =========================================================================
-        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc56hLQqC0i-591Amvc62_KRqafYcvk79fdTv6jmM04nIPZqDg74wfcvhb6KXmg8W8/exec";
+        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTMg2r0YKQtgP5z2rYYUwSuQa0iwSyiE-BuleSR6mdctK75DUB66TeEGVhAeWdyq6E/exec";
 
         let currentUser = null;
         let selectedLoginRole = 'student';
@@ -813,9 +854,9 @@
                 { title: "ជំពូកទី២ មេរៀនទី២ ទំនាក់ទំនងក្នុងបរិស្ថាន", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c2-u/home", resDoc: "https://drive.google.com/file/d/15Yd5OJvMaLcBCGz1a6yM5z3l1Z1XhKB1/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAuuQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1CsJx_KO3mXyW3NuPsmopk79f7dWqtOa6FWb-VFDumz8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbz0BevZ1Cx7uwaaPQ7dI9yBYfdvB6iaw4T09KRtGiIf6hvkGu6VvD-02uTWiy-FZXCjWQ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyloIBB2yHIsBuSoNi50WNEU8cITMGk4NoWL7dHMlHhkWEyTqu8Eq9tn6QFZcd-aSs/exec" },
                 { title: "ជំពូកទី៣ មេរៀនទី១ បន្សាយ", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c3-/home", resDoc: "https://drive.google.com/file/d/1dMTrr4SZPcQjpVZV2EMuFCvVtMPwze3c/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAuuQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Gib6/preview", workUrl: "https://docs.google.com/document/d/1pn5fBjrIwoNq55FGGkV7bkwSqtpSeC0fxi6c8wMwMuk/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx1lQW4M2RlojjdkuZaLsG3rVqkGrxfYCkKbPIBfXMno9b6XvaCxYMw5rWTF0E004XJDA/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycby6Ea_CgFSqFcFwvvTVEsIJVfeAHFAqqT8hIT2WnXP-gij3zYUiGsCWz-p-BIj7GUj5Rg/exec" },
                 { title: "ជំពូកទី៣ មេរៀនទី២ ដំណឹកនាំក្នុងរុក្ខជាតិ", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZ4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4Ze4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c3-/home", resDoc: "https://drive.google.com/file/d/1b_XA6LI-6NiAgNMQDXcEN84tUIbQa3oc/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giob6/preview", workUrl: "https://docs.google.com/document/d/1hul4AhnOdU8yTvQFaeap2_jzOYT9UuX3qsogyPSBXxQ/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwrsiNcuBL5XKKcDE2qjlQq3sQXJcYylKCgQ4v-of0E5pmS924hzOy7e8HNRwc3Lz1oJw/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycby3ORTl8dYqYclmcnQr70YF3VI0TC4DXAItFKv1MpvcoILKp7flLuufHEIVnyviymnv/exec" },
-                { title: "ជំពូកទី៤ មេរៀនទី១ ប្រដាប់ដង្ហើម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/16TsdK4TtVYDYGGcBsMGAJQgAp-L40_09/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0QGiofb6/preview", workUrl: "https://docs.google.com/document/d/1Y1HnLIr9awsyIz8GGhKe-jgSQuVbBNwHsG8eT1IhOis/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxKm7_uhagR6aEe0V_zkei5XY4l9RhGX7Y5g9l56WVnWhbB6zeqC2MTBrAjMvMNMfXS/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyd7hHMuHDDOjr5_Q7rHGYrKWG0tcw5Y2DOnyQBcmoBAqi0eJnY37BwUOB4WUxyF5gGlg/exec" },
+                { title: "ជំពូកទី៤ មេរៀនទី១ ប្រដាប់ដង្ហើម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/16TsdK4TtVYDYGGcBsMGAJQgAp-L40_09/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1Y1HnLIr9awsyIz8GGhKe-jgSQuVbBNwHsG8eT1IhOis/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxKm7_uhagR6aEe0V_zkei5XY4l9RhGX7Y5g9l56WVnWhbB6zeqC2MTBrAjMvMNMfXS/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyd7hHMuHDDOjr5_Q7rHGYrKWG0tcw5Y2DOnyQBcmoBAqi0eJnY37BwUOB4WUxyF5gGlg/exec" },
                 { title: "ជំពូកទី៤ មេរៀនទី២ ដង្ហើម", lessonVideo: "https://www.youtube.com/embed/iOjo4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjo4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1aK7Dek06w-Mb3OBNu0OcrfSJH-OY6prD/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1x8QYeQh96nNUrD58QSC6PEVRXK0VPPJZIYMtu8bzy1E/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxeWXm3YmuvLljiyPKY_ymzJFcFV34stNfuJ7c9bPOoRkqCcrZwIbyJrc5-pkSFXTzR/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzK7AfDYgALxMj7fpJlAwTDoWmQtoiOVtdWcaM4XbYtSJ-M2fMkwfYCLgoSQf7ezt2toA/exec" },
-                { title: "ជំពូកទី៤ មេរៀនទី៣ ដង្ហើមកោសិកា", lessonVideo: "https://www.youtube.com/embed/Cijko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1JDtZkg6lwGAMnLZs1_KW4cLrNsVtFycs/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx00Gfb6/preview", workUrl: "https://docs.google.com/document/d/1lAKtz0S6S8xt-fEcSPf5EfPlWizV4hXUncl7UjtIcOE/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxO6Q67v-C0u3cKQUAv-JUsWEClH84ZYOfYR2SZoJy_WotlG3jWIZA2AwjkxfY3XETl8w/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwHWSvKhO0JqcTNpS0-5z3kq857JfIRUBQI513VuHIGXRKk6nnz0ThCDhRuf7X5ZuQ2/exec" },
+                { title: "ជំពូកទី៤ មេរៀនទី៣ ដង្ហើមកោសិកា", lessonVideo: "https://www.youtube.com/embed/Cijko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1JDtZkg6lwGAMnLZs1_KW4cLrNsVtFycs/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1lAKtz0S6S8xt-fEcSPf5EfPlWizV4hXUncl7UjtIcOE/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxO6Q67v-C0u3cKQUAv-JUsWEClH84ZYOfYR2SZoJy_WotlG3jWIZA2AwjkxfY3XETl8w/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwHWSvKhO0JqcTNpS0-5z3kq857JfIRUBQI513VuHIGXRKk6nnz0ThCDhRuf7X5ZuQ2/exec" },
                 { title: "ជំពូកទី៤ មេរៀនទី៤ ប្រដាប់់របត់ឈាម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4Ze4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1XRPc20RaXcEML8kuKq-nEqr1Nhv_h9_P/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1TAswj7EtXmFItaTCZQyOrF95yaKIxaRzywNz5Jf9xV8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzntrepUP0qr_BZszcJn5D4xtyhFF45zwCAAOh1fxcrMGV4qeVVCvxxcs_SMV3zbMOW/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxy1cgq7hHWp4Cd5Xs4EJ2hd6Ual1on7JBDM_AXrRw33C8Ens3vdh6YnawMY0kI8povfw/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី១ អាហារ", lessonVideo: "https://www.youtube.com/embed/CiOjk4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1lcYOnqsjke7zPexjinP-2H9ii-fXtqVS/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1mgfRGbpv4ZNXXDpaFAVeOv2m3pppQXh3zaXkWySbvqg/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbyhxo5HwdTG-ytwlMCjKEOAVSUgyE4ALQ8X381yzQZ9AWoTdDsXH5piyEJBELTcb6sd/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwiOSRsYK3tQLSAtp4PkxUP_cPJFKzc-ElXHgtMdjAnFhC8-mFxlGuXjH-5HqHblBCh/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី២ របបអាហារនិងថាមពល", lessonVideo: "https://www.youtube.com/embed/CiOjko4oe4", lessonVideo2: "https://www.youtube.com/embed/CiOjkooZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1OdLwSmMLAhb2C9BEOAOsJZ5_NdSlmih3/preview", exerciseVideo: "https://www.youtube.com/embed/oY5coAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-/preview", workUrl: "https://docs.google.com/document/d/1QaS7hDxUO8o_J3gT9RHJ1FQC9BVT6y2RMkik-f8biaU/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzUq6rawmy2kn5HcpVYO1tfrhgPa4HCKmVz6zdOxpPLtnJAtD7fCKGFmWhX9-2BwQp_/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzS-T52vJkGoQgIhXJXKsbxN1fXqAkZCCf34AfBHlDE5JDcBXXVztQDZGE0yoohqmlY/exec" },
@@ -841,7 +882,7 @@
                 { title: "មេរៀនទី ១៥", lessonVideo: "https://www.youtube.com/embed/CiOjko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-g9-c6-u3/home", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://sites.google.com/moeys.gov.kh/homework-g9-c6-u3/home", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx91vtd1dhJn0XTHHIqFizPJ_48iP4SHHwZigmPkoWoks2kCdgY6k2AAkrKdSkoTUNT1Q/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyZw_4m9NjvKrmr8R1jhTGc4Xn9ROtQ57b__BSmZwu5Gw8J017ObNBmq0jgP3IKUzVW/exec" }
             ],
             '១០': [
-                { title: "សេចក្ដីផ្ដើម៖ជីវវិទ្យា", lessonVideo: "https://www.youtube.com/embed/vZgET-1ODSM?si=z4NSIp8ujzyVVkco", lessonVideo2: "https://www.youtube.com/embed/vZgET-1ODSM?si=z4NSIp8ujzyVVkco", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/16SJVlV_G-qxfphef4SFHrFaRNPrx0KUY/preview", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovB/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4u", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb/preview", workUrl: "https://docs.google.com/document/d/1S2kdeNRsdC29QDH-hyvAjHo5UtFnV6tkflaogfg3tec/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwqHzLMyxvP8XUxlBb6A13EafOPZM2edWcNpne3RADxboITo2PQJ40RGymwAJZHpY3t/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxE_J3Xtbr7-nbN5nA6YAsA_7ExURN7_YilVDJaYrsd7-qCrlN05BPCdR8XQgrCDpvJ/exec" },
+                { title: "សេចក្ដីផ្ដើម៖ជីវវិទ្យា", lessonVideo: "https://www.youtube.com/embed/vZgET-1ODSM?si=z4NSIp8ujzyVVkco", lessonVideo2: "https://www.youtube.com/embed/vZgET-1ODSM?si=z4NSIp8ujzyVVkco", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/16SJVlV_G-qxfphef4SFHrFaRNPrx0KUY/preview", resDoc: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovB/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4u", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1S2kdeNRsdC29QDH-hyvAjHo5UtFnV6tkflaogfg3tec/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwqHzLMyxvP8XUxlBb6A13EafOPZM2edWcNpne3RADxboITo2PQJ40RGymwAJZHpY3t/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxE_J3Xtbr7-nbN5nA6YAsA_7ExURN7_YilVDJaYrsd7-qCrlN05BPCdR8XQgrCDpvJ/exec" },
                 { title: "ជំពូកទី១ មេរៀនទី១ ចំណែកថ្នាក់ និងដើមឈើមែកធាងពូជអម្បូរ", lessonVideo: "https://www.youtube.com/embed/5PcP3jR5whM", lessonVideo2: "https://www.youtube.com/embed/5PcP3jR5whM", expVideo: "https://www.youtube.com/embed/zKZ1g0o6PqE", pdfDoc: "https://drive.google.com/file/d/1QlCOF6Jdaco4dL6vmpcNk6fM-FwBJcrO/preview", resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", resExercise: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", workUrl: "https://docs.google.com/document/d/1bFMIucXBVVwr5WuV_BuGLwAEv8ThUfMajbk61FvRSGg/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwQJc8EU-WDzQBJuvLzotgW_LjrQS0WD4UgfNfizPy281ggY01Agx_Y0RhcUmPG8OyC/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyYBxzeTIp-LKy_7kQwvUSnhDXlO_ABpfA93LrNHw2crs5q8g8J1iVXzZTJVgyakR8J/exec" },
                 { title: "ជំពូកទី១ មេរៀនទី២ វីរូស និងបាក់តេរី", lessonVideo: "https://www.youtube.com/embed/AK7SgaSatUg", lessonVideo2: "https://www.youtube.com/embed/AK7SgaSatUg", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/1r_Zq13nxJz1fB1Yp14ENcEVdN-P8WlU0/preview", resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", resExercise: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", workUrl: "https://docs.google.com/document/d/1FCdWzlnQ9IjgH8lfztJum5DBa91-aHl4uIp7BS-v6yk/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycby_ptzV51WFt1d1sbNzUHsuR6V4dp47eJb2G9JQ5igGjW1r_M61e71NcYpYFBffLL36vw/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyR-3xqHK4EkrZEmUp0Pxj1I-3njQRDhiIMlUBXUnUe6ctpdVc9Goe6pHaC74_lAdvBSQ/exec" },
                 { title: "ជំពូកទី១ មេរៀនទី៣ ប្រូទីស", lessonVideo: "https://www.youtube.com/embed/_m1Tf0CojSI", lessonVideo2: "https://www.youtube.com/embed/_m1Tf0CojSI", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/1zD5ObtW5hOJxp-Wp_tQoLoYeFPI5W_lQ/preview", resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", resExercise: "https://drive.google.com/file/d/13bbEg4ARr6ktVGpxpt-w7ML1R3xtovBv/preview", workUrl: "https://docs.google.com/document/d/1dthDpK4lSwBFKmG4HbNU0cphgghrb7lodkJMaoBiAfk/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxdC5P4i2gNvnhhj3QxQL98QzXNWjUQhzwWpuuIOzaESnQAfvkbK3uSioTKpfumVOVT/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxDOtwAFwbaravg3mEmiwHF4TUKp25XMU7fh811hfOsa48GyG_IM0SFZCE0kcRJrb_JiQ/exec" },
@@ -868,7 +909,7 @@
                 { title: "ជំពូកទី២ មេរៀនទី៤ ប្រដាប់បន្តពូជ", lessonVideo: "https://www.youtube.com/embed/GpGPBD3vUL4?si=W2arLHLWYNFFR0iw", lessonVideo2: "https://www.youtube.com/embed/5itaiSAnNlM?si=FNw8lpSrR7GUZ6br", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/11Rz4b6PIXKmkAIwi-n-PqBBU3Eaw7SQ_/preview", resDoc: "https://drive.google.com/file/d/1PlG1lFqtTZaq-Ykv_x1qRKuKb3QrHTpC/preview", exerciseVideo: "https://www.youtube.com/embed/ULWZjWkntOY?si=K6ByVSjkJf2LUQms", resExercise: "https://drive.google.com/file/d/1cZsOWcjr1h8MjlJ9CsJh87NP6ixfOKjD/preview", workUrl: "https://docs.google.com/document/d/1D3Jr74vgVxRm496ukQ-tUD-8OjV0LvoBZII3qNBstFg/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwx7mR3-mYYVI-n_NFx1hALd6EgCxF_eLFgyZwO4ccJSR_eJy1UiOIY4xobj7VvRhWJ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwNBtaUVdPiVfPMxue7-mmmg6s66e0RuzY_s5-igOB-gffarPp2Lsu7Hl_KIbDQDLP3/exec" },
                 { title: "ជំពូកទី២ មេរៀនទី៥ ប្រដាប់របត់ឈាមនិងប្រព័ន្ធស៊ាំ", lessonVideo: "https://www.youtube.com/embed/5eTrt48ktcI?si=7KEmRSHhWBqg8yif", lessonVideo2: "https://www.youtube.com/embed/vT3S65s1_pE?si=4aVpscXmvyqYGmrA", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo?si=4aVpscXmvyqYGmrA", pdfDoc: "https://drive.google.com/file/d/1VK0xbclWM-51coq2yNlMCzdVwpssUOl_/preview", resDoc: "https://drive.google.com/file/d/15--rREYAvNE0q0fKCzJ1qPzwxfcmX2vp/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", resExercise: "https://drive.google.com/file/d/1rVo6JRMz-OqnOg44DhAX6SMz33qV5Pn/preview", workUrl: "https://docs.google.com/document/d/1SV0UfGpn-WnN4gC0n-IBMasfQYNCCbvDIOPeS3fMu5c/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwee-0928G1y0UlYLj0eae8gd_mv2qGSO0BemXTQBnx3PkAqUckZDazATHHUqLtZj-9jg/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzNKancZp-sKHDS1QUpxT3qK6Xu8Ir9rca1VXCPpGtiLJ1pQ7qePrxqI_8fFomgACzA/exec" },
                 { title: "ជំពូកទី៣ មេរៀនទី១ ច្បាប់តំណពូជ", lessonVideo: "https://www.youtube.com/embed/-imkOUCujDs?si=rfIA4rIq8ATIBL5g", lessonVideo2: "https://www.youtube.com/embed/-imkOUCujDs?si=rfIA4rIq8ATIBL5g", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/146xCfC4tDK4WSXlO6yVZwc6VxCG4JlMN/preview", resDoc: "https://drive.google.com/file/d/1yqOIn04vdOkCMtCiZ7VXAX7JRSfUMB1R/preview", exerciseVideo: "https://www.youtube.com/embed/QBylrB89XeQ?si=BgseALvt_jSki2nH", resExercise: "https://drive.google.com/file/d/1eWuh8Ha2Iwc-5J59QCoNHAM7MO2WZg5j/preview", workUrl: "https://docs.google.com/document/d/13u0wduVDJTDE2szGoFoOTEjQKc6kH1rpJUVaxedgyM0/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzHcbnHUWY_TvJEHcn5SboZ9-JbnezM4IwfVbBrnm-_0kqbNHa-FxkM4D-hmRCAaK6kDA/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyjJLE2NHD_wJJroWUk7cSXulybwsPxi-f1Dm5X2zDMhE2KHFnNmOwhADZ-E8op5JgR/exec" },
-                { title: "ជំពូកទី៣ មេរៀនទី២ ក្រូម៉ូសូម", lessonVideo: "https://www.youtube.com/embed/-y_VdyyWfvk?si=b1FTRu9cmI6KqwuR", lessonVideo2: "https://www.youtube.com/embed/-y_VdyyWfvk?si=b1FTRu9cmI6KqwuR", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/1pbQMRHjYM3XCvGpatp9_5ZBQ8ofhfT5G/preview", resDoc: "https://drive.google.com/file/d/1yqOIn04vdOkCMtCiZ7VXAX7JRSfUMB1R/preview", exerciseVideo: "https://www.youtube.com/embed/_8G0TrzM6m4?si=IYBNgbo4R7g5thYi", resExercise: "https://drive.google.com/file/d/1y1hqAHBIxa6Oa7oxVCCNeKahLDuE8Sfr/preview", workUrl: "https://docs.google.com/document/d/1nAv7WkaxgL0qNXB1tG3jwkERnuuUiGovwuE_i9vUZSU/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbznxfdYnPRKCO1Gh6qgE-bSro-bw8WdCv0GB4V41m1cOnLYD4A0RMFZiDMxmnjxDNLF/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyzKNxyu0ehycT9oAbz688C2CzucLSxaJsef7A6Vsev0YhLjMth-bE3d30oUFl1J3hUUQ/exec" },
+                { title: "ជំពូកទី៣ មេរៀនទី២ ក្រូម៉ូសូម", lessonVideo: "https://www.youtube.com/embed/-y_VdyyWfvk?si=b1FTRu9cmI6KqwuR", lessonVideo2: "https://www.youtube.com/embed/-y_VdyyWfvk?si=b1FTRu9cmI6KqwuR", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/1pbQMRHjYM3XCvGpatp9_5ZBQ8ofhfT5G/preview", resDoc: "https://drive.google.com/file/d/1yqOIn04vdOkCMtCiZ7VXAX7JRSfUMB1/preview", exerciseVideo: "https://www.youtube.com/embed/_8G0TrzM6m4?si=IYBNgbo4R7g5thYi", resExercise: "https://drive.google.com/file/d/1y1hqAHBIxa6Oa7oxVCCNeKahLDuE8Sfr/preview", workUrl: "https://docs.google.com/document/d/1nAv7WkaxgL0qNXB1tG3jwkERnuuUiGovwuE_i9vUZSU/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbznxfdYnPRKCO1Gh6qgE-bSro-bw8WdCv0GB4V41m1cOnLYD4A0RMFZiDMxmnjxDNLF/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbyzKNxyu0ehycT9oAbz688C2CzucLSxaJsef7A6Vsev0YhLjMth-bE3d30oUFl1J3hUUQ/exec" },
                 { title: "ជំពូកទី៤ មេរៀនទី១ ជំងឺបង្កលើមនុស្សនិងវិធានការការពារ", lessonVideo: "https://www.youtube.com/embed/xT-GhmPHn8w?si=Apj3hPoXOiFHm8Pa", lessonVideo2: "https://www.youtube.com/embed/xT-GhmPHn8w?si=Apj3hPoXOiFHm8Pa", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/1wsb3NFgR3vvxtvpjFYTC5YQgAevu0oJ_/preview", resDoc: "https://drive.google.com/file/d/1jBlekNbvRPXsPEQg8vl0FcQ_xpYhrdBf/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giof/preview", workUrl: "https://docs.google.com/document/d/1xmtiX-W49Zdkx7I8Vsc97d0ahdOE2D5VnLdvmjjPeI4/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbz53JmVzwO5iwBIwbOWLbTtpjn8UQKzLP8T4dADZZFYYG-OVgaSNySVer0AIJhbf9uB/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbx6Gd0ivGWyz_EshkqSDcA6NnrcjIDfuUoU-z7T1naTPTpeObQ0xhwHpAffHzWUpHml/exec" },
                 { title: "ជំពូកទី៤ មេរៀនទី២ អាហារ​និងសុខភាព", lessonVideo: "https://www.youtube.com/embed/PBlTyOuejew?si=fVj8-TzFw7MwHVc1", lessonVideo2: "https://www.youtube.com/embed/PBlTyOuejew?si=fVj8-TzFw7MwHVc1", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/1rLn_hZJLlbHFuLeO6D2BkIk_ESSZWRT6/preview", resDoc: "https://drive.google.com/file/d/16ZxnqyO0HWRw2tS9Rn6ZQ9xzwtYYeIVt/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giof/preview", workUrl: "https://docs.google.com/document/d/1xorcgj2URIMGgc4PbdHSJp64YbtYXq-2EMUet6r8dgo/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbz7gRy8jK-SvVzRfgo-Jrncus48YfyJXOZrTSW-MJwpMt-Xc9kk07UoaVYjQpQgQII/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwJJZuRJZKGexNpVMWBXncVD7_MbaK7njybgXI_GCqQDorZ8lFN7wK196QA1dTKWAxO/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី១ ដំណឹកនាំនិងការលូតលាស់ក្នុងរុក្ខជាតិ", lessonVideo: "https://www.youtube.com/embed/lbulrLR_Qik?si=iADTudjmz7o5OdFZ", lessonVideo2: "https://www.youtube.com/embed/lbulrLR_Qik?si=iADTudjmz7o5OdFZ", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://drive.google.com/file/d/1BW6H6fzOVRzy1VJnbbjNq5pbWpzA0r_v/preview", resDoc: "https://drive.google.com/file/d/1r35D-RuM3T2bzvXngzHMGT8RNEOPByJp/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoAu4", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giof/preview", workUrl: "https://docs.google.com/document/d/1e4Kjs3aut1QN-E_9arzglmX-RrFeRbKEs3BSyWjIIBw/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbx3rLVsaA2k2UH8Fb_Eqr4Xt9aI4AFhlDBnGJsNF-ROAnA9ncDRr0WVGBLyPkUO2BTL/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbz_ExcA09zoxWKRp7PN4JhPWLlOXNlgAl3hfUY-1jPEgHRmaYMeKu2stz2bdjibZ6Uz/exec" },
@@ -1745,7 +1786,7 @@
             loadAdminUsers();
         }
 
-        // --- តារាងពិន្ទុតេស្ត ១០០ សំណួរ ---
+        // --- តារាងពិន្ទុតេស្ត ១០០ សំណួរ (បន្ថែមមុខងារ កែ និង លុប សម្រាប់ Admin និងគ្រូបន្ទុកថ្នាក់) ---
         async function loadAllQuizScores() {
             const box = document.getElementById('allScoresContainer');
             box.innerHTML = "កំពុងទាញយកទិន្នន័យ...";
@@ -1799,21 +1840,143 @@
                 return;
             }
 
-            let html = `<table class="data-table"><tr>
-                ${currentUser.role !== 'student' ? '<th>ថ្នាក់</th><th>អត្តលេខ</th><th>ឈ្មោះសិស្ស</th>' : ''}
-                <th>កាលបរិច្ឆេទ</th><th>មេរៀន</th><th>ពិន្ទុ</th>
-            </tr>`;
+            const isStaff = (currentUser.role === 'admin' || currentUser.role === 'teacher');
 
-            rows.forEach(r => {
+            let html = `<table class="data-table">
+                <thead>
+                    <tr>
+                        ${isStaff ? '<th>ថ្នាក់</th><th>អត្តលេខ</th><th>ឈ្មោះសិស្ស</th>' : ''}
+                        <th>កាលបរិច្ឆេទ</th>
+                        <th>មេរៀន</th>
+                        <th>ពិន្ទុ</th>
+                        ${isStaff ? '<th>សកម្មភាព</th>' : ''}
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            rows.forEach((r, idx) => {
+                const canManageRow = (currentUser.role === 'admin') ||
+                    (currentUser.role === 'teacher' && isClassAllowedForTeacher(r.className || currentUser.className, currentUser));
+
+                const rowObjStr = escapeAttr(JSON.stringify(r));
+                const actionCell = isStaff ? (
+                    canManageRow
+                        ? `<td style="white-space:nowrap;">
+                            <button type="button" class="btn-sm btn-edit-lesson" onclick='openEditQuizScoreModal(${rowObjStr})'>✏️ កែ</button>
+                            <button type="button" class="btn-sm" style="background:var(--danger); color:white;" onclick='deleteQuizScoreRow(${rowObjStr})'>🗑️ លុប</button>
+                           </td>`
+                        : `<td>-</td>`
+                ) : '';
+
                 html += `<tr>
-                    ${currentUser.role !== 'student' ? `<td><strong>${r.className || currentUser.className}</strong></td><td>${r.studentId || '-'}</td><td><strong>${r.studentName || '-'}</strong></td>` : ''}
+                    ${isStaff ? `<td><strong>${r.className || currentUser.className}</strong></td><td>${r.studentId || '-'}</td><td><strong>${r.studentName || '-'}</strong></td>` : ''}
                     <td>${new Date(r.date).toLocaleDateString()}</td>
                     <td>${r.lesson || '-'}</td>
                     <td><strong style="color:var(--primary);">${r.score} / ${r.total}</strong></td>
+                    ${actionCell}
                 </tr>`;
             });
-            html += `</table>`;
+            html += `</tbody></table>`;
             box.innerHTML = html;
+        }
+
+        // បើកផ្ទាំងកែប្រែពិន្ទុតេស្ត ១០០ សំណួរ
+        function openEditQuizScoreModal(row) {
+            document.getElementById('eqRowIndex').value = row.rowIndex || '';
+            document.getElementById('eqOrigClassName').value = row.className || '';
+            document.getElementById('eqOrigStudentName').value = row.studentName || '';
+            document.getElementById('eqOrigLesson').value = row.lesson || '';
+            document.getElementById('eqOrigScore').value = row.score !== undefined ? row.score : '';
+
+            document.getElementById('eqClassName').value = row.className || '';
+            document.getElementById('eqStudentId').value = row.studentId || '';
+            document.getElementById('eqStudentName').value = row.studentName || '';
+            document.getElementById('eqLesson').value = row.lesson || '';
+            document.getElementById('eqScore').value = row.score !== undefined ? row.score : 0;
+            document.getElementById('eqTotal').value = row.total || 100;
+
+            document.getElementById('editQuizScoreModal').style.display = 'flex';
+        }
+
+        function closeEditQuizScoreModal() {
+            document.getElementById('editQuizScoreModal').style.display = 'none';
+        }
+
+        document.getElementById('editQuizScoreForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSaveEditQuizScore');
+            btn.disabled = true;
+            btn.innerText = "កំពុងរក្សាទុក...";
+
+            const payload = {
+                action: 'editQuizScore',
+                role: currentUser.role,
+                teacherUsername: currentUser.username,
+                teacherPassword: currentUser._pass || "",
+                allowedClasses: getAssignedClassesForUser(currentUser),
+                rowIndex: document.getElementById('eqRowIndex').value,
+                origClassName: document.getElementById('eqOrigClassName').value,
+                origStudentName: document.getElementById('eqOrigStudentName').value,
+                origLesson: document.getElementById('eqOrigLesson').value,
+                origScore: document.getElementById('eqOrigScore').value,
+                className: document.getElementById('eqClassName').value.trim(),
+                studentId: document.getElementById('eqStudentId').value.trim(),
+                studentName: document.getElementById('eqStudentName').value.trim(),
+                lesson: document.getElementById('eqLesson').value.trim(),
+                score: document.getElementById('eqScore').value,
+                total: document.getElementById('eqTotal').value
+            };
+
+            try {
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (result.status === 'success') {
+                    closeEditQuizScoreModal();
+                    loadAllQuizScores();
+                }
+            } catch (err) {
+                alert("កំហុសក្នុងការកែប្រែទិន្នន័យ៖ " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "រក្សាទុកការកែប្រែ";
+            }
+        });
+
+        // លុបលទ្ធផលពិន្ទុតេស្ត ១០០ សំណួរ
+        async function deleteQuizScoreRow(row) {
+            const confirmMsg = `តើអ្នកពិតជាចង់លុបលទ្ធផលពិន្ទុតេស្តនេះមែនទេ?\n\n• ថ្នាក់៖ ${row.className}\n• សិស្ស៖ ${row.studentName} (${row.studentId || '-'})\n• មេរៀន៖ ${row.lesson}\n• ពិន្ទុ៖ ${row.score} / ${row.total}`;
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'deleteQuizScore',
+                        role: currentUser.role,
+                        teacherUsername: currentUser.username,
+                        teacherPassword: currentUser._pass || "",
+                        allowedClasses: getAssignedClassesForUser(currentUser),
+                        rowIndex: row.rowIndex,
+                        className: row.className,
+                        studentName: row.studentName,
+                        lesson: row.lesson,
+                        score: row.score
+                    })
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (result.status === 'success') {
+                    loadAllQuizScores();
+                }
+            } catch (err) {
+                alert("កំហុសក្នុងការលុបទិន្នន័យ៖ " + err.message);
+            }
         }
 
         // --- EXPORT EXCEL (.xlsx) ---
