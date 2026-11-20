@@ -39,7 +39,7 @@
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 28s linear infinite; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* --- INSTALL APP BUTTON --- */
+        /* --- INSTALL APP & NOTIFICATION BUTTONS --- */
         .btn-install-pwa {
             background: #eab308; color: #0f172a; border: none; padding: 8px 16px;
             border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
@@ -47,6 +47,26 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.2s;
         }
         .btn-install-pwa:hover { background: #facc15; transform: translateY(-1px); }
+
+        .btn-notif-bell {
+            position: relative; background: rgba(255,255,255,0.2); color: white;
+            border: 1px solid rgba(255,255,255,0.35); padding: 6px 12px; border-radius: 20px;
+            cursor: pointer; font-weight: 700; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-notif-bell:hover { background: rgba(255,255,255,0.3); }
+        .notif-badge-count {
+            background: #ef4444; color: white; font-size: 0.72rem; font-weight: 700;
+            padding: 1px 6px; border-radius: 999px; display: none;
+        }
+
+        /* --- TOAST POPUP FOR LIVE NOTIFICATION --- */
+        .notif-toast {
+            position: fixed; bottom: 20px; right: 20px; max-width: 380px; width: calc(100% - 40px);
+            background: #0f172a; color: white; border-left: 6px solid #facc15;
+            padding: 16px; border-radius: 14px; box-shadow: 0 20px 35px rgba(0,0,0,0.35);
+            z-index: 9999; display: none; animation: slideInUp 0.35s ease;
+        }
+        @keyframes slideInUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         /* --- LOGIN SCREEN --- */
         .login-wrapper {
@@ -198,6 +218,13 @@
         .data-table th { background: var(--primary); color: white; padding: 12px; text-align: left; font-size: 0.88rem; }
         .data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.88rem; }
 
+        /* NOTIFICATION ITEM CARD */
+        .notif-item {
+            background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #1d4ed8;
+            padding: 12px 14px; border-radius: 10px; margin-bottom: 10px;
+        }
+        .notif-item.unread { background: #eff6ff; border-color: #93c5fd; border-left-color: #dc2626; }
+
         /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -253,6 +280,18 @@
         </div>
     </div>
 
+    <!-- TOAST POPUP សម្រាប់បង្ហាញសារលោតភ្លាមៗលើអេក្រង់ -->
+    <div id="liveNotifToast" class="notif-toast">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <strong id="toastTitle" style="color:#facc15; font-size:0.95rem;">🔔 ការជូនដំណឹងថ្មី</strong>
+            <button onclick="document.getElementById('liveNotifToast').style.display='none'" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-weight:bold;">✖</button>
+        </div>
+        <div id="toastBody" style="font-size:0.86rem; line-height:1.45; color:#f1f5f9;"></div>
+        <div style="margin-top:10px; text-align:right;">
+            <button onclick="openNotifModal(); document.getElementById('liveNotifToast').style.display='none';" class="btn-sm" style="background:#2563eb; color:white;">មើលសារទាំងអស់</button>
+        </div>
+    </div>
+
     <!-- ១. ផ្ទាំង LOGIN -->
     <div class="login-wrapper" id="loginScreen">
         <div class="login-card">
@@ -297,6 +336,10 @@
             </div>
             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
                 <button type="button" class="btn-install-pwa" id="installBtnTop" onclick="installPWA()">📲 ដំឡើង App</button>
+                <!-- ប៊ូតុងកណ្តឹងជូនដំណឹងសម្រាប់សិស្ស -->
+                <button type="button" class="btn-notif-bell hidden" id="btnStudentNotifBell" onclick="openNotifModal()">
+                    🔔 សារជូនដំណឹង <span id="notifBadgeCount" class="notif-badge-count">0</span>
+                </button>
                 <div class="user-badge">
                     <span id="topUserInfo">👤 អ្នកប្រើប្រាស់</span>
                     <button class="btn-logout" onclick="logout()">ចាកចេញ</button>
@@ -324,6 +367,12 @@
                     <button class="side-btn" id="nav-admin" onclick="switchTab('admin')">
                         ⚙️ កំណត់សិទ្ធិគ្រូ និងសិស្ស
                     </button>
+                </div>
+
+                <!-- ប៊ូតុងអនុញ្ញាតឱ្យសារលោតលើទូរសព្ទ/កុំព្យូទ័រសម្រាប់សិស្ស -->
+                <div id="studentPushEnableBox" class="hidden" style="margin-top:10px; padding:10px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px;">
+                    <div style="font-size:0.8rem; color:#1e40af; font-weight:600; margin-bottom:6px;">📲 ទទួលសារលើអេក្រង់ទូរសព្ទ/PC</div>
+                    <button type="button" id="btnEnableDeviceNotif" onclick="requestDeviceNotificationPermission()" class="btn-sm" style="width:100%; margin-left:0; background:#1d4ed8; color:white;">បើកការជូនដំណឹង (Enable)</button>
                 </div>
 
                 <div style="margin-top: auto; padding: 12px; background: #f8fafc; border-radius: 10px; font-size: 0.8rem; color: #475569;">
@@ -526,7 +575,24 @@
         </div>
     </div>
 
-    <!-- MODAL ថ្មី៖ កែប្រែលទ្ធផលពិន្ទុតេស្ត ១០០ សំណួរ (សម្រាប់ Admin & គ្រូបន្ទុកថ្នាក់) -->
+    <!-- MODAL ថ្មី៖ ប្រអប់សារជូនដំណឹងសម្រាប់សិស្ស (Notifications Modal) -->
+    <div class="modal-overlay" id="notifModal" onclick="if(event.target === this) closeNotifModal()">
+        <div class="modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0; color:var(--primary);">🔔 សារជូនដំណឹងអំពីការកែប្រែកិច្ចការ និងពិន្ទុ</h3>
+                <button type="button" class="btn-sm" style="background:#cbd5e1;" onclick="closeNotifModal()">✖ បិទ</button>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px; flex-wrap:wrap;">
+                <span style="font-size:0.84rem; color:#64748b;">សារទាំងនេះផ្ញើដោយស្វ័យប្រវត្តិនៅពេល Admin ឬគ្រូបន្ទុកថ្នាក់កែប្រែទិន្នន័យរបស់អ្នក។</span>
+                <button type="button" class="btn-sm" style="background:#1d4ed8; color:white;" onclick="markAllNotifsRead()">✓ សម្គាល់ថាបានអានទាំងអស់</button>
+            </div>
+            <div id="notifListContainer" style="max-height:55vh; overflow-y:auto;">
+                <p style="text-align:center; color:#64748b;">កំពុងទាញយកសារ...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL៖ កែប្រែលទ្ធផលពិន្ទុតេស្ត ១០០ សំណួរ (សម្រាប់ Admin & គ្រូបន្ទុកថ្នាក់) -->
     <div class="modal-overlay" id="editQuizScoreModal" onclick="if(event.target === this) closeEditQuizScoreModal()">
         <div class="modal-box">
             <h3 style="margin-top:0; color:var(--primary);">✏️ កែប្រែលទ្ធផលពិន្ទុតេស្ត ១០០ សំណួរ</h3>
@@ -667,11 +733,15 @@
         // PWA SERVICE WORKER REGISTRATION & INSTALL PROMPT
         // =========================================================================
         let deferredPrompt;
+        let swRegistration = null;
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker Registered:', reg.scope))
+                    .then(reg => {
+                        swRegistration = reg;
+                        console.log('Service Worker Registered:', reg.scope);
+                    })
                     .catch(err => console.error('Service Worker Registration Failed:', err));
             });
         }
@@ -708,28 +778,19 @@
             const url = rawUrl.trim();
 
             const ytWatchMatch = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-            if (ytWatchMatch) {
-                return `https://www.youtube.com/embed/${ytWatchMatch[1]}?autoplay=1`;
-            }
+            if (ytWatchMatch) return `https://www.youtube.com/embed/${ytWatchMatch[1]}?autoplay=1`;
 
             const ytShortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
-            if (ytShortMatch) {
-                return `https://www.youtube.com/embed/${ytShortMatch[1]}?autoplay=1`;
-            }
+            if (ytShortMatch) return `https://www.youtube.com/embed/${ytShortMatch[1]}?autoplay=1`;
 
             const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-            if (driveFileMatch) {
-                return `https://drive.google.com/file/d/${driveFileMatch[1]}/preview`;
-            }
+            if (driveFileMatch) return `https://drive.google.com/file/d/${driveFileMatch[1]}/preview`;
+
             const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
-            if (driveOpenMatch) {
-                return `https://drive.google.com/file/d/${driveOpenMatch[1]}/preview`;
-            }
+            if (driveOpenMatch) return `https://drive.google.com/file/d/${driveOpenMatch[1]}/preview`;
 
             const googleDocsMatch = url.match(/docs\.google\.com\/(document|presentation|spreadsheets)\/d\/([a-zA-Z0-9_-]+)/);
-            if (googleDocsMatch) {
-                return `https://docs.google.com/${googleDocsMatch[1]}/d/${googleDocsMatch[2]}/preview`;
-            }
+            if (googleDocsMatch) return `https://docs.google.com/${googleDocsMatch[1]}/d/${googleDocsMatch[2]}/preview`;
 
             return url;
         }
@@ -812,9 +873,179 @@
         }
 
         // =========================================================================
+        // STUDENT NOTIFICATION SYSTEM (PWA DEVICE PUSH + IN-APP POLLING)
+        // =========================================================================
+        let studentNotifications = [];
+        let notifPollInterval = null;
+
+        function getReadNotifIds() {
+            try {
+                return JSON.parse(localStorage.getItem('ngspad_read_notifs') || '[]');
+            } catch (e) { return []; }
+        }
+
+        function saveReadNotifIds(ids) {
+            localStorage.setItem('ngspad_read_notifs', JSON.stringify(ids.slice(-200)));
+        }
+
+        function getAnnouncedNotifIds() {
+            try {
+                return JSON.parse(localStorage.getItem('ngspad_announced_notifs') || '[]');
+            } catch (e) { return []; }
+        }
+
+        function saveAnnouncedNotifIds(ids) {
+            localStorage.setItem('ngspad_announced_notifs', JSON.stringify(ids.slice(-200)));
+        }
+
+        async function requestDeviceNotificationPermission() {
+            if (!('Notification' in window)) {
+                alert("កម្មវិធីរុករក (Browser) របស់អ្នកមិនគាំទ្រការជូនដំណឹងលើអេក្រង់ទេ!");
+                return;
+            }
+            const perm = await Notification.requestPermission();
+            if (perm === 'granted') {
+                alert("✅ បានបើកការជូនដំណឹងទៅកាន់ទូរសព្ទ/កុំព្យូទ័រជោគជ័យ!");
+                document.getElementById('studentPushEnableBox').classList.add('hidden');
+                triggerSystemNotification(
+                    "ប្រព័ន្ធសិក្សាជីវវិទ្យា NGS_PAD",
+                    "អ្នកនឹងទទួលបានសារជូនដំណឹងភ្លាមៗ នៅពេលគ្រូបន្ទុកថ្នាក់ ឬ Admin កែប្រែកិច្ចការ ឬពិន្ទុរបស់អ្នក!"
+                );
+            } else {
+                alert("⚠️ អ្នកបានបដិសេធការជូនដំណឹង។ សូមចូលទៅកាន់ Settings របស់ Browser ដើម្បីអនុញ្ញាត Notification។");
+            }
+        }
+
+        function triggerSystemNotification(title, body) {
+            // ១. បង្ហាញ Toast ក្នុង App ជានិច្ច
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastBody').innerText = body;
+            document.getElementById('liveNotifToast').style.display = 'block';
+
+            // ២. បញ្ជូន System Notification ទៅកាន់ទូរសព្ទ ឬកុំព្យូទ័រ (តាម Service Worker ឬ Notification API)
+            if ('Notification' in window && Notification.permission === 'granted') {
+                const options = {
+                    body: body,
+                    icon: 'https://lh3.googleusercontent.com/d/1mGVFFMVNkaM7cyndEQctonpTa6gOvFaN',
+                    badge: 'https://lh3.googleusercontent.com/d/1mGVFFMVNkaM7cyndEQctonpTa6gOvFaN',
+                    vibrate: [200, 100, 200],
+                    tag: 'ngspad-grade-update-' + Date.now()
+                };
+                if (swRegistration && swRegistration.showNotification) {
+                    swRegistration.showNotification(title, options);
+                } else {
+                    new Notification(title, options);
+                }
+            }
+        }
+
+        function startStudentNotificationPolling() {
+            if (!currentUser || currentUser.role !== 'student') return;
+
+            document.getElementById('btnStudentNotifBell').classList.remove('hidden');
+            if ('Notification' in window && Notification.permission !== 'granted') {
+                document.getElementById('studentPushEnableBox').classList.remove('hidden');
+            }
+
+            checkStudentNotifications(false);
+            if (notifPollInterval) clearInterval(notifPollInterval);
+            notifPollInterval = setInterval(() => checkStudentNotifications(true), 15000); // ឆែករៀងរាល់ ១៥ វិនាទី
+        }
+
+        async function checkStudentNotifications(announceNew = true) {
+            if (!currentUser || currentUser.role !== 'student') return;
+            try {
+                const url = `${MAIN_APPS_SCRIPT_URL}?action=getStudentNotifications&className=${encodeURIComponent(currentUser.className)}&studentName=${encodeURIComponent(currentUser.username)}&studentId=${encodeURIComponent(currentUser.studentId || '')}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                if (json.status !== 'success') return;
+
+                studentNotifications = json.data || [];
+                const readIds = getReadNotifIds();
+                const announcedIds = getAnnouncedNotifIds();
+
+                const unreadList = studentNotifications.filter(n => !readIds.includes(n.notifId));
+                const badge = document.getElementById('notifBadgeCount');
+                if (unreadList.length > 0) {
+                    badge.style.display = 'inline-block';
+                    badge.innerText = unreadList.length;
+                } else {
+                    badge.style.display = 'none';
+                }
+
+                // ប្រកាសសារថ្មីដែលមិនទាន់លោតលើឧបករណ៍
+                const brandNew = unreadList.filter(n => !announcedIds.includes(n.notifId));
+                if (brandNew.length > 0) {
+                    brandNew.forEach(n => announcedIds.push(n.notifId));
+                    saveAnnouncedNotifIds(announcedIds);
+
+                    if (announceNew) {
+                        const latest = brandNew[0];
+                        triggerSystemNotification(latest.title || "🔔 ការកែប្រែពិន្ទុ / កិច្ចការ", latest.message);
+                    }
+                }
+            } catch (err) {
+                console.error("Notification poll error:", err);
+            }
+        }
+
+        function openNotifModal() {
+            document.getElementById('notifModal').style.display = 'flex';
+            renderNotifModalList();
+        }
+
+        function closeNotifModal() {
+            document.getElementById('notifModal').style.display = 'none';
+        }
+
+        function renderNotifModalList() {
+            const container = document.getElementById('notifListContainer');
+            if (!studentNotifications || studentNotifications.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:#64748b; padding:20px;">មិនទាន់មានសារជូនដំណឹងថ្មីនៅឡើយទេ។</p>`;
+                return;
+            }
+            const readIds = getReadNotifIds();
+            let html = "";
+            studentNotifications.forEach(n => {
+                const isUnread = !readIds.includes(n.notifId);
+                html += `
+                    <div class="notif-item ${isUnread ? 'unread' : ''}" onclick="markSingleNotifRead('${n.notifId}')">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <strong style="color:${isUnread ? '#b91c1c' : '#14532d'}; font-size:0.92rem;">${n.title}</strong>
+                            <span style="font-size:0.78rem; color:#64748b;">${new Date(n.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div style="font-size:0.86rem; color:#1e293b; line-height:1.45;">${n.message}</div>
+                        <div style="font-size:0.78rem; color:#475569; margin-top:5px;">ដោយ៖ <strong>${n.updatedBy}</strong></div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function markSingleNotifRead(notifId) {
+            const readIds = getReadNotifIds();
+            if (!readIds.includes(notifId)) {
+                readIds.push(notifId);
+                saveReadNotifIds(readIds);
+                checkStudentNotifications(false);
+                renderNotifModalList();
+            }
+        }
+
+        function markAllNotifsRead() {
+            const readIds = getReadNotifIds();
+            studentNotifications.forEach(n => {
+                if (!readIds.includes(n.notifId)) readIds.push(n.notifId);
+            });
+            saveReadNotifIds(readIds);
+            checkStudentNotifications(false);
+            renderNotifModalList();
+        }
+
+        // =========================================================================
         // MAIN APPLICATION LOGIC
         // =========================================================================
-        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTMg2r0YKQtgP5z2rYYUwSuQa0iwSyiE-BuleSR6mdctK75DUB66TeEGVhAeWdyq6E/exec";
+        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgd0r9N_YZCNc-M9MyyPeaNBL6qg3xArYNbF6gO0vpwvsTQJqo059aCJioDRew0iKe/exec";
 
         let currentUser = null;
         let selectedLoginRole = 'student';
@@ -860,7 +1091,7 @@
                 { title: "ជំពូកទី៤ មេរៀនទី៤ ប្រដាប់់របត់ឈាម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4Ze4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1XRPc20RaXcEML8kuKq-nEqr1Nhv_h9_P/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1TAswj7EtXmFItaTCZQyOrF95yaKIxaRzywNz5Jf9xV8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzntrepUP0qr_BZszcJn5D4xtyhFF45zwCAAOh1fxcrMGV4qeVVCvxxcs_SMV3zbMOW/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxy1cgq7hHWp4Cd5Xs4EJ2hd6Ual1on7JBDM_AXrRw33C8Ens3vdh6YnawMY0kI8povfw/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី១ អាហារ", lessonVideo: "https://www.youtube.com/embed/CiOjk4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1lcYOnqsjke7zPexjinP-2H9ii-fXtqVS/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1mgfRGbpv4ZNXXDpaFAVeOv2m3pppQXh3zaXkWySbvqg/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbyhxo5HwdTG-ytwlMCjKEOAVSUgyE4ALQ8X381yzQZ9AWoTdDsXH5piyEJBELTcb6sd/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwiOSRsYK3tQLSAtp4PkxUP_cPJFKzc-ElXHgtMdjAnFhC8-mFxlGuXjH-5HqHblBCh/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី២ របបអាហារនិងថាមពល", lessonVideo: "https://www.youtube.com/embed/CiOjko4oe4", lessonVideo2: "https://www.youtube.com/embed/CiOjkooZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1OdLwSmMLAhb2C9BEOAOsJZ5_NdSlmih3/preview", exerciseVideo: "https://www.youtube.com/embed/oY5coAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-/preview", workUrl: "https://docs.google.com/document/d/1QaS7hDxUO8o_J3gT9RHJ1FQC9BVT6y2RMkik-f8biaU/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzUq6rawmy2kn5HcpVYO1tfrhgPa4HCKmVz6zdOxpPLtnJAtD7fCKGFmWhX9-2BwQp_/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzS-T52vJkGoQgIhXJXKsbxN1fXqAkZCCf34AfBHlDE5JDcBXXVztQDZGE0yoohqmlY/exec" },
-                { title: "ជំពូកទី៥ មេរៀនទី៣ អាហារមានសុវត្ថិភាព", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1sA1zeMps0zMJDMdfqsdXK7I2fWvnTxwj/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoA4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx00Giofb6/preview", workUrl: "https://docs.google.com/document/d/1Z36fcijrZoYf8wW5Xw-YvMxkKbGI9njNxU5IQIN2zoc/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxbGbtLaRBJJ0sNZhQIXw2k-ZB8Z44EthhF2uhkqHME-U0H5eeSvj_XsLaZwgO9SDMx8g/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzT6AAjG5ZpJu_NgnuZLSvWieAnNrE59e71lQrygsWD13YlSPR-kWv_3Q6V2gLmMgiD/exec" },
+                { title: "ជំពូកទី៥ មេរៀនទី៣ អាហារមានសុវត្ថិភាព", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1sA1zeMps0zMJDMdfqsdXK7I2fWvnTxwj/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoA4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1Z36fcijrZoYf8wW5Xw-YvMxkKbGI9njNxU5IQIN2zoc/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxbGbtLaRBJJ0sNZhQIXw2k-ZB8Z44EthhF2uhkqHME-U0H5eeSvj_XsLaZwgO9SDMx8g/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzT6AAjG5ZpJu_NgnuZLSvWieAnNrE59e71lQrygsWD13YlSPR-kWv_3Q6V2gLmMgiD/exec" },
                 { title: "ជំពូកទី៦ មេរៀនទី១ គ្រឿងញៀន", lessonVideo: "https://www.youtube.com/embed/CiOjk4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjkooZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c6-/home", resDoc: "https://drive.google.com/file/d/1BV0vKiEJEOUx3NS5WXfJJ3PplLImo6tO/preview", exerciseVideo: "https://www.youtube.com/embed/oYqcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Gifb6/preview", workUrl: "https://docs.google.com/document/d/1Nbt3xQVoDnYr4yokHpxfvxpvttu1MhCHWxl56Py5d8M/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwcoIx-7GItiz1oDNrwpoSXxGjERGtRctF6E0ES4M5dL4M5JIV_hlGLNqAgrg_cdpAQ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwlfxsEUT3WAgDNlWBI763LDefFYe704ezekPVBDpK3kO_Wol8vU-FiaZdfem0oTVZ5/exec" },
                 { title: "ជំពូកទី៦ មេរៀនទី២ ឥទ្ធិពលនៃគ្រឿងញៀន", lessonVideo: "https://www.youtube.com/embed/Cijko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c6-/home", resDoc: "https://drive.google.com/file/d/1WhkLsw8-GbTb_NoIsoR6iq3Hz9jj4dUx/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1_G5Ueh7Knypm5ZP3FFlKa6GZAZZB33qB-B0Yfoa0g_E/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwSQqXNPo3BntI0J3YCvoQQGcPXbVf1WlW54lxa19zfi_oZwvJzqNGkpr1MDlCswFNLwA/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbws3xHmOU81cPfccDPS9g0jaVbDlukYnVGAV5xDPgPgx20M4R5q3V6IvMCDK9omyfTIeg/exec" }
             ],
@@ -1033,12 +1264,13 @@
             if (currentUser.role === 'student') {
                 document.getElementById('hwClassHeader').innerText = `ថ្នាក់ ${currentUser.className}`;
                 document.getElementById('permissionNotice').innerText = `សិទ្ធិសិស្ស (${currentUser.username})៖ មើល និងកែប្រែកិច្ចការរបស់ខ្លួនឯង`;
+                startStudentNotificationPolling();
             } else if (currentUser.role === 'teacher') {
                 const assignedClasses = getAssignedClassesForUser(currentUser);
                 const assignedGrades = getAssignedGradesForUser(currentUser);
 
                 document.getElementById('hwClassHeader').innerText = `ថ្នាក់ក្នុងបន្ទុក៖ ${assignedClasses.join(', ')}`;
-                document.getElementById('permissionNotice').innerText = `សិទ្ធិគ្រូ៖ កែកិច្ចការ & ដាក់ពិន្ទុថ្នាក់ ${assignedClasses.join(', ')}`;
+                document.getElementById('permissionNotice').innerText = `សិទ្ធិគ្រូ៖ កែកិច្ចការ លុប & ដាក់ពិន្ទុថ្នាក់ ${assignedClasses.join(', ')}`;
                 document.getElementById('btnExportHwExcel').classList.remove('hidden');
                 document.getElementById('btnExportQuizExcel').classList.remove('hidden');
                 document.getElementById('btnExportCombinedExcel').classList.remove('hidden');
@@ -1086,7 +1318,7 @@
                 document.getElementById('btnExportCombinedExcel').classList.remove('hidden');
                 document.getElementById('teacherAdminHwFilterBar').classList.remove('hidden');
                 document.getElementById('teacherAdminScoreFilterBar').classList.remove('hidden');
-                document.getElementById('permissionNotice').innerText = "សិទ្ធិ Admin៖ កំណត់សិទ្ធិគ្រូ និងគ្រប់គ្រងប្រព័ន្ធ";
+                document.getElementById('permissionNotice').innerText = "សិទ្ធិ Admin៖ កំណត់សិទ្ធិគ្រូ លុប/កែទិន្នន័យ និងគ្រប់គ្រងប្រព័ន្ធ";
             }
 
             const assignedGrades = getAssignedGradesForUser(currentUser);
@@ -1149,6 +1381,7 @@
         }
 
         function logout() {
+            if (notifPollInterval) clearInterval(notifPollInterval);
             localStorage.removeItem('ngspad_user');
             location.reload();
         }
@@ -1493,18 +1726,22 @@
             tbody.innerHTML = "";
             rows.forEach(hw => {
                 const isOwnerStudent = (currentUser.role === 'student' && hw.studentName.toString().trim().toLowerCase() === currentUser.username.trim().toLowerCase());
-                const canTeacherGradeThisRow = (currentUser.role === 'admin') ||
+                const canStaffManageRow = (currentUser.role === 'admin') ||
                     (currentUser.role === 'teacher' && isClassAllowedForTeacher(hw.className, currentUser));
 
+                const hwObjStr = escapeAttr(JSON.stringify(hw));
                 let actionBtns = "-";
                 if (isOwnerStudent) {
                     actionBtns = `
-                        <button class="btn-sm btn-edit-lesson" onclick='openEditHwStudent(${JSON.stringify(hw)})'>✏️ កែ</button>
+                        <button class="btn-sm btn-edit-lesson" onclick='openEditHwStudent(${hwObjStr})'>✏️ កែ</button>
                         <button class="btn-sm" style="background:var(--danger); color:white;" onclick="deleteHwStudent('${hw.recordId}')">🗑️ លុប</button>
                     `;
-                } else if (canTeacherGradeThisRow) {
+                } else if (canStaffManageRow) {
                     actionBtns = `
-                        <button class="btn-sm btn-study" onclick='openGradeHwTeacher(${JSON.stringify(hw)})'>✅ ដាក់ពិន្ទុ / កែ</button>
+                        <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                            <button class="btn-sm btn-study" onclick='openGradeHwTeacher(${hwObjStr})'>✅ ដាក់ពិន្ទុ / កែ</button>
+                            <button class="btn-sm" style="background:var(--danger); color:white;" onclick='deleteHwStaff(${hwObjStr})'>🗑️ លុប</button>
+                        </div>
                     `;
                 }
 
@@ -1662,6 +1899,34 @@
             loadHomeworkTable();
         }
 
+        // លុបកិច្ចការផ្ទះ/ស្រាវជ្រាវ ដោយ Admin ឬគ្រូបន្ទុកថ្នាក់
+        async function deleteHwStaff(hw) {
+            const confirmMsg = `តើអ្នកពិតជាចង់លុបកិច្ចការផ្ទះ/ស្រាវជ្រាវនេះមែនទេ?\n\n• ថ្នាក់៖ ${hw.className}\n• សិស្ស៖ ${hw.studentName} (${hw.studentId || '-'})\n• មេរៀន៖ ${hw.lessonTitle}`;
+            if (!confirm(confirmMsg)) return;
+
+            try {
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'deleteHomeworkStaff',
+                        recordId: hw.recordId,
+                        role: currentUser.role,
+                        teacherUsername: currentUser.username,
+                        teacherPassword: currentUser._pass || "",
+                        allowedClasses: getAssignedClassesForUser(currentUser)
+                    })
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (result.status === 'success') {
+                    loadHomeworkTable();
+                }
+            } catch (err) {
+                alert("កំហុសក្នុងការលុបកិច្ចការ៖ " + err.message);
+            }
+        }
+
         function toBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1786,7 +2051,7 @@
             loadAdminUsers();
         }
 
-        // --- តារាងពិន្ទុតេស្ត ១០០ សំណួរ (បន្ថែមមុខងារ កែ និង លុប សម្រាប់ Admin និងគ្រូបន្ទុកថ្នាក់) ---
+        // --- តារាងពិន្ទុតេស្ត ១០០ សំណួរ ---
         async function loadAllQuizScores() {
             const box = document.getElementById('allScoresContainer');
             box.innerHTML = "កំពុងទាញយកទិន្នន័យ...";
@@ -1854,7 +2119,7 @@
                 </thead>
                 <tbody>`;
 
-            rows.forEach((r, idx) => {
+            rows.forEach((r) => {
                 const canManageRow = (currentUser.role === 'admin') ||
                     (currentUser.role === 'teacher' && isClassAllowedForTeacher(r.className || currentUser.className, currentUser));
 
@@ -1880,7 +2145,6 @@
             box.innerHTML = html;
         }
 
-        // បើកផ្ទាំងកែប្រែពិន្ទុតេស្ត ១០០ សំណួរ
         function openEditQuizScoreModal(row) {
             document.getElementById('eqRowIndex').value = row.rowIndex || '';
             document.getElementById('eqOrigClassName').value = row.className || '';
@@ -1947,7 +2211,6 @@
             }
         });
 
-        // លុបលទ្ធផលពិន្ទុតេស្ត ១០០ សំណួរ
         async function deleteQuizScoreRow(row) {
             const confirmMsg = `តើអ្នកពិតជាចង់លុបលទ្ធផលពិន្ទុតេស្តនេះមែនទេ?\n\n• ថ្នាក់៖ ${row.className}\n• សិស្ស៖ ${row.studentName} (${row.studentId || '-'})\n• មេរៀន៖ ${row.lesson}\n• ពិន្ទុ៖ ${row.score} / ${row.total}`;
             if (!confirm(confirmMsg)) return;
