@@ -15,6 +15,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- បណ្ណាល័យសម្រាប់ Export ទៅជា File Excel (.xlsx) -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+
+    <!-- OneSignal Web Push SDK v16 -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
     <style>
         :root {
             --primary: #14532d;
@@ -85,11 +89,11 @@
 
         .form-group { text-align: left; margin-bottom: 14px; }
         .form-group label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 5px; color: #334155; }
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1;
-            border-radius: 10px; font-size: 0.95rem; outline: none;
+            border-radius: 10px; font-size: 0.95rem; outline: none; font-family: inherit;
         }
-        .form-group input:focus, .form-group select:focus { border-color: var(--primary-light); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-light); }
 
         .btn-login {
             width: 100%; padding: 12px; border: none; border-radius: 10px;
@@ -147,6 +151,43 @@
             font-size: 0.8rem; font-weight: 700; margin-left: 8px;
         }
 
+        /* HOMEWORK PROMPTS / QUESTIONS BOARD */
+        .hw-prompt-section {
+            background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px;
+            padding: 16px; margin-top: 14px; margin-bottom: 18px;
+        }
+        .hw-prompt-card {
+            background: white; border-left: 5px solid #2563eb; border-radius: 10px;
+            padding: 14px 16px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
+        }
+        .hw-prompt-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 8px; margin-bottom: 8px;
+        }
+        .hw-prompt-body {
+            background: #f1f5f9; padding: 12px 14px; border-radius: 8px;
+            font-size: 0.93rem; line-height: 1.6; color: #0f172a; white-space: pre-line;
+            margin-bottom: 10px;
+        }
+        .hw-class-chip {
+            background: #dbeafe; color: #1e40af; padding: 3px 10px; border-radius: 6px;
+            font-size: 0.78rem; font-weight: 700;
+        }
+        .hw-due-chip {
+            background: #fef3c7; color: #92400e; padding: 3px 10px; border-radius: 6px;
+            font-size: 0.78rem; font-weight: 700;
+        }
+        .class-checkbox-grid {
+            display: flex; flex-wrap: wrap; gap: 8px; background: #f8fafc;
+            padding: 10px; border-radius: 10px; border: 1px solid #cbd5e1;
+        }
+        .class-checkbox-item {
+            display: inline-flex; align-items: center; gap: 5px; background: white;
+            padding: 5px 10px; border-radius: 6px; border: 1px solid #cbd5e1;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+        }
+
         /* NOTIFICATION CARD STYLES */
         .notif-banner-alert {
             background: #fef9c3; border: 1px solid #fde047; color: #854d0e;
@@ -197,6 +238,8 @@
         .btn-media-pdf:hover { background: #bfdbfe; }
         .btn-media-drive { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
         .btn-media-drive:hover { background: #bbf7d0; }
+        .btn-media-text { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+        .btn-media-text:hover { background: #e9d5ff; }
 
         /* LESSON STUDY PANEL */
         .study-panel { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
@@ -228,7 +271,7 @@
         /* TABLE STYLES */
         .data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; margin-top: 15px; }
         .data-table th { background: var(--primary); color: white; padding: 12px; text-align: left; font-size: 0.88rem; }
-        .data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.88rem; }
+        .data-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 0.88rem; vertical-align: top; }
 
         /* MODAL */
         .modal-overlay {
@@ -454,9 +497,10 @@
                     <div class="study-panel">
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <h2 style="margin:0; color:var(--blue);">📝 កិច្ចការផ្ទះ និងការស្រាវជ្រាវ (<span id="hwClassHeader"></span>)</h2>
-                            <div>
+                            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                <button class="btn-sm hidden" id="btnOpenNewPrompt" style="background:#7c3aed; color:white;" onclick="openHwPromptModal()">✍️ សរសេរប្រធានបទ/សំណួរកិច្ចការផ្ទះ</button>
                                 <button class="btn-sm btn-excel hidden" id="btnExportHwExcel" onclick="exportHomeworkToExcel()">📥 ទាញយកពិន្ទុកិច្ចការ (Excel)</button>
-                                <button class="btn-sm btn-study" id="btnOpenNewHw" onclick="openHwFormModal()">+ បញ្ជូនកិច្ចការថ្មី</button>
+                                <button class="btn-sm btn-study" id="btnOpenNewHw" onclick="openHwFormModal()">+ បញ្ជូនកិច្ចការ/ចម្លើយថ្មី</button>
                             </div>
                         </div>
 
@@ -475,8 +519,18 @@
                             </div>
                         </div>
 
-                        <p style="font-size:0.88rem; color:#64748b;">
-                            * សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ ចុចលើប៊ូតុង <strong>🎬 វីដេអូ / 📄 PDF / 📁 Drive File</strong> ដើម្បីបើកមើលផ្ទាល់លើអេក្រង់។
+                        <!-- ផ្ទាំងបង្ហាញប្រធានបទ / សំណួរកិច្ចការផ្ទះតាមកម្រិត និងប្រភេទថ្នាក់នីមួយៗ -->
+                        <div class="hw-prompt-section">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                                <h3 style="margin:0; font-size:1.05rem; color:#1e3a8a;">📌 ប្រធានបទ / សំណួរកិច្ចការផ្ទះ និងការស្រាវជ្រាវពីគ្រូ</h3>
+                                <span style="font-size:0.8rem; color:#475569;">សិស្សអាចចុច «✍️ សរសេរចម្លើយឆ្លើយតប» លើសំណួរនីមួយៗ</span>
+                            </div>
+                            <div id="hwPromptsContainer">កំពុងទាញយកសំណួរកិច្ចការផ្ទះ...</div>
+                        </div>
+
+                        <h3 style="margin:10px 0 6px; font-size:1.05rem; color:var(--primary);">📋 តារាងចម្លើយ និងកិច្ចការដែលសិស្សបានបញ្ជូន</h3>
+                        <p style="font-size:0.88rem; color:#64748b; margin-top:0;">
+                            • សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ ចុចលើប៊ូតុង <strong>📝 អានចម្លើយ / 🎬 វីដេអូ / 📄 PDF / 📁 Drive File</strong> ដើម្បីបើកមើលផ្ទាល់លើអេក្រង់។
                         </p>
                         <div style="overflow-x:auto;">
                             <table class="data-table">
@@ -486,7 +540,7 @@
                                         <th>មេរៀន</th>
                                         <th>អត្តលេខ</th>
                                         <th>ឈ្មោះសិស្ស</th>
-                                        <th>តំណភ្ជាប់ / ឯកសារ (ចុចមើល)</th>
+                                        <th>ចម្លើយសរសេរ & ឯកសារ</th>
                                         <th>ពិន្ទុ (គ្រូដាក់)</th>
                                         <th>មតិគ្រូ</th>
                                         <th>សកម្មភាព</th>
@@ -534,16 +588,16 @@
                 <section id="tab-notifications" class="hidden">
                     <div class="study-panel">
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
-                            <h2 style="margin:0; color:var(--blue);">🔔 សារជូនដំណឹងអំពីការកែប្រែពិន្ទុ និងកិច្ចការ</h2>
+                            <h2 style="margin:0; color:var(--blue);">🔔 សារជូនដំណឹងពីគ្រូ (OneSignal & ប្រព័ន្ធ)</h2>
                             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                                <button type="button" class="btn-sm" style="background:#dbeafe; color:#1d4ed8;" onclick="enableSystemNotifications()">📲 បើកការជូនដំណឹងលើទូរសព្ទ/កុំព្យូទ័រ</button>
+                                <button type="button" class="btn-sm" style="background:#dbeafe; color:#1d4ed8;" onclick="enableOneSignalNotifications()">📲 បើកការជូនដំណឹង OneSignal លើទូរសព្ទ/កុំព្យូទ័រ</button>
                                 <button type="button" class="btn-sm" style="background:var(--danger); color:white;" onclick="deleteAllStudentNotifications()">🗑️ លុបសារទាំងអស់</button>
                             </div>
                         </div>
 
                         <div id="notifPermissionBanner" class="notif-banner-alert hidden">
-                            <span>📢 សូមចុចប៊ូតុង <strong>"អនុញ្ញាតការជូនដំណឹង"</strong> ដើម្បីទទួលសារលើអេក្រង់ទូរសព្ទ ឬកុំព្យូទ័រ ទោះបីជាអ្នកមិនបានបើក App ក៏ដោយ!</span>
-                            <button type="button" class="btn-sm btn-study" onclick="enableSystemNotifications()">✅ អនុញ្ញាតឥឡូវនេះ</button>
+                            <span>📢 សូមចុចប៊ូតុង <strong>"បើកការជូនដំណឹង OneSignal"</strong> ដើម្បីទទួលសារលើអេក្រង់ទូរសព្ទ ឬកុំព្យូទ័រ ទោះបីជាអ្នកបិទ App ក៏ដោយ!</span>
+                            <button type="button" class="btn-sm btn-study" onclick="enableOneSignalNotifications()">✅ អនុញ្ញាតឥឡូវនេះ</button>
                         </div>
 
                         <div id="notificationsListContainer">កំពុងទាញយកសារជូនដំណឹង...</div>
@@ -555,7 +609,7 @@
                     <div class="study-panel">
                         <h2 style="margin-top:0; color:var(--danger);">🛡️ គ្រប់គ្រងគណនី និងកំណត់ថ្នាក់ជូនគ្រូបន្ទុកថ្នាក់ (Admin)</h2>
                         <p style="font-size:0.85rem; color:#475569; margin-top:-8px;">
-                            * Admin អាចកំណត់ថ្នាក់ឱ្យគ្រូម្នាក់បង្រៀនច្រើនថ្នាក់ដោយបន្ថែមម្តងមួយថ្នាក់ (ដូចជា <code>១១F</code>, <code>១១G</code>, <code>១០A</code>) ឬវាយចូលគ្នាដោយដាក់សញ្ញាក្បៀស (ឧ. <code>១១A, ១១B, ១១F</code>) ឬ <code>ALL</code>។
+                            • Admin អាចកំណត់ថ្នាក់ឱ្យគ្រូម្នាក់បង្រៀនច្រើនថ្នាក់ដោយបន្ថែមម្តងមួយថ្នាក់ (ដូចជា <code>១១F</code>, <code>១១G</code>, <code>១០A</code>) ឬវាយចូលគ្នាដោយដាក់សញ្ញាក្បៀស (ឧ. <code>១១A, ១១B, ១១F</code>) ឬ <code>ALL</code>។
                         </p>
                         <form id="adminUserForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; background:#f8fafc; padding:15px; border-radius:12px;">
                             <input type="text" id="admUsername" placeholder="ឈ្មោះគ្រូ ឬសិស្ស (Username)" required>
@@ -584,6 +638,86 @@
                     </div>
                 </section>
             </main>
+        </div>
+    </div>
+
+    <!-- MODAL សម្រាប់គ្រូ / ADMIN សរសេរ និងកែប្រែសំណួរ/ប្រធានបទកិច្ចការផ្ទះ -->
+    <div class="modal-overlay" id="hwPromptModal" onclick="if(event.target === this) closeHwPromptModal()">
+        <div class="modal-box">
+            <h3 id="hwPromptModalTitle" style="margin-top:0; color:#6d28d9;">✍️ សរសេរប្រធានបទ / សំណួរកិច្ចការផ្ទះ</h3>
+            <form id="hwPromptForm">
+                <input type="hidden" id="hpPromptId">
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label>ប្រភេទកិច្ចការ</label>
+                        <select id="hpTaskType">
+                            <option value="កិច្ចការផ្ទះ">📝 កិច្ចការផ្ទះ</option>
+                            <option value="កិច្ចការស្រាវជ្រាវ">🔬 កិច្ចការស្រាវជ្រាវ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>កម្រិតថ្នាក់</label>
+                        <select id="hpGradeSelect" onchange="onPromptGradeChange(this.value)">
+                            <option value="៧">ថ្នាក់ទី ៧</option>
+                            <option value="៨">ថ្នាក់ទី ៨</option>
+                            <option value="៩">ថ្នាក់ទី ៩</option>
+                            <option value="១០">ថ្នាក់ទី ១០</option>
+                            <option value="១១">ថ្នាក់ទី ១១</option>
+                            <option value="១២">ថ្នាក់ទី ១២</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>ជ្រើសរើសប្រភេទថ្នាក់ទទួលកិច្ចការ (អាចជ្រើសរើសមួយ ឬច្រើនថ្នាក់)</label>
+                    <div id="hpClassCheckboxes" class="class-checkbox-grid"></div>
+                    <input type="text" id="hpCustomClassInput" placeholder="ឬវាយបញ្ចូលឈ្មោះថ្នាក់បន្ថែម (ឧ. ១១F, ១១G)" style="margin-top:6px;">
+                </div>
+
+                <div class="form-group">
+                    <label>ជ្រើសរើសមេរៀន</label>
+                    <select id="hpLessonSelect" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label>ចំណងជើងប្រធានបទកិច្ចការ</label>
+                    <input type="text" id="hpTitle" placeholder="ឧ. សំណួរត្រិះរិះពិចារណាអំពីរស្មីសំយោគ" required>
+                </div>
+
+                <div class="form-group">
+                    <label>ខ្លឹមសារសំណួរ / សេចក្ដីណែនាំលម្អិតសម្រាប់សិស្ស</label>
+                    <textarea id="hpQuestionText" rows="5" placeholder="សរសេរសំណួរទី ១, សំណួរទី ២... ឬសេចក្ដីណែនាំឱ្យសិស្សធ្វើនៅទីនេះ..." required></textarea>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label>ថ្ងៃផុតកំណត់បញ្ជូន (ស្រេចចិត្ត)</label>
+                        <input type="date" id="hpDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Link ឯកសារជំនួយ (ស្រេចចិត្ត)</label>
+                        <input type="url" id="hpRefLink" placeholder="https://...">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+                    <button type="button" class="btn-sm" style="background:#cbd5e1;" onclick="closeHwPromptModal()">បោះបង់</button>
+                    <button type="submit" class="btn-sm" style="background:#7c3aed; color:white;" id="btnSaveHwPrompt">រក្សាទុក & ជូនដំណឹងសិស្ស</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL អានចម្លើយសរសេររបស់សិស្សពេញលេញ -->
+    <div class="modal-overlay" id="readAnswerModal" onclick="if(event.target === this) closeReadAnswerModal()">
+        <div class="modal-box">
+            <h3 id="readAnsModalTitle" style="margin-top:0; color:var(--primary);">📝 ចម្លើយសរសេររបស់សិស្ស</h3>
+            <div id="readAnsModalMeta" style="font-size:0.85rem; color:#64748b; margin-bottom:10px;"></div>
+            <div id="readAnsModalBody" style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:15px; white-space:pre-line; line-height:1.65; font-size:0.95rem; max-height:55vh; overflow-y:auto;"></div>
+            <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+                <button type="button" class="btn-sm" style="background:#dc2626; color:white;" onclick="closeReadAnswerModal()">✖ បិទ</button>
+            </div>
         </div>
     </div>
 
@@ -657,22 +791,35 @@
         </div>
     </div>
 
-    <!-- MODAL សម្រាប់កិច្ចការផ្ទះ -->
+    <!-- MODAL សម្រាប់សិស្សសរសេរចម្លើយឆ្លើយតប និងបញ្ជូនកិច្ចការផ្ទះ -->
     <div class="modal-overlay" id="hwModal">
         <div class="modal-box">
-            <h3 id="hwModalTitle" style="margin-top:0; color:var(--primary);">បញ្ជូនកិច្ចការផ្ទះ</h3>
+            <h3 id="hwModalTitle" style="margin-top:0; color:var(--primary);">បញ្ជូនកិច្ចការផ្ទះ / សរសេរចម្លើយឆ្លើយតប</h3>
             <form id="hwForm">
                 <input type="hidden" id="hwRecordId">
+                <input type="hidden" id="hwPromptIdRef">
+
+                <div id="hwPromptReferenceBox" class="hidden" style="background:#eff6ff; border-left:4px solid #2563eb; padding:10px 12px; border-radius:8px; margin-bottom:12px; font-size:0.88rem;">
+                    <strong style="color:#1e40af;" id="hwPromptRefTitle"></strong>
+                    <div id="hwPromptRefQuestion" style="color:#334155; margin-top:4px; white-space:pre-line;"></div>
+                </div>
+
                 <div class="form-group">
                     <label>ជ្រើសរើសមេរៀន</label>
                     <select id="hwLessonSelect" required></select>
                 </div>
+
                 <div class="form-group">
-                    <label>Link វីដេអូ (YouTube / Google Drive)</label>
+                    <label style="color:var(--primary);">✍️ សរសេរចម្លើយឆ្លើយតបរបស់អ្នកនៅទីនេះ (អាចសរសេរផ្ទាល់ ឬភ្ជាប់ Link ខាងក្រោម)</label>
+                    <textarea id="hwAnswerText" rows="5" placeholder="សរសេរចម្លើយសម្រាប់សំណួរកិច្ចការផ្ទះ ឬកិច្ចការស្រាវជ្រាវនៅទីនេះ..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Link វីដេអូ (YouTube / Google Drive - ស្រេចចិត្ត)</label>
                     <input type="url" id="hwVideoLink" placeholder="https://...">
                 </div>
                 <div class="form-group">
-                    <label>Link ឯកសារ PDF (Google Drive)</label>
+                    <label>Link ឯកសារ PDF (Google Drive - ស្រេចចិត្ត)</label>
                     <input type="url" id="hwPdfLink" placeholder="https://...">
                 </div>
                 <div class="form-group" id="hwFileUploadGroup">
@@ -693,7 +840,7 @@
 
                 <div style="display:flex; gap:10px; justify-content:flex-end;">
                     <button type="button" class="btn-sm" style="background:#cbd5e1;" onclick="closeHwModal()">បោះបង់</button>
-                    <button type="submit" class="btn-sm btn-study" id="btnSaveHw">រក្សាទុក</button>
+                    <button type="submit" class="btn-sm btn-study" id="btnSaveHw">រក្សាទុក & បញ្ជូន</button>
                 </div>
             </form>
         </div>
@@ -724,10 +871,91 @@
     </div>
 
     <script>
-        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxTbt-k-0hN4eZJPDqV_c5T-HDFI487G1mWaSThu8qzJM3xgF-64fRUGiMHBxclijNS/exec";
+        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlHXlekFxEN6-uhLomimyM9AT4iTjAbiW05E8xc1gKpRRz5ylYHUG5OxpxIBcjpvyX/exec";
+        
+        // =========================================================================
+        // ដាក់ ONESIGNAL APP ID របស់អ្នកនៅទីនេះ (យកពី OneSignal Dashboard > Settings > Keys & IDs)
+        // =========================================================================
+        const ONESIGNAL_APP_ID = "YOUR_ONESIGNAL_APP_ID";
+
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "084a07c7-c4fb-494f-8d1e-f2c2d371f003") {
+                await OneSignal.init({
+                    appId: ONESIGNAL_APP_ID,
+                    allowLocalhostAsSecureOrigin: true,
+                    notifyButton: { enable: false }
+                });
+
+                OneSignal.Notifications.addEventListener("permissionChange", (granted) => {
+                    if (granted) {
+                        document.getElementById('notifPermissionBanner').classList.add('hidden');
+                        registerStudentWithOneSignal();
+                    }
+                });
+
+                if (currentUser && currentUser.role === 'student') {
+                    registerStudentWithOneSignal();
+                }
+            }
+        });
+
+        // ចុះឈ្មោះ External ID និង Tags (ថ្នាក់ & កម្រិតថ្នាក់) ទៅកាន់ OneSignal សម្រាប់សិស្សម្នាក់ៗ
+        function registerStudentWithOneSignal() {
+            if (!currentUser || currentUser.role !== 'student') return;
+            if (!ONESIGNAL_APP_ID || ONESIGNAL_APP_ID === "YOUR_ONESIGNAL_APP_ID") return;
+
+            const normCls = normalizeClass(currentUser.className);
+            const cleanId = (currentUser.studentId || currentUser.username).toString().trim();
+            const externalUserId = `STU_${normCls}_${cleanId}`.replace(/\s+/g, '_');
+
+            window.OneSignalDeferred.push(async function(OneSignal) {
+                try {
+                    await OneSignal.login(externalUserId);
+                    await OneSignal.User.addTags({
+                        role: "student",
+                        className: normCls,
+                        gradeLevel: normalizeClass(currentUser.gradeLevel),
+                        studentName: currentUser.username,
+                        studentId: cleanId
+                    });
+                    console.log("OneSignal Student Registered:", externalUserId, normCls);
+                } catch (err) {
+                    console.error("OneSignal Login/Tag Error:", err);
+                }
+            });
+        }
+
+        async function enableOneSignalNotifications() {
+            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "YOUR_ONESIGNAL_APP_ID") {
+                window.OneSignalDeferred.push(async function(OneSignal) {
+                    try {
+                        await OneSignal.Slidedown.promptPush();
+                        const perm = OneSignal.Notifications.permission;
+                        if (perm) {
+                            document.getElementById('notifPermissionBanner').classList.add('hidden');
+                            registerStudentWithOneSignal();
+                            alert("✅ បានភ្ជាប់ការជូនដំណឹង OneSignal លើឧបករណ៍របស់អ្នកជោគជ័យ!");
+                        }
+                    } catch (e) {
+                        await Notification.requestPermission();
+                    }
+                });
+            } else {
+                if (!('Notification' in window)) {
+                    alert("Browser របស់អ្នកមិនគាំទ្រការជូនដំណឹងទេ!");
+                    return;
+                }
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    document.getElementById('notifPermissionBanner').classList.add('hidden');
+                    alert("✅ បានបើកការជូនដំណឹងលើឧបករណ៍របស់អ្នកជោគជ័យ! (កុំភ្លេចបញ្ចូល ONESIGNAL_APP_ID ដើម្បីទទួល Push ពេលបិទ App)");
+                }
+            }
+        }
 
         // =========================================================================
-        // PWA SERVICE WORKER REGISTRATION, BACKGROUND NOTIFICATION & INSTALL PROMPT
+        // PWA SERVICE WORKER REGISTRATION & INSTALL PROMPT
         // =========================================================================
         let deferredPrompt;
         let swRegistration = null;
@@ -739,15 +967,6 @@
                 try {
                     swRegistration = await navigator.serviceWorker.register('./sw.js');
                     console.log('Service Worker Registered:', swRegistration.scope);
-
-                    if ('periodicSync' in swRegistration) {
-                        const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
-                        if (status.state === 'granted') {
-                            await swRegistration.periodicSync.register('ngspad-check-notifications', {
-                                minInterval: 15 * 60 * 1000
-                            });
-                        }
-                    }
                 } catch (err) {
                     console.error('Service Worker Registration Failed:', err);
                 }
@@ -777,31 +996,6 @@
             document.getElementById('installBtnTop').style.display = 'none';
             deferredPrompt = null;
         });
-
-        async function enableSystemNotifications() {
-            if (!('Notification' in window)) {
-                alert("កម្មវិធីរុករក (Browser) របស់អ្នកមិនគាំទ្រការជូនដំណឹងលើអេក្រង់ទេ!");
-                return;
-            }
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                document.getElementById('notifPermissionBanner').classList.add('hidden');
-                syncUserToServiceWorker();
-                alert("✅ បានបើកការជូនដំណឹងលើឧបករណ៍របស់អ្នកជោគជ័យ!");
-            } else {
-                alert("⚠️ អ្នកបានបដិសេធសិទ្ធិជូនដំណឹង។ សូមបើក Notification ក្នុងការកំណត់ Browser របស់អ្នក។");
-            }
-        }
-
-        function syncUserToServiceWorker() {
-            if (navigator.serviceWorker && navigator.serviceWorker.controller && currentUser) {
-                navigator.serviceWorker.controller.postMessage({
-                    type: 'SET_USER_CONFIG',
-                    apiUrl: MAIN_APPS_SCRIPT_URL,
-                    user: currentUser
-                });
-            }
-        }
 
         function triggerDeviceNotification(title, body, notifId) {
             const shownIds = JSON.parse(localStorage.getItem('ngspad_shown_notifs') || '[]');
@@ -864,9 +1058,12 @@
 
             let html = "";
             cachedStudentNotifications.forEach(n => {
-                const typeBadge = (n.type === 'HOMEWORK_EDIT' || n.type === 'HW_UPDATE' || n.type === 'HW_DELETE')
-                    ? `<span style="background:#dbeafe; color:#1d4ed8; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">📝 កែប្រែកិច្ចការផ្ទះ</span>`
-                    : `<span style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">📊 កែប្រែពិន្ទុតេស្ត ១០០ សំណួរ</span>`;
+                let typeBadge = `<span style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">📊 កែប្រែពិន្ទុតេស្ត ១០០ សំណួរ</span>`;
+                if (n.type === 'HOMEWORK_EDIT' || n.type === 'HW_UPDATE' || n.type === 'HW_DELETE') {
+                    typeBadge = `<span style="background:#dbeafe; color:#1d4ed8; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">📝 កែប្រែកិច្ចការផ្ទះ</span>`;
+                } else if (n.type === 'HW_PROMPT') {
+                    typeBadge = `<span style="background:#f3e8ff; color:#6b21a8; padding:2px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">✍️ សំណួរកិច្ចការផ្ទះថ្មី</span>`;
+                }
 
                 html += `
                     <div class="notif-card unread" id="notif-card-${n.notifId}">
@@ -980,7 +1177,7 @@
         function openMediaViewerModal(rawUrl, typeLabel, studentName, lessonTitle) {
             if (!rawUrl) return;
             const embedUrl = convertToEmbedUrl(rawUrl);
-            document.getElementById('mediaModalTitle').innerText = `${typeLabel} — សិស្ស៖ ${studentName}`;
+            document.getElementById('mediaModalTitle').innerText = `${typeLabel} — ${studentName}`;
             document.getElementById('mediaModalSubtitle').innerText = `មេរៀន៖ ${lessonTitle}`;
             document.getElementById('mediaExternalLink').href = rawUrl;
             document.getElementById('mediaModalIframe').src = embedUrl;
@@ -990,6 +1187,17 @@
         function closeMediaViewerModal() {
             document.getElementById('mediaModalIframe').src = '';
             document.getElementById('mediaViewerModal').style.display = 'none';
+        }
+
+        function openReadAnswerModal(studentName, className, lessonTitle, answerText) {
+            document.getElementById('readAnsModalTitle').innerText = `📝 ចម្លើយរបស់សិស្ស៖ ${studentName}`;
+            document.getElementById('readAnsModalMeta').innerText = `ថ្នាក់៖ ${className} | មេរៀន៖ ${lessonTitle}`;
+            document.getElementById('readAnsModalBody').innerText = answerText || "គ្មានអត្ថបទចម្លើយ";
+            document.getElementById('readAnswerModal').style.display = 'flex';
+        }
+
+        function closeReadAnswerModal() {
+            document.getElementById('readAnswerModal').style.display = 'none';
         }
 
         // =========================================================================
@@ -1067,6 +1275,7 @@
         let timerInterval = null;
 
         let cachedHomeworkData = [];
+        let cachedHwPromptsData = [];
         let cachedQuizScoresData = [];
         let activeTeacherClass = 'ALL';
 
@@ -1101,8 +1310,8 @@
                 { title: "ជំពូកទី៤ មេរៀនទី៤ ប្រដាប់់របត់ឈាម", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4Ze4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c4-/home", resDoc: "https://drive.google.com/file/d/1XRPc20RaXcEML8kuKq-nEqr1Nhv_h9_P/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1TAswj7EtXmFItaTCZQyOrF95yaKIxaRzywNz5Jf9xV8/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzntrepUP0qr_BZszcJn5D4xtyhFF45zwCAAOh1fxcrMGV4qeVVCvxxcs_SMV3zbMOW/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbxy1cgq7hHWp4Cd5Xs4EJ2hd6Ual1on7JBDM_AXrRw33C8Ens3vdh6YnawMY0kI8povfw/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី១ អាហារ", lessonVideo: "https://www.youtube.com/embed/CiOjk4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1lcYOnqsjke7zPexjinP-2H9ii-fXtqVS/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1mgfRGbpv4ZNXXDpaFAVeOv2m3pppQXh3zaXkWySbvqg/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbyhxo5HwdTG-ytwlMCjKEOAVSUgyE4ALQ8X381yzQZ9AWoTdDsXH5piyEJBELTcb6sd/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwiOSRsYK3tQLSAtp4PkxUP_cPJFKzc-ElXHgtMdjAnFhC8-mFxlGuXjH-5HqHblBCh/exec" },
                 { title: "ជំពូកទី៥ មេរៀនទី២ របបអាហារនិងថាមពល", lessonVideo: "https://www.youtube.com/embed/CiOjko4oe4", lessonVideo2: "https://www.youtube.com/embed/CiOjkooZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1OdLwSmMLAhb2C9BEOAOsJZ5_NdSlmih3/preview", exerciseVideo: "https://www.youtube.com/embed/oY5coAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-/preview", workUrl: "https://docs.google.com/document/d/1QaS7hDxUO8o_J3gT9RHJ1FQC9BVT6y2RMkik-f8biaU/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbzUq6rawmy2kn5HcpVYO1tfrhgPa4HCKmVz6zdOxpPLtnJAtD7fCKGFmWhX9-2BwQp_/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzS-T52vJkGoQgIhXJXKsbxN1fXqAkZCCf34AfBHlDE5JDcBXXVztQDZGE0yoohqmlY/exec" },
-                { title: "ជំពូកទី៥ មេរៀនទី៣ អាហារមានសុវត្ថិភាព", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1sA1zeMps0zMJDMdfqsdXK7I2fWvnTxwj/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoA4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx00Giofb6/preview", workUrl: "https://docs.google.com/document/d/1Z36fcijrZoYf8wW5Xw-YvMxkKbGI9njNxU5IQIN2zoc/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxbGbtLaRBJJ0sNZhQIXw2k-ZB8Z44EthhF2uhkqHME-U0H5eeSvj_XsLaZwgO9SDMx8g/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzT6AAjG5ZpJu_NgnuZLSvWieAnNrE59e71lQrygsWD13YlSPR-kWv_3Q6V2gLmMgiD/exec" },
-                { title: "ជំពូកទី៦ មេរៀនទី១ គ្រឿងញៀន", lessonVideo: "https://www.youtube.com/embed/CiOjk4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjkooZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c6-/home", resDoc: "https://drive.google.com/file/d/1BV0vKiEJEOUx3NS5WXfJJ3PplLImo6tO/preview", exerciseVideo: "https://www.youtube.com/embed/oYqcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Gifb6/preview", workUrl: "https://docs.google.com/document/d/1Nbt3xQVoDnYr4yokHpxfvxpvttu1MhCHWxl56Py5d8M/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwcoIx-7GItiz1oDNrwpoSXxGjERGtRctF6E0ES4M5dL4M5JIV_hlGLNqAgrg_cdpAQ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbwlfxsEUT3WAgDNlWBI763LDefFYe704ezekPVBDpK3kO_Wol8vU-FiaZdfem0oTVZ5/exec" },
+                { title: "ជំពូកទី៥ មេរៀនទី៣ អាហារមានសុវត្ថិភាព", lessonVideo: "https://www.youtube.com/embed/CiOjkooZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjko4oe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c5-/home", resDoc: "https://drive.google.com/file/d/1sA1zeMps0zMJDMdfqsdXK7I2fWvnTxwj/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qcoA4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1Z36fcijrZoYf8wW5Xw-YvMxkKbGI9njNxU5IQIN2zoc/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbxbGbtLaRBJJ0sNZhQIXw2k-ZB8Z44EthhF2uhkqHME-U0H5eeSvj_XsLaZwgO9SDMx8g/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbzT6AAjG5ZpJu_NgnuZLSvWieAnNrE59e71lQrygsWD13YlSPR-kWv_3Q6V2gLmMgiD/exec" },
+                { title: "ជំពូកទី៦ មេរៀនទី១ គ្រឿងញៀន", lessonVideo: "https://www.youtube.com/embed/CiOjk4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOjkooZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c6-/home", resDoc: "https://drive.google.com/file/d/1BV0vKiEJEOUx3NS5WXfJJ3PplLImo6tO/preview", exerciseVideo: "https://www.youtube.com/embed/oYqcoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Gifb6/preview", workUrl: "https://docs.google.com/document/d/1Nbt3xQVoDnYr4yokHpxfvxpvttu1MhCHWxl56Py5d8M/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwcoIx-7GItiz1oDNrwpoSXxGjERGtRctF6E0ES4M5dL4M5JIV_hlGLNqAgrg_cdpAQ/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbws3xHmOU81cPfccDPS9g0jaVbDlukYnVGAV5xDPgPgx20M4R5q3V6IvMCDK9omyfTIeg/exec" },
                 { title: "ជំពូកទី៦ មេរៀនទី២ ឥទ្ធិពលនៃគ្រឿងញៀន", lessonVideo: "https://www.youtube.com/embed/Cijko4oZe4", lessonVideo2: "https://www.youtube.com/embed/CiOko4oZe4", expVideo: "https://www.youtube.com/embed/3nS9O_MvPmo", pdfDoc: "https://sites.google.com/moeys.gov.kh/study-biology-ngspad-g8-c6-/home", resDoc: "https://drive.google.com/file/d/1WhkLsw8-GbTb_NoIsoR6iq3Hz9jj4dUx/preview", exerciseVideo: "https://www.youtube.com/embed/oY5qoAu4uQ", resExercise: "https://drive.google.com/file/d/1ArXpvEFqCr-vIJtOvTCjfhx0Q0Giofb6/preview", workUrl: "https://docs.google.com/document/d/1_G5Ueh7Knypm5ZP3FFlKa6GZAZZB33qB-B0Yfoa0g_E/preview", quizScriptUrl: "https://script.google.com/macros/s/AKfycbwSQqXNPo3BntI0J3YCvoQQGcPXbVf1WlW54lxa19zfi_oZwvJzqNGkpr1MDlCswFNLwA/exec", workScriptUrl: "https://script.google.com/macros/s/AKfycbws3xHmOU81cPfccDPS9g0jaVbDlukYnVGAV5xDPgPgx20M4R5q3V6IvMCDK9omyfTIeg/exec" }
             ],
             '៩': [
@@ -1273,7 +1482,7 @@
 
             if (currentUser.role === 'student') {
                 document.getElementById('hwClassHeader').innerText = `ថ្នាក់ ${currentUser.className}`;
-                document.getElementById('permissionNotice').innerText = `សិទ្ធិសិស្ស (${currentUser.username})៖ មើល និងកែប្រែកិច្ចការរបស់ខ្លួនឯង`;
+                document.getElementById('permissionNotice').innerText = `សិទ្ធិសិស្ស (${currentUser.username})៖ អានសំណួរ និងសរសេរចម្លើយឆ្លើយតប`;
 
                 document.getElementById('topNotifBtn').classList.remove('hidden');
                 document.getElementById('nav-notifications').classList.remove('hidden');
@@ -1282,7 +1491,9 @@
                     document.getElementById('notifPermissionBanner').classList.remove('hidden');
                 }
 
-                syncUserToServiceWorker();
+                // ចុះឈ្មោះសិស្សម្នាក់នេះទៅកាន់ OneSignal Push Notification
+                registerStudentWithOneSignal();
+
                 checkStudentNotifications(true);
                 if (notifPollInterval) clearInterval(notifPollInterval);
                 notifPollInterval = setInterval(() => checkStudentNotifications(true), 20000);
@@ -1291,7 +1502,8 @@
                 const assignedGrades = getAssignedGradesForUser(currentUser);
 
                 document.getElementById('hwClassHeader').innerText = `ថ្នាក់ក្នុងបន្ទុក៖ ${assignedClasses.join(', ')}`;
-                document.getElementById('permissionNotice').innerText = `សិទ្ធិគ្រូ៖ កែ/លុបកិច្ចការ & ដាក់ពិន្ទុថ្នាក់ ${assignedClasses.join(', ')}`;
+                document.getElementById('permissionNotice').innerText = `សិទ្ធិគ្រូ៖ សរសេរសំណួរ កែ/លុបកិច្ចការ & ដាក់ពិន្ទុថ្នាក់ ${assignedClasses.join(', ')}`;
+                document.getElementById('btnOpenNewPrompt').classList.remove('hidden');
                 document.getElementById('btnExportHwExcel').classList.remove('hidden');
                 document.getElementById('btnExportQuizExcel').classList.remove('hidden');
                 document.getElementById('btnExportCombinedExcel').classList.remove('hidden');
@@ -1334,12 +1546,13 @@
                 document.getElementById('hwClassHeader').innerText = `គ្រប់ថ្នាក់ទាំងអស់`;
                 document.getElementById('adminSidebarSection').classList.remove('hidden');
                 document.getElementById('gradeSelectorForAdmin').classList.remove('hidden');
+                document.getElementById('btnOpenNewPrompt').classList.remove('hidden');
                 document.getElementById('btnExportHwExcel').classList.remove('hidden');
                 document.getElementById('btnExportQuizExcel').classList.remove('hidden');
                 document.getElementById('btnExportCombinedExcel').classList.remove('hidden');
                 document.getElementById('teacherAdminHwFilterBar').classList.remove('hidden');
                 document.getElementById('teacherAdminScoreFilterBar').classList.remove('hidden');
-                document.getElementById('permissionNotice').innerText = "សិទ្ធិ Admin៖ កំណត់សិទ្ធិគ្រូ និងគ្រប់គ្រងប្រព័ន្ធ";
+                document.getElementById('permissionNotice').innerText = "សិទ្ធិ Admin៖ កំណត់សិទ្ធិគ្រូ សរសេរសំណួរ និងគ្រប់គ្រងប្រព័ន្ធ";
             }
 
             const assignedGrades = getAssignedGradesForUser(currentUser);
@@ -1372,6 +1585,7 @@
             }
 
             if (!document.getElementById('tab-homework').classList.contains('hidden')) {
+                renderHwPromptsFiltered();
                 renderHomeworkFiltered();
             }
             if (!document.getElementById('tab-scores').classList.contains('hidden')) {
@@ -1387,6 +1601,7 @@
             if (scoreSel && [...scoreSel.options].some(o => o.value === selectedVal)) scoreSel.value = selectedVal;
 
             updateLessonDropdownBySelectedClass('hwClassFilter', 'hwLessonFilter', cachedHomeworkData);
+            renderHwPromptsFiltered();
             renderHomeworkFiltered();
         }
 
@@ -1403,6 +1618,11 @@
 
         function logout() {
             if (notifPollInterval) clearInterval(notifPollInterval);
+            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "YOUR_ONESIGNAL_APP_ID") {
+                window.OneSignalDeferred.push(async function(OneSignal) {
+                    try { await OneSignal.logout(); } catch (e) {}
+                });
+            }
             localStorage.removeItem('ngspad_user');
             location.reload();
         }
@@ -1419,7 +1639,10 @@
             const activeNav = document.getElementById('nav-' + tabName) || document.getElementById('nav-my-scores');
             if (activeNav) activeNav.classList.add('active');
 
-            if (tabName === 'homework') loadHomeworkTable();
+            if (tabName === 'homework') {
+                loadHwPrompts();
+                loadHomeworkTable();
+            }
             if (tabName === 'scores') loadAllQuizScores();
             if (tabName === 'notifications') checkStudentNotifications(false);
             if (tabName === 'admin') loadAdminUsers();
@@ -1685,7 +1908,315 @@
             updateLessonDropdownBySelectedClass(classSelectId, lessonSelectId, dataList);
         }
 
-        // --- កិច្ចការផ្ទះ / ស្រាវជ្រាវ ---
+        // =========================================================================
+        // ផ្ទាំងសរសេរប្រធានបទ / សំណួរកិច្ចការផ្ទះ (HOMEWORK PROMPTS / QUESTIONS)
+        // =========================================================================
+        async function loadHwPrompts() {
+            const container = document.getElementById('hwPromptsContainer');
+            container.innerHTML = "កំពុងទាញយកសំណួរកិច្ចការផ្ទះ...";
+            try {
+                const allowedClassesParam = getAssignedClassesForUser(currentUser).join(',');
+                const url = `${MAIN_APPS_SCRIPT_URL}?action=getHwPrompts&className=${encodeURIComponent(currentUser.className)}&gradeLevel=${encodeURIComponent(currentUser.gradeLevel)}&allowedClasses=${encodeURIComponent(allowedClassesParam)}&role=${currentUser.role}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                cachedHwPromptsData = json.data || [];
+                renderHwPromptsFiltered();
+            } catch (err) {
+                container.innerHTML = `<p style="color:red;">មិនអាចទាញយកប្រធានបទកិច្ចការផ្ទះបានទេ៖ ${err.message}</p>`;
+            }
+        }
+
+        function doesPromptMatchStudent(prompt, user) {
+            const stuClassNorm = normalizeClass(user.className);
+            const stuGradeNorm = toKhmerDigits(extractGradeFromClassName(user.className) || user.gradeLevel);
+            const promptGradeNorm = toKhmerDigits(prompt.gradeLevel || '');
+
+            const targetList = (prompt.targetClasses || 'ALL').split(/[,;\/]+/).map(c => normalizeClass(c)).filter(Boolean);
+            if (targetList.includes('ALL')) {
+                return !promptGradeNorm || promptGradeNorm === stuGradeNorm;
+            }
+            return targetList.includes(stuClassNorm);
+        }
+
+        function renderHwPromptsFiltered() {
+            const container = document.getElementById('hwPromptsContainer');
+            let list = cachedHwPromptsData;
+
+            if (currentUser.role === 'student') {
+                list = list.filter(p => doesPromptMatchStudent(p, currentUser));
+            } else {
+                const selectedClass = document.getElementById('hwClassFilter')?.value || 'ALL';
+                const selectedLesson = document.getElementById('hwLessonFilter')?.value || 'ALL';
+
+                if (currentUser.role === 'teacher') {
+                    list = list.filter(p => {
+                        const targetList = (p.targetClasses || '').split(/[,;\/]+/).map(c => c.trim()).filter(Boolean);
+                        if (targetList.some(t => normalizeClass(t) === 'ALL')) return true;
+                        return targetList.some(t => isClassAllowedForTeacher(t, currentUser));
+                    });
+                }
+
+                if (selectedClass !== 'ALL') {
+                    const selNorm = normalizeClass(selectedClass);
+                    const selGrade = toKhmerDigits(extractGradeFromClassName(selectedClass) || '');
+                    list = list.filter(p => {
+                        const targetList = (p.targetClasses || '').split(/[,;\/]+/).map(c => normalizeClass(c)).filter(Boolean);
+                        if (targetList.includes('ALL')) return toKhmerDigits(p.gradeLevel) === selGrade;
+                        return targetList.includes(selNorm);
+                    });
+                }
+
+                if (selectedLesson !== 'ALL') {
+                    list = list.filter(p => p.lessonTitle === selectedLesson);
+                }
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `<p style="color:#64748b; font-size:0.9rem; margin:0;">មិនទាន់មានប្រធានបទ ឬសំណួរកិច្ចការផ្ទះសម្រាប់ថ្នាក់នេះនៅឡើយទេ។</p>`;
+                return;
+            }
+
+            let html = "";
+            list.forEach(p => {
+                const pStr = escapeAttr(JSON.stringify(p));
+                const canStaffManage = (currentUser.role === 'admin') ||
+                    (currentUser.role === 'teacher' && (
+                        p.createdBy === currentUser.username ||
+                        (p.targetClasses || '').split(/[,;\/]+/).some(c => isClassAllowedForTeacher(c, currentUser))
+                    ));
+
+                const dueChip = p.dueDate ? `<span class="hw-due-chip">⏰ ផុតកំណត់៖ ${p.dueDate}</span>` : '';
+                const refBtn = p.refLink
+                    ? `<button type="button" class="btn-media-view btn-media-pdf" onclick="openMediaViewerModal('${escapeAttr(p.refLink)}', '📎 ឯកសារជំនួយ', '${escapeAttr(p.createdBy || 'គ្រូ')}', '${escapeAttr(p.lessonTitle)}')">📎 មើលឯកសារជំនួយ</button>`
+                    : '';
+
+                const existingAns = cachedHomeworkData.find(hw =>
+                    hw.studentName.toString().trim().toLowerCase() === currentUser.username.trim().toLowerCase() &&
+                    normalizeClass(hw.className) === normalizeClass(currentUser.className) &&
+                    ((hw.promptId && hw.promptId === p.promptId) || hw.lessonTitle === p.lessonTitle)
+                );
+
+                let actionArea = '';
+                if (currentUser.role === 'student') {
+                    if (existingAns) {
+                        const ansStr = escapeAttr(JSON.stringify(existingAns));
+                        actionArea = `
+                            <span style="background:#dcfce7; color:#15803d; padding:4px 10px; border-radius:6px; font-size:0.8rem; font-weight:700;">✅ បានឆ្លើយតបរួចហើយ</span>
+                            <button type="button" class="btn-sm btn-edit-lesson" onclick='openEditHwStudent(${ansStr})'>✏️ កែប្រែចម្លើយរបស់ខ្ញុំ</button>
+                        `;
+                    } else {
+                        actionArea = `
+                            <button type="button" class="btn-sm btn-study" onclick='openReplyToPromptModal(${pStr})'>✍️ សរសេរចម្លើយឆ្លើយតប</button>
+                        `;
+                    }
+                } else if (canStaffManage) {
+                    actionArea = `
+                        <button type="button" class="btn-sm btn-edit-lesson" onclick='openEditHwPromptModal(${pStr})'>✏️ កែសំណួរ</button>
+                        <button type="button" class="btn-sm" style="background:var(--danger); color:white;" onclick="deleteHwPrompt('${p.promptId}')">🗑️ លុបសំណួរ</button>
+                    `;
+                }
+
+                html += `
+                    <div class="hw-prompt-card">
+                        <div class="hw-prompt-header">
+                            <div>
+                                <span class="hw-class-chip">${p.taskType || 'កិច្ចការផ្ទះ'} • ថ្នាក់ទី ${p.gradeLevel} (${p.targetClasses})</span>
+                                ${dueChip}
+                                <div style="font-weight:700; color:var(--primary); font-size:1.02rem; margin-top:6px;">
+                                    📖 ${p.lessonTitle} — ${p.title}
+                                </div>
+                            </div>
+                            <div style="font-size:0.78rem; color:#64748b;">
+                                ដោយ៖ <strong>${p.createdBy || 'គ្រូបន្ទុកថ្នាក់'}</strong> | ${new Date(p.timestamp).toLocaleDateString()}
+                            </div>
+                        </div>
+                        <div class="hw-prompt-body">${p.questionText}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <div>${refBtn}</div>
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">${actionArea}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function populatePromptClassCheckboxes(grade, preselectedClasses = []) {
+            const box = document.getElementById('hpClassCheckboxes');
+            box.innerHTML = '';
+
+            let candidateClasses = [];
+            if (currentUser.role === 'teacher') {
+                candidateClasses = getAssignedClassesForUser(currentUser).filter(c => {
+                    if (normalizeClass(c) === 'ALL') return true;
+                    return extractGradeFromClassName(c) === toKhmerDigits(grade);
+                });
+            } else {
+                const gKh = toKhmerDigits(grade);
+                candidateClasses = ['ALL', `${gKh}A`, `${gKh}B`, `${gKh}C`, `${gKh}D`, `${gKh}E`, `${gKh}F`, `${gKh}G`, `${gKh}H`];
+            }
+
+            const preNorm = preselectedClasses.map(c => normalizeClass(c));
+            candidateClasses.forEach(cls => {
+                const labelText = normalizeClass(cls) === 'ALL' ? `គ្រប់ថ្នាក់ទី ${grade} ទាំងអស់` : `ថ្នាក់ ${cls}`;
+                const checked = preNorm.includes(normalizeClass(cls)) || (candidateClasses.length === 1 && preNorm.length === 0) ? 'checked' : '';
+                box.innerHTML += `
+                    <label class="class-checkbox-item">
+                        <input type="checkbox" name="hpTargetClassChk" value="${cls}" ${checked}> ${labelText}
+                    </label>
+                `;
+            });
+        }
+
+        function onPromptGradeChange(grade) {
+            const lessonSel = document.getElementById('hpLessonSelect');
+            lessonSel.innerHTML = '';
+            (defaultLessonData[grade] || []).forEach(l => {
+                lessonSel.innerHTML += `<option value="${l.title}">${l.title}</option>`;
+            });
+            populatePromptClassCheckboxes(grade);
+        }
+
+        function openHwPromptModal() {
+            document.getElementById('hwPromptModalTitle').innerText = "✍️ សរសេរប្រធានបទ / សំណួរកិច្ចការផ្ទះថ្មី";
+            document.getElementById('hpPromptId').value = "";
+            document.getElementById('hpTaskType').value = "កិច្ចការផ្ទះ";
+            document.getElementById('hpTitle').value = "";
+            document.getElementById('hpQuestionText').value = "";
+            document.getElementById('hpDueDate').value = "";
+            document.getElementById('hpRefLink').value = "";
+            document.getElementById('hpCustomClassInput').value = "";
+
+            const gradeSel = document.getElementById('hpGradeSelect');
+            const assignedGrades = getAssignedGradesForUser(currentUser);
+            gradeSel.innerHTML = '';
+            assignedGrades.forEach(g => {
+                gradeSel.innerHTML += `<option value="${g}">ថ្នាក់ទី ${g}</option>`;
+            });
+
+            const defaultGrade = extractGradeFromClassName(activeTeacherClass) || assignedGrades[0] || '១០';
+            gradeSel.value = defaultGrade;
+            onPromptGradeChange(defaultGrade);
+
+            if (activeTeacherClass && activeTeacherClass !== 'ALL') {
+                populatePromptClassCheckboxes(defaultGrade, [activeTeacherClass]);
+            }
+
+            document.getElementById('hwPromptModal').style.display = 'flex';
+        }
+
+        function openEditHwPromptModal(prompt) {
+            document.getElementById('hwPromptModalTitle').innerText = "✏️ កែប្រែប្រធានបទ / សំណួរកិច្ចការផ្ទះ";
+            document.getElementById('hpPromptId').value = prompt.promptId;
+            document.getElementById('hpTaskType').value = prompt.taskType || "កិច្ចការផ្ទះ";
+            document.getElementById('hpTitle').value = prompt.title;
+            document.getElementById('hpQuestionText').value = prompt.questionText;
+            document.getElementById('hpDueDate').value = prompt.dueDate || "";
+            document.getElementById('hpRefLink').value = prompt.refLink || "";
+            document.getElementById('hpCustomClassInput').value = "";
+
+            const gradeSel = document.getElementById('hpGradeSelect');
+            const assignedGrades = getAssignedGradesForUser(currentUser);
+            gradeSel.innerHTML = '';
+            assignedGrades.forEach(g => {
+                gradeSel.innerHTML += `<option value="${g}">ថ្នាក់ទី ${g}</option>`;
+            });
+            gradeSel.value = prompt.gradeLevel || assignedGrades[0];
+
+            const lessonSel = document.getElementById('hpLessonSelect');
+            lessonSel.innerHTML = '';
+            (defaultLessonData[gradeSel.value] || []).forEach(l => {
+                lessonSel.innerHTML += `<option value="${l.title}">${l.title}</option>`;
+            });
+            lessonSel.value = prompt.lessonTitle;
+
+            const existingClasses = (prompt.targetClasses || '').split(/[,;\/]+/).map(c => c.trim()).filter(Boolean);
+            populatePromptClassCheckboxes(gradeSel.value, existingClasses);
+
+            document.getElementById('hwPromptModal').style.display = 'flex';
+        }
+
+        function closeHwPromptModal() {
+            document.getElementById('hwPromptModal').style.display = 'none';
+        }
+
+        document.getElementById('hwPromptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const checkedBoxes = [...document.querySelectorAll('input[name="hpTargetClassChk"]:checked')].map(cb => cb.value);
+            const customClasses = document.getElementById('hpCustomClassInput').value.split(/[,;\/]+/).map(c => c.trim()).filter(Boolean);
+            const allTargetClasses = [...new Set([...checkedBoxes, ...customClasses])];
+
+            if (allTargetClasses.length === 0) {
+                alert("សូមជ្រើសរើស ឬវាយបញ្ចូលប្រភេទថ្នាក់យ៉ាងតិច ១ ថ្នាក់!");
+                return;
+            }
+
+            const btn = document.getElementById('btnSaveHwPrompt');
+            btn.disabled = true;
+            btn.innerText = "កំពុងរក្សាទុក...";
+
+            const payload = {
+                action: 'saveHwPrompt',
+                promptId: document.getElementById('hpPromptId').value,
+                role: currentUser.role,
+                teacherUsername: currentUser.username,
+                teacherPassword: currentUser._pass || "",
+                allowedClasses: getAssignedClassesForUser(currentUser),
+                taskType: document.getElementById('hpTaskType').value,
+                gradeLevel: document.getElementById('hpGradeSelect').value,
+                targetClasses: allTargetClasses.join(', '),
+                lessonTitle: document.getElementById('hpLessonSelect').value,
+                title: document.getElementById('hpTitle').value.trim(),
+                questionText: document.getElementById('hpQuestionText').value.trim(),
+                dueDate: document.getElementById('hpDueDate').value,
+                refLink: document.getElementById('hpRefLink').value.trim()
+            };
+
+            try {
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (result.status === 'success') {
+                    closeHwPromptModal();
+                    loadHwPrompts();
+                }
+            } catch (err) {
+                alert("កំហុសក្នុងការរក្សាទុកសំណួរ៖ " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "រក្សាទុក & ជូនដំណឹងសិស្ស";
+            }
+        });
+
+        async function deleteHwPrompt(promptId) {
+            if (!confirm("តើអ្នកពិតជាចង់លុបប្រធានបទ/សំណួរកិច្ចការផ្ទះនេះមែនទេ?")) return;
+            try {
+                const res = await fetch(MAIN_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'deleteHwPrompt',
+                        promptId: promptId,
+                        role: currentUser.role,
+                        teacherUsername: currentUser.username,
+                        teacherPassword: currentUser._pass || ""
+                    })
+                });
+                const result = await res.json();
+                alert(result.message);
+                if (result.status === 'success') {
+                    loadHwPrompts();
+                }
+            } catch (err) {
+                alert("កំហុសក្នុងការលុប៖ " + err.message);
+            }
+        }
+
+        // --- កិច្ចការផ្ទះ / ស្រាវជ្រាវ (ចម្លើយសិស្ស) ---
         async function loadHomeworkTable() {
             const tbody = document.getElementById('homeworkTableBody');
             tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">កំពុងទាញយកទិន្នន័យ...</td></tr>`;
@@ -1701,6 +2232,7 @@
                     populateTeacherAdminFilters('hwClassFilter', 'hwLessonFilter', cachedHomeworkData);
                 }
 
+                renderHwPromptsFiltered();
                 renderHomeworkFiltered();
             } catch (err) {
                 tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:red;">កំហុសក្នុងការទាញទិន្នន័យ៖ ${err.message}</td></tr>`;
@@ -1746,7 +2278,7 @@
             }
 
             if (rows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">មិនទាន់មានកិច្ចការសម្រាប់ជម្រើសនេះនៅឡើយទេ។</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">មិនទាន់មានកិច្ចការ ឬចម្លើយសម្រាប់ជម្រើសនេះនៅឡើយទេ។</td></tr>`;
                 return;
             }
 
@@ -1777,8 +2309,19 @@
 
                 const sNameEsc = escapeAttr(hw.studentName);
                 const lTitleEsc = escapeAttr(hw.lessonTitle);
+                const cNameEsc = escapeAttr(hw.className);
+                const ansTextEsc = escapeAttr(hw.answerText || '');
 
                 let mediaButtons = '<div class="media-btn-group">';
+                if (hw.answerText) {
+                    const previewSnippet = hw.answerText.length > 75 ? hw.answerText.substring(0, 75) + '...' : hw.answerText;
+                    mediaButtons += `
+                        <div style="width:100%; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 8px; font-size:0.82rem; color:#1e293b; margin-bottom:4px;">
+                            ${previewSnippet}
+                        </div>
+                        <button type="button" class="btn-media-view btn-media-text" onclick="openReadAnswerModal('${sNameEsc}', '${cNameEsc}', '${lTitleEsc}', '${ansTextEsc}')">📝 អានចម្លើយពេញ</button>
+                    `;
+                }
                 if (hw.videoLink) {
                     mediaButtons += `<button type="button" class="btn-media-view btn-media-video" onclick="openMediaViewerModal('${escapeAttr(hw.videoLink)}', '🎬 វីដេអូកិច្ចការ', '${sNameEsc}', '${lTitleEsc}')">🎬 វីដេអូ</button>`;
                 }
@@ -1788,8 +2331,8 @@
                 if (hw.driveFileUrl) {
                     mediaButtons += `<button type="button" class="btn-media-view btn-media-drive" onclick="openMediaViewerModal('${escapeAttr(hw.driveFileUrl)}', '📁 ឯកសារ Drive', '${sNameEsc}', '${lTitleEsc}')">📁 Drive File</button>`;
                 }
-                if (!hw.videoLink && !hw.pdfLink && !hw.driveFileUrl) {
-                    mediaButtons += '<span style="color:#94a3b8;">គ្មានឯកសារ</span>';
+                if (!hw.answerText && !hw.videoLink && !hw.pdfLink && !hw.driveFileUrl) {
+                    mediaButtons += '<span style="color:#94a3b8;">គ្មានចម្លើយ/ឯកសារ</span>';
                 }
                 mediaButtons += '</div>';
 
@@ -1808,9 +2351,33 @@
             });
         }
 
-        function openHwFormModal() {
-            document.getElementById('hwModalTitle').innerText = "បញ្ជូនកិច្ចការផ្ទះ / ស្រាវជ្រាវថ្មី";
+        function openReplyToPromptModal(prompt) {
+            document.getElementById('hwModalTitle').innerText = `✍️ សរសេរចម្លើយឆ្លើយតប (${prompt.taskType || 'កិច្ចការផ្ទះ'})`;
             document.getElementById('hwRecordId').value = "";
+            document.getElementById('hwPromptIdRef').value = prompt.promptId || "";
+            document.getElementById('hwAnswerText').value = "";
+            document.getElementById('hwVideoLink').value = "";
+            document.getElementById('hwPdfLink').value = "";
+            document.getElementById('hwFileUploadGroup').classList.remove('hidden');
+            document.getElementById('teacherGradingFields').classList.add('hidden');
+
+            const refBox = document.getElementById('hwPromptReferenceBox');
+            refBox.classList.remove('hidden');
+            document.getElementById('hwPromptRefTitle').innerText = `📌 សំណួរ៖ ${prompt.title}`;
+            document.getElementById('hwPromptRefQuestion').innerText = prompt.questionText;
+
+            const sel = document.getElementById('hwLessonSelect');
+            sel.innerHTML = `<option value="${prompt.lessonTitle}">${prompt.lessonTitle}</option>`;
+
+            document.getElementById('hwModal').style.display = 'flex';
+        }
+
+        function openHwFormModal() {
+            document.getElementById('hwModalTitle').innerText = "បញ្ជូនកិច្ចការផ្ទះ / សរសេរចម្លើយថ្មី";
+            document.getElementById('hwRecordId').value = "";
+            document.getElementById('hwPromptIdRef').value = "";
+            document.getElementById('hwPromptReferenceBox').classList.add('hidden');
+            document.getElementById('hwAnswerText').value = "";
             document.getElementById('hwVideoLink').value = "";
             document.getElementById('hwPdfLink').value = "";
             document.getElementById('hwFileUploadGroup').classList.remove('hidden');
@@ -1830,22 +2397,28 @@
         }
 
         function openEditHwStudent(hw) {
-            document.getElementById('hwModalTitle').innerText = "កែប្រែកិច្ចការរបស់អ្នក (មិនអាចកែពិន្ទុបានទេ)";
+            document.getElementById('hwModalTitle').innerText = "កែប្រែចម្លើយ និងកិច្ចការរបស់អ្នក (មិនអាចកែពិន្ទុបានទេ)";
             document.getElementById('hwRecordId').value = hw.recordId;
+            document.getElementById('hwPromptIdRef').value = hw.promptId || "";
+            document.getElementById('hwPromptReferenceBox').classList.add('hidden');
             document.getElementById('hwLessonSelect').innerHTML = `<option value="${hw.lessonTitle}">${hw.lessonTitle}</option>`;
-            document.getElementById('hwVideoLink').value = hw.videoLink;
-            document.getElementById('hwPdfLink').value = hw.pdfLink;
+            document.getElementById('hwAnswerText').value = hw.answerText || "";
+            document.getElementById('hwVideoLink').value = hw.videoLink || "";
+            document.getElementById('hwPdfLink').value = hw.pdfLink || "";
             document.getElementById('hwFileUploadGroup').classList.add('hidden');
             document.getElementById('teacherGradingFields').classList.add('hidden');
             document.getElementById('hwModal').style.display = 'flex';
         }
 
         function openGradeHwTeacher(hw) {
-            document.getElementById('hwModalTitle').innerText = `ដាក់ពិន្ទុ និងកែប្រែកិច្ចការ៖ ${hw.studentName} (ថ្នាក់ ${hw.className})`;
+            document.getElementById('hwModalTitle').innerText = `ពិនិត្យចម្លើយ & ដាក់ពិន្ទុ៖ ${hw.studentName} (ថ្នាក់ ${hw.className})`;
             document.getElementById('hwRecordId').value = hw.recordId;
+            document.getElementById('hwPromptIdRef').value = hw.promptId || "";
+            document.getElementById('hwPromptReferenceBox').classList.add('hidden');
             document.getElementById('hwLessonSelect').innerHTML = `<option value="${hw.lessonTitle}">${hw.lessonTitle}</option>`;
-            document.getElementById('hwVideoLink').value = hw.videoLink;
-            document.getElementById('hwPdfLink').value = hw.pdfLink;
+            document.getElementById('hwAnswerText').value = hw.answerText || "";
+            document.getElementById('hwVideoLink').value = hw.videoLink || "";
+            document.getElementById('hwPdfLink').value = hw.pdfLink || "";
             document.getElementById('hwFileUploadGroup').classList.add('hidden');
             document.getElementById('teacherGradingFields').classList.remove('hidden');
             document.getElementById('hwScoreInput').value = hw.score;
@@ -1871,11 +2444,13 @@
 
                 let payload = {
                     recordId: recordId,
+                    promptId: document.getElementById('hwPromptIdRef').value,
                     role: currentUser.role,
                     className: submitClass,
                     lessonTitle: document.getElementById('hwLessonSelect').value,
                     studentId: currentUser.studentId,
                     studentName: currentUser.username,
+                    answerText: document.getElementById('hwAnswerText').value.trim(),
                     videoLink: document.getElementById('hwVideoLink').value.trim(),
                     pdfLink: document.getElementById('hwPdfLink').value.trim()
                 };
@@ -1919,7 +2494,7 @@
                 alert("កំហុសក្នុងការរក្សាទុកទិន្នន័យ៖ " + err.message);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "រក្សាទុក";
+                btn.innerText = "រក្សាទុក & បញ្ជូន";
             }
         });
 
@@ -2337,6 +2912,7 @@
                 "ឈ្មោះសិស្ស": hw.studentName,
                 "មេរៀន": hw.lessonTitle,
                 "កាលបរិច្ឆេទបញ្ជូន": new Date(hw.timestamp).toLocaleDateString(),
+                "ចម្លើយសរសេររបស់សិស្ស": hw.answerText || "",
                 "ពិន្ទុកិច្ចការ": hw.score !== "" ? Number(hw.score) : "មិនទាន់ដាក់",
                 "មតិគ្រូ": hw.teacherNote || "",
                 "Link វីដេអូ": hw.videoLink || "",
@@ -2440,6 +3016,7 @@
                 "អត្តលេខ": hw.studentId,
                 "ឈ្មោះសិស្ស": hw.studentName,
                 "មេរៀន": hw.lessonTitle,
+                "ចម្លើយសរសេរ": hw.answerText || "",
                 "ពិន្ទុកិច្ចការ": hw.score !== "" ? Number(hw.score) : "មិនទាន់ដាក់",
                 "មតិគ្រូ": hw.teacherNote || "",
                 "កាលបរិច្ឆេទ": new Date(hw.timestamp).toLocaleDateString()
