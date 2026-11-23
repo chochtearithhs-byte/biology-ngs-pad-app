@@ -542,7 +542,7 @@
 
                         <h3 style="margin:10px 0 6px; font-size:1.05rem; color:var(--primary);">📋 តារាងចម្លើយ និងកិច្ចការដែលសិស្សបានបញ្ជូន</h3>
                         <p style="font-size:0.88rem; color:#64748b; margin-top:0;">
-                            * សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ ចុចលើប៊ូតុង <strong>📝 អានចម្លើយ / 🎬 វីដេអូ / 📄 PDF / 📁 Drive File</strong> ដើម្បីបើកមើលផ្ទាល់លើអេក្រង់។
+                            • សិស្សមើលឃើញ និងអាចកែប្រែ ឬលុបកិច្ចការរបស់ខ្លួនឯងផ្ទាល់ប៉ុណ្ណោះ (លើកលែងតែពិន្ទុ)។ ចុចលើប៊ូតុង <strong>📝 អានចម្លើយ / 🎬 វីដេអូ / 📄 PDF / 📁 Drive File</strong> ដើម្បីបើកមើលផ្ទាល់លើអេក្រង់។
                         </p>
                         <div style="overflow-x:auto;">
                             <table class="data-table">
@@ -621,7 +621,7 @@
                     <div class="study-panel">
                         <h2 style="margin-top:0; color:var(--danger);">🛡️ គ្រប់គ្រងគណនី និងកំណត់ថ្នាក់ជូនគ្រូបន្ទុកថ្នាក់ (Admin)</h2>
                         <p style="font-size:0.85rem; color:#475569; margin-top:-8px;">
-                            * Admin អាចកំណត់ថ្នាក់ឱ្យគ្រូម្នាក់បង្រៀនច្រើនថ្នាក់ដោយបន្ថែមម្តងមួយថ្នាក់ (ដូចជា <code>១១F</code>, <code>១១G</code>, <code>១០A</code>) ឬវាយចូលគ្នាដោយដាក់សញ្ញាក្បៀស (ឧ. <code>១១A, ១១B, ១១F</code>) ឬ <code>ALL</code>។
+                            • Admin អាចកំណត់ថ្នាក់ឱ្យគ្រូម្នាក់បង្រៀនច្រើនថ្នាក់ដោយបន្ថែមម្តងមួយថ្នាក់ (ដូចជា <code>១១F</code>, <code>១១G</code>, <code>១០A</code>) ឬវាយចូលគ្នាដោយដាក់សញ្ញាក្បៀស (ឧ. <code>១១A, ១១B, ១១F</code>) ឬ <code>ALL</code>។
                         </p>
                         <form id="adminUserForm" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; background:#f8fafc; padding:15px; border-radius:12px;">
                             <input type="text" id="admUsername" placeholder="ឈ្មោះគ្រូ ឬសិស្ស (Username)" required>
@@ -904,10 +904,10 @@
     </div>
 
     <script>
-        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-uwwk-BDF9_HiHoNvJxpu4xlRvxPhZ3JgG3i6mMM-RrxWGrObhdAGNGJZVmiGN7dQ/exec";
+        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRs1Ek2VZ5m1ccXhVkVl8uEfsVRltjmbHrHeF9zPPdn2jZlo90f95kiHF2Q7P1ew/exec";
         
         // =========================================================================
-        // ONESIGNAL APP ID (ដាក់ត្រូវគ្នាជាមួយ Apps Script រួចរាល់)
+        // ONESIGNAL APP ID
         // =========================================================================
         const ONESIGNAL_APP_ID = "084a07c7-c4fb-494f-8d1e-f2c2d371f003";
 
@@ -916,7 +916,7 @@
 
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
-            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "084a07c7-c4fb-494f-8d1e-f2c2d371f003") {
+            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID.trim() !== "") {
                 try {
                     await OneSignal.init({
                         appId: ONESIGNAL_APP_ID,
@@ -958,7 +958,7 @@
         // ចុះឈ្មោះ External ID និង Tags (ថ្នាក់ & កម្រិតថ្នាក់) ទៅកាន់ OneSignal សម្រាប់សិស្សម្នាក់ៗ
         function registerStudentWithOneSignal() {
             if (!currentUser || currentUser.role !== 'student') return;
-            if (!ONESIGNAL_APP_ID || ONESIGNAL_APP_ID === "084a07c7-c4fb-494f-8d1e-f2c2d371f003") return;
+            if (!ONESIGNAL_APP_ID || ONESIGNAL_APP_ID.trim() === "") return;
 
             const normCls = normalizeClass(currentUser.className);
             const cleanId = (currentUser.studentId || currentUser.username).toString().trim();
@@ -982,7 +982,7 @@
         }
 
         async function enableOneSignalNotifications() {
-            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "084a07c7-c4fb-494f-8d1e-f2c2d371f003") {
+            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID.trim() !== "") {
                 window.OneSignalDeferred.push(async function(OneSignal) {
                     try {
                         await OneSignal.Notifications.requestPermission();
@@ -1607,13 +1607,11 @@
                 document.getElementById('topNotifBtn').classList.remove('hidden');
                 document.getElementById('nav-notifications').classList.remove('hidden');
 
-                // បង្ហាញបដាសុំអនុញ្ញាត Notification ភ្លាមៗនៅលើកំពូលទំព័រ ប្រសិនបើមិនទាន់ Allow
                 if ('Notification' in window && Notification.permission !== 'granted') {
                     document.getElementById('notifPermissionBanner')?.classList.remove('hidden');
                     document.getElementById('globalNotifPermissionBanner')?.classList.remove('hidden');
                 }
 
-                // ចុះឈ្មោះសិស្សម្នាក់នេះទៅកាន់ OneSignal Push Notification
                 registerStudentWithOneSignal();
 
                 checkStudentNotifications(true);
@@ -1740,7 +1738,7 @@
 
         function logout() {
             if (notifPollInterval) clearInterval(notifPollInterval);
-            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "YOUR_ONESIGNAL_APP_ID") {
+            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID.trim() !== "") {
                 window.OneSignalDeferred.push(async function(OneSignal) {
                     try { await OneSignal.logout(); } catch (e) {}
                 });
