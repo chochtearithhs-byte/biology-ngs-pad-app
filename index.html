@@ -904,7 +904,7 @@
     </div>
 
     <script>
-        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpyCW3Gh3NAgObEPHpQXJOPIaIugOp4zyYMXQI9mHSHIn7BT09VoJBnBNHcb3Fy1Wf/exec";
+        const MAIN_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-uwwk-BDF9_HiHoNvJxpu4xlRvxPhZ3JgG3i6mMM-RrxWGrObhdAGNGJZVmiGN7dQ/exec";
         
         // =========================================================================
         // ONESIGNAL APP ID (ដាក់ត្រូវគ្នាជាមួយ Apps Script រួចរាល់)
@@ -958,7 +958,7 @@
         // ចុះឈ្មោះ External ID និង Tags (ថ្នាក់ & កម្រិតថ្នាក់) ទៅកាន់ OneSignal សម្រាប់សិស្សម្នាក់ៗ
         function registerStudentWithOneSignal() {
             if (!currentUser || currentUser.role !== 'student') return;
-            if (!ONESIGNAL_APP_ID || ONESIGNAL_APP_ID === "YOUR_ONESIGNAL_APP_ID") return;
+            if (!ONESIGNAL_APP_ID || ONESIGNAL_APP_ID === "084a07c7-c4fb-494f-8d1e-f2c2d371f003") return;
 
             const normCls = normalizeClass(currentUser.className);
             const cleanId = (currentUser.studentId || currentUser.username).toString().trim();
@@ -982,7 +982,7 @@
         }
 
         async function enableOneSignalNotifications() {
-            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "YOUR_ONESIGNAL_APP_ID") {
+            if (ONESIGNAL_APP_ID && ONESIGNAL_APP_ID !== "084a07c7-c4fb-494f-8d1e-f2c2d371f003") {
                 window.OneSignalDeferred.push(async function(OneSignal) {
                     try {
                         await OneSignal.Notifications.requestPermission();
